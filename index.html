@@ -11,35 +11,20 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
     <style>
-        :root { --gold: #ffd700; --deep-green: #004d26; }
-        body { margin: 0; background: #000; color: white; font-family: 'Montserrat', sans-serif; overflow: hidden; }
+        :root { --gold: #ffd700; --p-green: #004d26; }
+        body { margin: 0; background: #000; color: white; font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
         .cinzel { font-family: 'Cinzel', serif; }
 
-        /* Premium Glass Panel */
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
+
         .glass-panel {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
         }
-
-        /* Gold Action Button */
-        .premium-btn {
-            background: linear-gradient(135deg, #ffd700, #b8860b);
-            color: #000;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 0 0 rgba(255, 215, 0, 0);
-        }
-
-        .premium-btn:hover {
-            transform: scale(1.08) translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
-            letter-spacing: 2px;
-        }
-
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
 
         .gold-text {
             background: linear-gradient(to right, #ffd700, #ffffff, #ffd700);
@@ -50,26 +35,38 @@
         }
 
         @keyframes shine { to { background-position: 200% center; } }
-        
-        .fade-out { opacity: 0; transition: opacity 1s ease-out; }
+
+        .premium-btn {
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            display: none; /* Hidden until launch */
+        }
+
+        .locked-msg {
+            color: rgba(255, 215, 0, 0.5);
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* Branding Section Styling */
+        .branding-section {
+            background: linear-gradient(to bottom, transparent, var(--p-green));
+            padding: 100px 20px;
+        }
     </style>
 </head>
-<body id="main-body">
+<body>
 
     <canvas id="bg-canvas"></canvas>
 
-    <main class="h-screen flex flex-col items-center justify-center px-4 text-center">
-        
-        <div id="hero-content" class="opacity-0">
-            <h2 class="cinzel text-gold text-lg md:text-xl tracking-[0.6em] mb-4 font-bold uppercase text-yellow-500">Paramount English Medium High School</h2>
-            <h1 class="cinzel gold-text text-4xl md:text-8xl font-black mb-8 uppercase tracking-tighter">The Future Education Starts Here...</h1>
+    <section class="min-h-screen flex flex-col items-center justify-center px-4 text-center">
+        <div id="hero-content">
+            <h2 class="cinzel text-gold text-lg tracking-[0.6em] mb-4 font-bold uppercase text-yellow-500">Paramount English Medium High School</h2>
+            <h1 class="cinzel gold-text text-5xl md:text-8xl font-black mb-8 uppercase tracking-tighter">The Future of Education starts here..</h1>
             
-            <p class="text-gray-400 max-w-2xl mx-auto mb-14 font-light leading-relaxed text-sm md:text-lg">
-                Step into the new era of institutional digital management. <br class="hidden md:block"> 
-                Experience our high-end school portal designed for parents, students, and faculty.
-            </p>
-
-            <div id="countdown" class="glass-panel rounded-3xl p-10 flex gap-6 md:gap-14 justify-center mb-16 border border-white/5">
+            <div id="countdown" class="glass-panel rounded-3xl p-8 md:p-12 flex gap-6 md:gap-14 justify-center mb-12 border border-white/5">
                 <div class="text-center">
                     <span id="days" class="block text-4xl md:text-6xl font-bold">00</span>
                     <small class="text-[10px] uppercase tracking-widest text-yellow-500 font-bold">Days</small>
@@ -88,76 +85,95 @@
                 </div>
             </div>
 
-            <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
-                <a href="https://paramountschooledu.in/" 
-                   onclick="transitionPortal(event)"
-                   class="premium-btn px-12 py-5 rounded-full font-extrabold uppercase tracking-widest text-sm flex items-center gap-3">
-                    <i class="fas fa-external-link-alt"></i> Enter Official Portal
-                </a>
+            <div id="action-container" class="h-20 flex items-center justify-center">
+                <div id="lock-status" class="locked-msg">
+                    <i class="fas fa-lock mr-2"></i> Portal Encrypted Until Launch
+                </div>
                 
-                <a href="https://wa.me/919550791538" class="bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur px-10 py-5 rounded-full text-white font-bold uppercase tracking-wider text-sm transition-all flex items-center gap-2">
-                    <i class="fab fa-whatsapp"></i> Get Support
+                <a id="launch-link" href="https://paramountschooledu.in/" 
+                   class="premium-btn px-12 py-5 rounded-full font-extrabold uppercase tracking-widest text-sm flex items-center gap-3">
+                    <i class="fas fa-rocket"></i> Enter Official Portal
                 </a>
             </div>
+            
+            <div class="mt-8 animate-bounce text-white/30 text-xs tracking-widest uppercase">
+                Scroll to explore our legacy <br> <i class="fas fa-chevron-down mt-2"></i>
+            </div>
         </div>
+    </section>
 
-    </main>
+    <section class="branding-section">
+        <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div class="reveal-text">
+                <h3 class="cinzel text-3xl text-gold mb-6">Est. 2019</h3>
+                <p class="text-gray-300 leading-loose font-light">
+                    From our roots in Warangal to the digital frontier. Paramount School has always stood for **Academic Excellence**, **Character Building**, and **Innovation**. This new portal marks our commitment to a seamless education experience for every student and parent.
+                </p>
+            </div>
+            <div class="glass-panel p-8 rounded-2xl border-gold/20 reveal-text">
+                <h4 class="cinzel text-gold mb-4 uppercase text-sm tracking-widest">Institutions</h4>
+                <ul class="space-y-3 text-sm text-gray-400 font-semibold">
+                    <li><i class="fas fa-check text-gold mr-2"></i> Paramount English Medium School</li>
+                </ul>
+            </div>
+        </div>
+    </section>
 
     <script>
-        // --- THREE.JS 3D BACKGROUND ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- THREE.JS BACKGROUND ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true, antialias: true });
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         const starsGeometry = new THREE.BufferGeometry();
-        const starsCount = 6000;
+        const starsCount = 4000;
         const posArray = new Float32Array(starsCount * 3);
-
-        for(let i=0; i < starsCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 1000;
-        }
+        for(let i=0; i < starsCount * 3; i++) { posArray[i] = (Math.random() - 0.5) * 1000; }
         starsGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const starsMaterial = new THREE.PointsMaterial({ size: 0.8, color: 0xffffff, transparent: true, opacity: 0.8 });
+        const starsMaterial = new THREE.PointsMaterial({ size: 0.7, color: 0xffd700, transparent: true, opacity: 0.4 });
         const starsMesh = new THREE.Points(starsGeometry, starsMaterial);
         scene.add(starsMesh);
-
         camera.position.z = 150;
 
         function animate() {
             requestAnimationFrame(animate);
-            starsMesh.rotation.y += 0.0008;
-            starsMesh.rotation.x += 0.0003;
+            starsMesh.rotation.y += 0.0005;
             renderer.render(scene, camera);
         }
         animate();
 
-        // --- GSAP ANIMATIONS ---
-        gsap.to("#hero-content", { opacity: 1, duration: 2.5, y: -30, ease: "power4.out" });
+        // --- SCROLL ANIMATIONS ---
+        gsap.from(".reveal-text", {
+            scrollTrigger: { trigger: ".branding-section", start: "top 80%" },
+            y: 50, opacity: 0, duration: 1, stagger: 0.3
+        });
 
-        // --- PORTAL TRANSITION ---
-        function transitionPortal(e) {
-            e.preventDefault();
-            const link = e.currentTarget.href;
-            document.getElementById('main-body').classList.add('fade-out');
-            setTimeout(() => {
-                window.location.href = link;
-            }, 800);
-        }
-
-        // --- COUNTDOWN LOGIC (Set to May 20, 2026) ---
+        // --- COUNTDOWN & LOCK LOGIC ---
         const targetDate = new Date("May 20, 2026 09:00:00").getTime();
+        const lockStatus = document.getElementById('lock-status');
+        const launchLink = document.getElementById('launch-link');
 
         function updateCountdown() {
             const now = new Date().getTime();
             const gap = targetDate - now;
-            const second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24;
 
             if (gap <= 0) {
-                document.getElementById('countdown').innerHTML = "<h2 class='text-2xl font-bold gold-text uppercase'>Portal is Live!</h2>";
+                // STOP TIMER & REVEAL LINK
+                document.getElementById('days').innerText = "00";
+                document.getElementById('hours').innerText = "00";
+                document.getElementById('minutes').innerText = "00";
+                document.getElementById('seconds').innerText = "00";
+                
+                lockStatus.style.display = 'none';
+                launchLink.style.display = 'flex';
+                gsap.fromTo(launchLink, {scale: 0.8, opacity: 0}, {scale: 1, opacity: 1, duration: 1, ease: "elastic.out"});
                 return;
             }
 
+            const second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24;
             document.getElementById('days').innerText = String(Math.floor(gap / day)).padStart(2, '0');
             document.getElementById('hours').innerText = String(Math.floor((gap % day) / hour)).padStart(2, '0');
             document.getElementById('minutes').innerText = String(Math.floor((gap % hour) / minute)).padStart(2, '0');
