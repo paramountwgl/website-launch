@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramount School | The Grand Unveiling</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        :root { --gold: #ffd700; --deep-green: #004d26; }
+        body { margin: 0; background: #000; color: white; font-family: 'Montserrat', sans-serif; overflow: hidden; }
+        .cinzel { font-family: 'Cinzel', serif; }
+
+        /* Premium Glass Panel */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Gold Action Button */
+        .premium-btn {
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            color: #000;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 0 rgba(255, 215, 0, 0);
+        }
+
+        .premium-btn:hover {
+            transform: scale(1.08) translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+            letter-spacing: 2px;
+        }
+
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        .gold-text {
+            background: linear-gradient(to right, #ffd700, #ffffff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine { to { background-position: 200% center; } }
+        
+        .fade-out { opacity: 0; transition: opacity 1s ease-out; }
+    </style>
+</head>
+<body id="main-body">
+
+    <canvas id="bg-canvas"></canvas>
+
+    <main class="h-screen flex flex-col items-center justify-center px-4 text-center">
+        
+        <div id="hero-content" class="opacity-0">
+            <h2 class="cinzel text-gold text-lg md:text-xl tracking-[0.6em] mb-4 font-bold uppercase text-yellow-500">Paramount English Medium High School</h2>
+            <h1 class="cinzel gold-text text-4xl md:text-8xl font-black mb-8 uppercase tracking-tighter">The Future Education Starts Here...</h1>
+            
+            <p class="text-gray-400 max-w-2xl mx-auto mb-14 font-light leading-relaxed text-sm md:text-lg">
+                Step into the new era of institutional digital management. <br class="hidden md:block"> 
+                Experience our high-end school portal designed for parents, students, and faculty.
+            </p>
+
+            <div id="countdown" class="glass-panel rounded-3xl p-10 flex gap-6 md:gap-14 justify-center mb-16 border border-white/5">
+                <div class="text-center">
+                    <span id="days" class="block text-4xl md:text-6xl font-bold">00</span>
+                    <small class="text-[10px] uppercase tracking-widest text-yellow-500 font-bold">Days</small>
+                </div>
+                <div class="text-center">
+                    <span id="hours" class="block text-4xl md:text-6xl font-bold">00</span>
+                    <small class="text-[10px] uppercase tracking-widest text-yellow-500 font-bold">Hours</small>
+                </div>
+                <div class="text-center">
+                    <span id="minutes" class="block text-4xl md:text-6xl font-bold">00</span>
+                    <small class="text-[10px] uppercase tracking-widest text-yellow-500 font-bold">Mins</small>
+                </div>
+                <div class="text-center">
+                    <span id="seconds" class="block text-4xl md:text-6xl font-bold text-yellow-500">00</span>
+                    <small class="text-[10px] uppercase tracking-widest text-white/40 font-bold">Secs</small>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
+                <a href="https://paramountschooledu.in/" 
+                   onclick="transitionPortal(event)"
+                   class="premium-btn px-12 py-5 rounded-full font-extrabold uppercase tracking-widest text-sm flex items-center gap-3">
+                    <i class="fas fa-external-link-alt"></i> Enter Official Portal
+                </a>
+                
+                <a href="https://wa.me/919550791538" class="bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur px-10 py-5 rounded-full text-white font-bold uppercase tracking-wider text-sm transition-all flex items-center gap-2">
+                    <i class="fab fa-whatsapp"></i> Get Support
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- THREE.JS 3D BACKGROUND ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const starsGeometry = new THREE.BufferGeometry();
+        const starsCount = 6000;
+        const posArray = new Float32Array(starsCount * 3);
+
+        for(let i=0; i < starsCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 1000;
+        }
+        starsGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const starsMaterial = new THREE.PointsMaterial({ size: 0.8, color: 0xffffff, transparent: true, opacity: 0.8 });
+        const starsMesh = new THREE.Points(starsGeometry, starsMaterial);
+        scene.add(starsMesh);
+
+        camera.position.z = 150;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            starsMesh.rotation.y += 0.0008;
+            starsMesh.rotation.x += 0.0003;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // --- GSAP ANIMATIONS ---
+        gsap.to("#hero-content", { opacity: 1, duration: 2.5, y: -30, ease: "power4.out" });
+
+        // --- PORTAL TRANSITION ---
+        function transitionPortal(e) {
+            e.preventDefault();
+            const link = e.currentTarget.href;
+            document.getElementById('main-body').classList.add('fade-out');
+            setTimeout(() => {
+                window.location.href = link;
+            }, 800);
+        }
+
+        // --- COUNTDOWN LOGIC (Set to May 20, 2026) ---
+        const targetDate = new Date("May 20, 2026 09:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const gap = targetDate - now;
+            const second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24;
+
+            if (gap <= 0) {
+                document.getElementById('countdown').innerHTML = "<h2 class='text-2xl font-bold gold-text uppercase'>Portal is Live!</h2>";
+                return;
+            }
+
+            document.getElementById('days').innerText = String(Math.floor(gap / day)).padStart(2, '0');
+            document.getElementById('hours').innerText = String(Math.floor((gap % day) / hour)).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(Math.floor((gap % hour) / minute)).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(Math.floor((gap % minute) / second)).padStart(2, '0');
+        }
+        setInterval(updateCountdown, 1000);
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
