@@ -218,11 +218,9 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // Global variables initialized smoothly without multi-declaration collision errors
         let scene, camera, renderer, starParticles, rocketMasterGroup;
         let engineFireGlow, launchpadBase, fireParticles;
-        let audienceGroup, fireAudienceParticles;
-        let audiencePositions = [];
+        let audienceGroup, audienceMeshArray = []; 
         let audienceState = "idle";
         let launchTriggerActive = false;
 
@@ -238,14 +236,14 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-            const ambient = new THREE.AmbientLight(0xffffff, 0.5); 
+            const ambient = new THREE.AmbientLight(0xffffff, 0.6); 
             scene.add(ambient);
 
-            const platformLight = new THREE.DirectionalLight(0xfff5df, 1.5);
+            const platformLight = new THREE.DirectionalLight(0xfff5df, 1.8);
             platformLight.position.set(40, 150, 60);
             scene.add(platformLight);
 
-            const cosmicFillLight = new THREE.PointLight(0x3a86ff, 2.0, 300);
+            const cosmicFillLight = new THREE.PointLight(0x3a86ff, 2.5, 300);
             cosmicFillLight.position.set(-80, 50, -50);
             scene.add(cosmicFillLight);
 
@@ -260,7 +258,7 @@
             starParticles = new THREE.Points(starGeom, starMat);
             scene.add(starParticles);
 
-            // Launchpad Frame
+            // Launchpad Base
             const baseGeom = new THREE.CylinderGeometry(80, 90, 8, 4);
             const baseMat = new THREE.MeshStandardMaterial({ color: 0x111622, roughness: 0.7, metalness: 0.5 });
             launchpadBase = new THREE.Mesh(baseGeom, baseMat);
@@ -281,43 +279,82 @@
             }
             scene.add(stadiumGroup);
 
-            // Crowd Particles Generation
+            // Procedural Low-Poly 3D Sitting Human Objects Generation
             audienceGroup = new THREE.Group();
-            const audienceCount = 750; 
-            const audienceGeom = new THREE.BufferGeometry();
-            const initialPosArr = [];
+            const audienceCount = 350; // Balanced volume for hyper-performance loading
+            
+            // Premium Translucent Architectural Gold Glass Material
+            const humanMaterial = new THREE.MeshStandardMaterial({
+                color: 0xe2c069,
+                metalness: 0.7,
+                roughness: 0.2,
+                transparent: true,
+                opacity: 0.85,
+                emissive: 0xb8860b,
+                emissiveIntensity: 0.2
+            });
+
+            // Single Reusable Shared Geometries for Memory Efficiency
+            const headGeom = new THREE.SphereGeometry(0.8, 8, 8);
+            const torsoGeom = new THREE.CylinderGeometry(0.7, 0.5, 2.2, 6);
+            const limbGeom = new THREE.BoxGeometry(0.3, 1.4, 0.3);
 
             for(let i=0; i<audienceCount; i++) {
                 let sideIdx = Math.random() > 0.5 ? 1 : -1;
                 let stepLevel = Math.floor(Math.random() * 12);
                 
-                let targetX = sideIdx * (115 + (stepLevel * 5) + (Math.random() * 12 - 6));
-                let targetY = -60 + (stepLevel * 4) + 6; 
-                let targetZ = (Math.random() * 90) - 45;
+                // Placement directly mapped along the dimensional stairs
+                let targetX = sideIdx * (115 + (stepLevel * 5) + (Math.random() * 14 - 7));
+                let targetY = -60 + (stepLevel * 4) + 3.5; 
+                let targetZ = (Math.random() * 96) - 48;
 
-                audiencePositions.push({
-                    homeX: targetX,
+                // Create individual compound Human Object Group
+                const humanGroup = new THREE.Group();
+
+                // Torso
+                const torso = new THREE.Mesh(torsoGeom, humanMaterial);
+                torso.position.y = 1.1;
+                torso.rotation.x = 0.15; // Slanted lean sitting position
+                humanGroup.add(torso);
+
+                // Head
+                const head = new THREE.Mesh(headGeom, humanMaterial);
+                head.position.set(0, 2.5, -0.1);
+                humanGroup.add(head);
+
+                // Sitting Lap Legs
+                const upperLegL = new THREE.Mesh(limbGeom, humanMaterial);
+                upperLegL.position.set(-0.35, 0.4, 0.6);
+                upperLegL.rotation.x = Math.PI / 2; // Forward projection lap leg
+                
+                const upperLegR = upperLegL.clone();
+                upperLegR.position.x = 0.35;
+                humanGroup.add(upperLegL, upperLegR);
+
+                // Sitting Calves Drop down
+                const lowerLegL = new THREE.Mesh(limbGeom, humanMaterial);
+                lowerLegL.position.set(-0.35, -0.3, 1.2);
+                
+                const lowerLegR = lowerLegL.clone();
+                lowerLegR.position.x = 0.35;
+                humanGroup.add(lowerLegL, lowerLegR);
+
+                // Assembly offset configuration inside the space
+                humanGroup.position.set(targetX, targetY, targetZ);
+                
+                // Turn human meshes towards center focus rocket pad base orientation
+                humanGroup.lookAt(0, -20, 0);
+
+                // Track animation seeds individually
+                audienceMeshArray.push({
+                    mesh: humanGroup,
                     homeY: targetY,
-                    homeZ: targetZ,
-                    side: sideIdx,
-                    step: stepLevel,
-                    noiseSeed: Math.random() * 200
+                    noiseSeed: Math.random() * 500,
+                    cheerSpeed: 15 + Math.random() * 15
                 });
 
-                initialPosArr.push(targetX, targetY, targetZ);
+                audienceGroup.add(humanGroup);
             }
-            
-            audienceGeom.setAttribute('position', new THREE.Float32BufferAttribute(initialPosArr, 3));
-            
-            const audienceMat = new THREE.PointsMaterial({
-                size: 4.5, 
-                color: 0xffd700, 
-                transparent: true,
-                opacity: 0.95,
-                blending: THREE.AdditiveBlending
-            });
-            fireAudienceParticles = new THREE.Points(audienceGeom, audienceMat);
-            audienceGroup.add(fireAudienceParticles);
             scene.add(audienceGroup);
 
             // Rocket Object Build
@@ -396,36 +433,27 @@
                 fireParticles.geometry.attributes.position.needsUpdate = true;
             }
 
-            // Interactive Audience Animations Engine Loop
-            if(fireAudienceParticles) {
-                const audPositions = fireAudienceParticles.geometry.attributes.position.array;
-                let pointer = 0;
-
-                for(let i=0; i<audiencePositions.length; i++) {
-                    let atom = audiencePositions[i];
+            // Real-time Mesh Animation Mechanics Engine Loop
+            for(let i=0; i<audienceMeshArray.length; i++) {
+                let human = audienceMeshArray[i];
+                
+                if(audienceState === "idle") {
+                    // Micro breathing and head look adjustment simulations
+                    let subtleNudge = Math.sin(elapsedTicks * 1.5 + human.noiseSeed) * 0.08;
+                    human.mesh.position.y = human.homeY + subtleNudge;
                     
-                    if(audienceState === "idle") {
-                        let movementOffset = Math.sin(elapsedTicks * 2.0 + atom.noiseSeed) * 0.35;
-                        let walkTrigger = Math.cos(elapsedTicks * 0.4 + atom.noiseSeed) > 0.84;
-                        
-                        audPositions[pointer] = atom.homeX + (walkTrigger ? movementOffset * 2.0 : 0);
-                        audPositions[pointer+1] = atom.homeY + (walkTrigger ? Math.abs(movementOffset) * 0.5 : 0);
-                        audPositions[pointer+2] = atom.homeZ + (walkTrigger ? movementOffset * 1.5 : 0);
-
-                    } else if(audienceState === "gathering") {
-                        audPositions[pointer] += (atom.homeX - audPositions[pointer]) * 0.12;
-                        audPositions[pointer+1] += (atom.homeY - audPositions[pointer+1]) * 0.12;
-                        audPositions[pointer+2] += (atom.homeZ - audPositions[pointer+2]) * 0.12;
-
-                    } else if(audienceState === "cheering") {
-                        let excitementFactor = Math.sin(elapsedTicks * 42 + atom.noiseSeed) * 3.5;
-                        audPositions[pointer] = atom.homeX + (Math.random() - 0.5) * 0.8;
-                        audPositions[pointer+1] = atom.homeY + Math.max(0, excitementFactor);
-                        audPositions[pointer+2] = atom.homeZ;
-                    }
-                    pointer += 3;
+                } else if(audienceState === "gathering") {
+                    // Attention anchor posture adjustments
+                    human.mesh.position.y += (human.homeY - human.mesh.position.y) * 0.1;
+                    
+                } else if(audienceState === "cheering") {
+                    // Full kinetic jump vertical cheering loop sequence during launch blastoff
+                    let verticalCheer = Math.max(0, Math.sin(elapsedTicks * human.cheerSpeed + human.noiseSeed) * 4.5);
+                    human.mesh.position.y = human.homeY + verticalCheer;
+                    
+                    // Kinetic hand hands swing excitement lean rotation tracking
+                    human.mesh.rotation.z = Math.sin(elapsedTicks * human.cheerSpeed) * 0.1;
                 }
-                fireAudienceParticles.geometry.attributes.position.needsUpdate = true;
             }
 
             renderer.render(scene, camera);
