@@ -157,16 +157,45 @@
       z-index: 5;
     }
 
+    /* FIXED: Isolated Top Branding Container with scale logic to prevent huge images */
+    .top-branding-box {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+      padding: 0;
+      animation: brandingGlowPulse 4s infinite ease-in-out;
+    }
+
+    .top-branding-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    @keyframes brandingGlowPulse {
+      0% { transform: scale(1); box-shadow: 0 0 25px rgba(59, 130, 246, 0.25); }
+      50% { transform: scale(1.04); box-shadow: 0 0 55px rgba(139, 92, 246, 0.45); }
+      100% { transform: scale(1); box-shadow: 0 0 25px rgba(59, 130, 246, 0.25); }
+    }
+
     .school-name {
-      font-size: 3.5rem;
+      font-size: 3.2rem;
       font-weight: 800;
-      line-height: 1.1;
+      line-height: 1.2;
+      white-space: nowrap;
       background: linear-gradient(to right, #ffffff, #93c5fd, #d8b4fe);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 0 30px rgba(255,255,255,0.1);
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       letter-spacing: 1px;
+      width: 100%;
+      max-width: 100%;
     }
 
     .subtitle {
@@ -177,9 +206,7 @@
       margin-bottom: 40px;
     }
 
-    /* ========================================================
-       GRAND THEATRICAL REVEAL EXHIBITION GRID (NEW STRUCTURAL LAYOUT)
-       ======================================================== */
+    /* Grand Theatrical Reveal Exhibition Grid Layout */
     .launch-exhibition-stage {
       display: flex;
       align-items: center;
@@ -210,7 +237,6 @@
       margin-bottom: 20px;
     }
 
-    /* High-tech Shroud Wrapper for the Logo Module */
     .logo-reveal-container {
       width: 130px;
       height: 130px;
@@ -227,11 +253,9 @@
       object-fit: contain;
       border-radius: 50%;
       z-index: 1;
-      /* Dynamic inline blur/hiding is automated cleanly below via JS */
       transition: filter 1.5s ease;
     }
 
-    /* Theatrical Shroud Cover placeholder box before timer finishes */
     .veil-shroud {
       position: absolute;
       top: 0;
@@ -256,7 +280,6 @@
       100% { box-shadow: 0 0 45px rgba(59, 130, 246, 0.6); border-color: rgba(59, 130, 246, 0.6); }
     }
 
-    /* Web Preview Digital Asset Frame */
     .web-reveal-container {
       width: 160px;
       height: 110px;
@@ -278,7 +301,6 @@
       filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.4));
     }
 
-    /* Decorative Central Stage Light Divider beam */
     .stage-divider-beam {
       width: 1px;
       height: 180px;
@@ -295,7 +317,6 @@
       font-size: 0.9rem;
     }
 
-    /* Active Reveal Class injections handled over script logic */
     .revealed-status .veil-shroud {
       opacity: 0 !important;
       transform: scale(0.8);
@@ -311,7 +332,6 @@
       100% { transform: scale(1); box-shadow: 0 0 25px rgba(59, 130, 246, 0.3); }
     }
 
-    /* Reveal Badge positioning tweaks */
     .reveal-badge {
       display: inline-flex;
       align-items: center;
@@ -660,8 +680,8 @@
   </div>
 
   <div class="hero-container">
-    <div class="logo-box">
-      <img src="old logo.png" alt="School Logo">
+    <div class="top-branding-box">
+      <img src="old logo.png" alt="School Branding Old Logo">
     </div>
     
     <h1 class="school-name">PARAMOUNT ENGLISH MEDIUM HIGH SCHOOL</h1>
@@ -797,7 +817,6 @@
       if (hasLaunched) return;
       hasLaunched = true;
 
-      // Reveal hidden assets on display grid simultaneously
       document.getElementById('revealStageContainer').classList.add('revealed-status');
 
       rocket.classList.add('ignited');
@@ -825,7 +844,7 @@
     // =============================
     // COUNTDOWN INTERFACE RUNTIME
     // =============================
-    const launchDate = new Date('May 16, 2026 20:05:00').getTime();
+    const launchDate = new Date('May 30, 2026 14:00:00').getTime();
 
     const timer = setInterval(function() {
       const now = new Date().getTime();
