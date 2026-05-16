@@ -252,29 +252,29 @@
         function buildCosmosStage() {
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x000206);
-            scene.fog = new THREE.FogExp2(0x000206, 0.0018);
+            scene.fog = new THREE.FogExp2(0x000206, 0.0015);
 
             camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
-            camera.position.set(0, 35, 200);
+            camera.position.set(0, 35, 195); // Adjusted slightly inward for stronger zoom detailing
 
             renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-            // Upgraded lighting engine to cast clean shadows and highlights on clothes
-            const ambient = new THREE.AmbientLight(0xffffff, 0.75); 
+            // Boosted ambient and directional lighting specifically to illuminate full bodies down the stadium
+            const ambient = new THREE.AmbientLight(0xffffff, 1.2); 
             scene.add(ambient);
 
-            const platformLight = new THREE.DirectionalLight(0xfff5df, 2.0);
-            platformLight.position.set(0, 150, 100);
+            const platformLight = new THREE.DirectionalLight(0xfff5df, 2.5);
+            platformLight.position.set(0, 180, 120);
             scene.add(platformLight);
 
-            const leftStadiumLight = new THREE.SpotLight(0xffffff, 4, 300, Math.PI/3, 0.4, 0.5);
-            leftStadiumLight.position.set(-140, 90, 40);
+            const leftStadiumLight = new THREE.SpotLight(0xffffff, 6, 400, Math.PI/3, 0.5, 0.2);
+            leftStadiumLight.position.set(-130, 100, 60);
             scene.add(leftStadiumLight);
 
-            const rightStadiumLight = new THREE.SpotLight(0xffffff, 4, 300, Math.PI/3, 0.4, 0.5);
-            rightStadiumLight.position.set(140, 90, 40);
+            const rightStadiumLight = new THREE.SpotLight(0xffffff, 6, 400, Math.PI/3, 0.5, 0.2);
+            rightStadiumLight.position.set(130, 100, 60);
             scene.add(rightStadiumLight);
 
             // Stars Background System
@@ -309,105 +309,98 @@
             }
             scene.add(stadiumGroup);
 
-            // GENERATE PREMIUM 3D DETAILED CLOTHED AUDIENCE (MALE & FEMALE)
+            // AUDIENCE GENERATION - SCALED FOR FULL BODY VISIBILITY
             audienceGroup = new THREE.Group();
-            const audienceCount = 1100; 
+            const audienceCount = 750; // Optimized volume count for crisp rendering
 
-            // Premium Color Palette for Clothes Matching the Screenshot Design
             const clothColors = [
                 0xe2c069, // Gold Silk
-                0x8b0000, // Deep Crimson
-                0x102a43, // Premium Navy
-                0x242424, // Luxury Onyx
-                0xdcbe77  // Champagne
+                0xa62626, // Crimson Velvet
+                0x164e63, // High-End Teal
+                0x2d3748, // Charcoal Suit Matte
+                0xd4af37  // Bright Gold Metallic Accent
             ];
-            const skinMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac, roughness: 0.4 }); // Neutral skin tone
+            const skinMaterial = new THREE.MeshStandardMaterial({ color: 0xffe0bd, roughness: 0.3 });
+
+            // ENHANCED AND SCALED GEOMETRY PARAMETERS (Doubled in thickness/size so they aren't "dots")
+            const headGeom = new THREE.SphereGeometry(1.2, 16, 16);
+            const torsoGeom = new THREE.CylinderGeometry(0.9, 0.75, 3.4, 10);
+            const armGeom = new THREE.CylinderGeometry(0.24, 0.2, 2.0, 8);
+            const legGeom = new THREE.CylinderGeometry(0.32, 0.26, 2.4, 8);
 
             for(let i=0; i<audienceCount; i++) {
                 let sideIdx = Math.random() > 0.5 ? 1 : -1;
                 let stepLevel = Math.floor(Math.random() * 12);
                 
-                // Absolute structural layout position to snap perfectly to every step row cascading down
-                let baseStepX = sideIdx * (115 + (stepLevel * 5));
-                let randomOffsetWithinStepWidth = (Math.random() * 32 - 16); 
-                let targetX = baseStepX + randomOffsetWithinStepWidth;
+                // Perfect mathematical distribution to pull them out into clear view on lower rows
+                let baseStepX = sideIdx * (116 + (stepLevel * 5));
+                let horizontalSpread = (Math.random() * 30 - 15);
+                let targetX = baseStepX + horizontalSpread;
                 
-                // Pushed slightly higher on Y-axis to prevent ankles embedding into the stair geometries
-                let targetY = -60 + (stepLevel * 4) + 4.2; 
-                let targetZ = (Math.random() * 100) - 50;
+                // Grounded safely on step surfaces with precise elevation padding
+                let targetY = -60 + (stepLevel * 4) + 4.8; 
+                
+                // Z-Depth positioning shifted forward to avoid sinking back behind structural blocks
+                let targetZ = (Math.random() * 90) - 45;
 
                 const humanContainer = new THREE.Group();
 
-                // Select individual cloth color variation
                 const jacketMat = new THREE.MeshStandardMaterial({
                     color: clothColors[Math.floor(Math.random() * clothColors.length)],
-                    roughness: 0.6,
-                    metalness: 0.1
+                    roughness: 0.3,
+                    metalness: 0.2
                 });
                 const pantsMat = new THREE.MeshStandardMaterial({
-                    color: Math.random() > 0.5 ? 0x111111 : 0x333333,
-                    roughness: 0.7
+                    color: Math.random() > 0.5 ? 0x0a0a0a : 0x222222,
+                    roughness: 0.6
                 });
 
-                // Randomize Gender Dimorphism (Male vs Female proportions)
                 let isFemale = Math.random() > 0.5;
-                let hipWidth = isFemale ? 0.32 : 0.25;
-                let shoulderWidth = isFemale ? 0.6 : 0.75;
-                let torsoHeight = isFemale ? 1.8 : 2.1;
+                let scaleModifier = isFemale ? 0.9 : 1.1;
+                humanContainer.scale.set(scaleModifier, scaleModifier, scaleModifier);
 
-                // Torso (Jacket/Shirt Mesh)
-                const torsoGeom = new THREE.CylinderGeometry(shoulderWidth * 0.5, hipWidth, torsoHeight, 8);
+                // Torso Assembly
                 const torso = new THREE.Mesh(torsoGeom, jacketMat);
-                torso.position.y = torsoHeight / 2;
+                torso.position.y = 1.7;
                 humanContainer.add(torso);
 
-                // Head
-                const headGeom = new THREE.SphereGeometry(0.42, 12, 12);
+                // Head Assembly
                 const head = new THREE.Mesh(headGeom, skinMaterial);
-                head.position.set(0, torsoHeight + 0.45, 0);
+                head.position.set(0, 3.9, 0);
                 humanContainer.add(head);
 
-                // Initialize Animation Behavior State: 0=Sitting, 1=Standing, 2=Walking
                 let naturalBehavior = Math.floor(Math.random() * 3);
 
-                // Limbs Setup (Arms and Legs Geometries)
-                const armGeom = new THREE.CylinderGeometry(0.12, 0.1, 1.2, 6);
-                const legGeom = new THREE.CylinderGeometry(0.16, 0.13, 1.4, 6);
-
+                // Arms Assembly
                 const leftArm = new THREE.Mesh(armGeom, jacketMat);
-                leftArm.position.set(-shoulderWidth * 0.6, torsoHeight * 0.75, 0);
+                leftArm.position.set(-1.2, 2.5, 0);
                 const rightArm = leftArm.clone();
-                rightArm.position.x = shoulderWidth * 0.6;
+                rightArm.position.x = 1.2;
                 humanContainer.add(leftArm, rightArm);
 
+                // Legs Assembly
                 const leftLeg = new THREE.Mesh(legGeom, pantsMat);
                 const rightLeg = leftLeg.clone();
 
                 if (naturalBehavior === 0) {
-                    // SITTING POSTURE (Bending thighs forward)
-                    torso.rotation.x = 0.12; 
-                    
-                    leftLeg.position.set(-hipWidth * 0.6, 0.2, 0.6);
+                    // Sitting state adjustments
+                    torso.rotation.x = 0.15; 
+                    leftLeg.position.set(-0.45, 0.5, 1.0);
                     leftLeg.rotation.x = Math.PI / 2;
-                    rightLeg.position.set(hipWidth * 0.6, 0.2, 0.6);
+                    rightLeg.position.set(0.45, 0.5, 1.0);
                     rightLeg.rotation.x = Math.PI / 2;
-                    
-                    leftArm.rotation.x = 0.5;
-                    rightArm.rotation.x = 0.5;
+                    leftArm.rotation.x = 0.4;
+                    rightArm.rotation.x = 0.4;
                 } else {
-                    // STANDING / WALKING POSTURES (Vertical extension)
-                    leftLeg.position.set(-hipWidth * 0.6, -0.1, 0);
-                    rightLeg.position.set(hipWidth * 0.6, -0.1, 0);
+                    // Standing and Walking base positions
+                    leftLeg.position.set(-0.45, 0.2, 0);
+                    rightLeg.position.set(0.45, 0.2, 0);
                 }
                 humanContainer.add(leftLeg, rightLeg);
 
-                // Position final composite asset into scene context
                 humanContainer.position.set(targetX, targetY, targetZ);
-                
-                // Orient every human mesh tracking forward looking straight at the launch pad center
                 humanContainer.lookAt(0, targetY, 0); 
 
-                // Track variables for engine render loops
                 audienceMeshArray.push({
                     mesh: humanContainer,
                     behavior: naturalBehavior,
@@ -418,8 +411,7 @@
                     leftArmRef: leftArm,
                     rightArmRef: rightArm,
                     leftLegRef: leftLeg,
-                    rightLegRef: rightLeg,
-                    torsoHeight: torsoHeight
+                    rightLegRef: rightLeg
                 });
 
                 audienceGroup.add(humanContainer);
@@ -502,46 +494,42 @@
                 fireParticles.geometry.attributes.position.needsUpdate = true;
             }
 
-            // Real-Time Clothed Human Animation System Loop
+            // High-Definition Character Animation Loop
             for(let i=0; i<audienceMeshArray.length; i++) {
                 let human = audienceMeshArray[i];
                 let seed = elapsedTicks * 2.5 + human.noiseSeed;
 
                 if (audienceState === "cheering") {
-                    // TRIGGER UNIVERSAL JUMPING & ROCKET CELEBRATION
-                    let jumpFreq = 18 + (human.noiseSeed % 10);
-                    let jumpHeight = Math.max(0, Math.sin(elapsedTicks * jumpFreq) * 6.0);
+                    let velocity = 18 + (human.noiseSeed % 8);
+                    let jumpHeight = Math.max(0, Math.sin(elapsedTicks * velocity) * 7.0);
                     human.mesh.position.y = human.homeY + jumpHeight;
                     
-                    // Throw arms entirely overhead into the sky celebrating ignition blastoff
-                    human.leftArmRef.rotation.x = -Math.PI + Math.sin(elapsedTicks * jumpFreq) * 0.5;
-                    human.rightArmRef.rotation.x = -Math.PI + Math.cos(elapsedTicks * jumpFreq) * 0.5;
+                    human.leftArmRef.rotation.x = -Math.PI + Math.sin(elapsedTicks * velocity) * 0.6;
+                    human.rightArmRef.rotation.x = -Math.PI + Math.cos(elapsedTicks * velocity) * 0.6;
                 } 
                 else {
-                    // INDIVIDUAL LIVE IDLE BEHAVIORS
                     if (human.behavior === 0) { 
-                        // SITTING MODE: Ambient breathing & arm resting adjustments
-                        human.mesh.position.y = human.homeY + Math.sin(seed) * 0.04;
-                        human.leftArmRef.rotation.x = 0.5 + Math.sin(seed * 0.5) * 0.06;
-                        human.rightArmRef.rotation.x = 0.5 + Math.cos(seed * 0.5) * 0.06;
+                        // Sitting Breathing Loop
+                        human.mesh.position.y = human.homeY + Math.sin(seed) * 0.06;
+                        human.leftArmRef.rotation.x = 0.4 + Math.sin(seed * 0.5) * 0.08;
+                        human.rightArmRef.rotation.x = 0.4 + Math.cos(seed * 0.5) * 0.08;
                     } 
                     else if (human.behavior === 1) { 
-                        // STANDING MODE: Looking left and right around stadium space
+                        // Standing & Looking Around Look Cycles
                         human.mesh.position.y = human.homeY;
-                        human.mesh.rotation.y = Math.sin(seed * 0.2) * 0.2; 
-                        human.leftArmRef.rotation.z = Math.sin(seed * 0.5) * 0.05 - 0.1;
-                        human.rightArmRef.rotation.z = -Math.sin(seed * 0.5) * 0.05 + 0.1;
+                        human.mesh.rotation.y = Math.sin(seed * 0.3) * 0.25; 
+                        human.leftArmRef.rotation.z = Math.sin(seed * 0.4) * 0.06 - 0.12;
+                        human.rightArmRef.rotation.z = -Math.sin(seed * 0.4) * 0.06 + 0.12;
                     } 
                     else if (human.behavior === 2) { 
-                        // WALKING MODE: Moving back and forth along stair platform row depths
-                        let walkDistance = Math.sin(elapsedTicks * 0.8 + human.noiseSeed) * 4.5;
-                        human.mesh.position.z = human.homeZ + walkDistance;
+                        // Row Walking Pacing Animation Cycles
+                        let walkStroll = Math.sin(elapsedTicks * 0.7 + human.noiseSeed) * 5.0;
+                        human.mesh.position.z = human.homeZ + walkStroll;
                         
-                        // Synchronous alternating stride cycles for dressed limbs
-                        human.leftLegRef.rotation.x = Math.sin(elapsedTicks * 4.2 + human.noiseSeed) * 0.45;
-                        human.rightLegRef.rotation.x = -Math.sin(elapsedTicks * 4.2 + human.noiseSeed) * 0.45;
-                        human.leftArmRef.rotation.x = -Math.sin(elapsedTicks * 4.2 + human.noiseSeed) * 0.35;
-                        human.rightArmRef.rotation.x = Math.sin(elapsedTicks * 4.2 + human.noiseSeed) * 0.35;
+                        human.leftLegRef.rotation.x = Math.sin(elapsedTicks * 3.8 + human.noiseSeed) * 0.5;
+                        human.rightLegRef.rotation.x = -Math.sin(elapsedTicks * 3.8 + human.noiseSeed) * 0.5;
+                        human.leftArmRef.rotation.x = -Math.sin(elapsedTicks * 3.8 + human.noiseSeed) * 0.4;
+                        human.rightArmRef.rotation.x = Math.sin(elapsedTicks * 3.8 + human.noiseSeed) * 0.4;
                     }
                 }
             }
