@@ -62,7 +62,6 @@
             filter: drop-shadow(0 0 25px var(--neon-glow));
         }
 
-        /* Premium Look Countdown UI Elements */
         .luxury-timer-node {
             position: relative;
             background: radial-gradient(circle at center, rgba(226, 192, 105, 0.08) 0%, rgba(0,0,0,0.4) 70%);
@@ -262,7 +261,6 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-            // Upgraded lighting engine to make human shapes clearly visible
             const ambient = new THREE.AmbientLight(0xffffff, 0.8); 
             scene.add(ambient);
 
@@ -270,7 +268,6 @@
             platformLight.position.set(0, 150, 100);
             scene.add(platformLight);
 
-            // Left and Right dedicated spotlights targeting the crowd steps for maximum visibility
             const leftStadiumLight = new THREE.SpotLight(0xffe599, 5, 250, Math.PI/3, 0.5, 1);
             leftStadiumLight.position.set(-150, 80, 50);
             scene.add(leftStadiumLight);
@@ -311,11 +308,10 @@
             }
             scene.add(stadiumGroup);
 
-            // PACKED STADIUM AUDIENCE GENERATION
+            // FULLY FILLED STADIUM AUDIENCE GENERATION
             audienceGroup = new THREE.Group();
-            const audienceCount = 950; 
+            const audienceCount = 1200; // Increased volume density to fill all structural regions completely
             
-            // Replaced translucent glass with mirror-finish reflective solid gold metal for clear definition
             const clearHumanMaterial = new THREE.MeshStandardMaterial({
                 color: 0xf3d27a,
                 metalness: 0.9,
@@ -330,10 +326,20 @@
 
             for(let i=0; i<audienceCount; i++) {
                 let sideIdx = Math.random() > 0.5 ? 1 : -1;
+                
+                // Distribute evenly across all 12 step levels from bottom (0) to top (11)
                 let stepLevel = Math.floor(Math.random() * 12);
                 
-                let targetX = sideIdx * (115 + (stepLevel * 5) + (Math.random() * 16 - 8));
+                // FIXED COORDINATE CALCULATIONS: Map X directly using the width offset step level 
+                // to push them out across the lower widening sections
+                let baseStepX = sideIdx * (115 + (stepLevel * 5));
+                let randomOffsetWithinStepWidth = (Math.random() * 36 - 18); // Wide horizontal spread per step row
+                let targetX = baseStepX + randomOffsetWithinStepWidth;
+                
+                // Fixed height targeting to snap onto the step plane
                 let targetY = -60 + (stepLevel * 4) + 3.4; 
+                
+                // Spread along the depth axis (front to back)
                 let targetZ = (Math.random() * 100) - 50;
 
                 const humanContainer = new THREE.Group();
@@ -469,7 +475,7 @@
                 fireParticles.geometry.attributes.position.needsUpdate = true;
             }
 
-            // High-definition animation processing loop loops through all limbs explicitly
+            // Real-Time Differentiated Individual Humans Animation Mechanical Engine Processing Loop
             for(let i=0; i<audienceMeshArray.length; i++) {
                 let human = audienceMeshArray[i];
                 let seed = elapsedTicks * 2.5 + human.noiseSeed;
@@ -497,7 +503,7 @@
                         human.rightArmRef.rotation.z = -Math.sin(seed) * 0.08 + 0.15;
                     } 
                     else if (human.behavior === 2) { 
-                        // CLEAR ROW WALKING MECHANICAL PACING
+                        // PACING BACK AND FORTH ON ASSIGNED STEP LEVEL ROW
                         let walkStroll = Math.sin(elapsedTicks * 0.9 + human.noiseSeed) * 4.0;
                         human.mesh.position.z = human.homeZ + walkStroll;
                         
@@ -556,6 +562,10 @@
             actionButton.style.display = 'inline-block';
             
             actionButton.addEventListener('click', activateKineticPropulsionBlastOff);
+        }
+
+        function activateKinativePropulsionBlastOff() {
+            // Handled via core launch execution thread down below
         }
 
         function activateKineticPropulsionBlastOff() {
