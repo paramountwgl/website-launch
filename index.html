@@ -3,285 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramount School | Digital Horizon Launch</title>
+    <title>Webiste-Launch🚀 | Paramount School</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Playfair+Display+SC:wght@700;900&family=Tenor+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script>
 
     <style>
         :root {
-            --brand-green: #004d26;
-            --brand-gold: #c7a13c;
-            --deep-dark: #000408;
-            --off-white: #fdfdfd;
+            --gold: #dfba6b;
         }
 
-        body {
+        body, html {
             margin: 0;
-            background: var(--deep-dark);
-            color: var(--off-white);
-            font-family: 'Tenor Sans', sans-serif;
-            overflow: hidden; /* Lock scroll during sequence */
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            user-select: none;
         }
 
-        .hero-font { font-family: 'Playfair Display', serif; }
-        .sc-font { font-family: 'Playfair Display SC', serif; }
+        /* Cinematic Visual Stage */
+        #launch-stage {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: url('launch-bg.jpg') no-repeat center center;
+            background-size: cover;
+            transition: transform 0.1s ease;
+        }
 
-        #three-canvas {
-            position: fixed;
+        /* Overlay to keep the image looking crisp and high-contrast */
+        .color-grade {
+            position: absolute;
             top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%);
             z-index: 1;
-        }
-
-        .content-overlay {
-            position: relative;
-            z-index: 2;
             pointer-events: none;
+        }
+
+        /* Interactive Control Container mapping above graphic borders */
+        .ui-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        /* 1. Countdown Box Overlay (Mapped exactly over the image clock board) */
+        .live-countdown-board {
+            position: absolute;
+            top: 16.5%; /* Precision alignment over the image board box */
+            right: 7.5%;
+            width: 38%;
+            height: 13%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+            pointer-events: none;
+        }
+
+        .clock-segment {
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255,255,255,0.6), 0 0 10px rgba(223,186,107,0.5);
+            font-family: monospace;
+            font-weight: 900;
+            font-size: 3.5vw;
+            line-height: 1;
+        }
+
+        /* 2. Hot-Zone Invisible Click Target Wrapper (Mapped over the gold button handle area) */
+        .button-target-zone {
+            position: absolute;
+            bottom: 3%;
+            right: 17%;
+            width: 30%;
+            height: 42%;
+            cursor: not-allowed; /* Shows locked state initially */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Glowing overlay that appears *only* when unlocked */
+        .button-glow-ring {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,215,0,0.4) 0%, transparent 70%);
             opacity: 0;
+            pointer-events: none;
         }
 
-        .content-overlay * {
-            pointer-events: auto;
+        /* System Notice Banner at bottom */
+        .status-strip {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.75);
+            border: 1px solid rgba(223,186,107,0.3);
+            padding: 10px 30px;
+            border-radius: 50px;
+            color: #ccc;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            z-index: 10;
+            pointer-events: none;
         }
 
-        /* Ultimate Button */
-        .ultimate-btn {
-            background: linear-gradient(135deg, var(--brand-gold), #e6c166, var(--brand-gold));
-            background-size: 200% auto;
-            color: var(--deep-dark);
-            box-shadow: 0 10px 40px rgba(199, 161, 60, 0.3);
-            display: none; /* Crucial: Hidden by default */
+        .status-strip i {
+            color: var(--gold);
         }
 
-        .ultimate-btn:hover {
-            animation: moveGradient 2s infinite linear;
-            box-shadow: 0 10px 60px rgba(199, 161, 60, 0.5);
-            transform: translateY(-5px);
+        /* 3. Screen Burn Flame Overlay on Launch */
+        #launch-firewash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 35% 65%, rgba(255,100,0,0.6) 0%, rgba(255,215,0,0.2) 50%, transparent 100%);
+            z-index: 4;
+            opacity: 0;
+            pointer-events: none;
         }
-
-        @keyframes moveGradient {
-            to { background-position: 200% center; }
-        }
-
-        .gold-border {
-            border: 1px solid rgba(199, 161, 60, 0.2);
-        }
-
-        .gold-text {
-            color: var(--brand-gold);
-        }
-
-        #countdown-container {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .lock-notice {
-            letter-spacing: 5px;
-            font-weight: bold;
-            color: rgba(255, 255, 255, 0.4);
-        }
-
     </style>
 </head>
 <body>
 
-    <canvas id="three-canvas"></canvas>
-
-    <div class="content-overlay h-screen flex flex-col justify-between p-12 text-center" id="overlay">
+    <div id="launch-stage">
+        <div class="color-grade"></div>
         
-        <header class="opacity-fade">
-            <h2 class="sc-font gold-text text-sm md:text-lg tracking-[0.6em] font-bold uppercase">Paramount School</h2>
-            <div class="sc-font text-5xl md:text-8xl tracking-tight leading-tight hero-font italic opacity-70">Warangal</div>
-        </header>
-
-        <main class="max-w-4xl mx-auto opacity-fade">
-            <h1 class="hero-font text-5xl md:text-9xl leading-none font-black opacity-90 tracking-tighter mb-10">THE DIGITAL <br> HORIZON AWAITS</h1>
-            <p class="max-w-lg mx-auto text-gray-400 font-light leading-relaxed mb-16 text-sm md:text-base">
-                An institution redefining intelligence. Prepare for the ultimate platform reveal on **May 20, 2026**.
-            </p>
-
-            <div id="countdown-container" class="py-12 px-6 flex gap-6 md:gap-14 justify-center gold-border backdrop-blur-md bg-white/5 rounded-2xl mb-16">
-                <div class="w-20 md:w-32">
-                    <span id="days" class="hero-font block text-6xl md:text-9xl font-black">00</span>
-                    <small class="sc-font text-[10px] uppercase tracking-widest text-gold opacity-60">Days</small>
-                </div>
-                <div class="w-20 md:w-32">
-                    <span id="hours" class="hero-font block text-6xl md:text-9xl font-black">00</span>
-                    <small class="sc-font text-[10px] uppercase tracking-widest text-gold opacity-60">Hours</small>
-                </div>
-                <div class="w-20 md:w-32">
-                    <span id="minutes" class="hero-font block text-6xl md:text-9xl font-black">00</span>
-                    <small class="sc-font text-[10px] uppercase tracking-widest text-gold opacity-60">Mins</small>
-                </div>
-                <div class="w-20 md:w-32">
-                    <span id="seconds" class="hero-font block text-6xl md:text-9xl font-black text-gold">00</span>
-                    <small class="sc-font text-[10px] uppercase tracking-widest text-white/30">Secs</small>
-                </div>
+        <div class="ui-container">
+            <div class="live-countdown-board">
+                <div class="clock-segment"><span id="days-val">00</span></div>
+                <div class="clock-segment"><span id="hours-val">00</span></div>
+                <div class="clock-segment"><span id="minutes-val">00</span></div>
+                <div class="clock-segment"><span id="seconds-val">00</span></div>
             </div>
 
-            <div id="action-area" class="h-20 flex justify-center items-center">
-                <p id="countdown-lock" class="sc-font lock-notice"><i class="fas fa-lock mr-2"></i> Initializing System</p>
-                
-                <button id="launch-trigger" class="ultimate-btn px-16 py-6 rounded-full font-extrabold uppercase tracking-widest text-sm flex items-center gap-3">
-                    <i class="fas fa-fire mr-2"></i> Launch Digital Future
-                </button>
+            <div id="activation-target" class="button-target-zone">
+                <div id="glow-emitter" class="button-glow-ring"></div>
             </div>
-        </main>
+        </div>
+    </div>
 
-        <footer class="text-xs text-white/30 sc-font tracking-widest uppercase py-4 opacity-fade">
-            Warangal, Telangana • Paramount Educational Society
-        </footer>
+    <div id="launch-firewash"></div>
 
+    <div id="status-alert" class="status-strip">
+        <i class="fas fa-lock mr-2"></i> Ignition Sequence Safe • Core Systems Encrypted
     </div>
 
     <script>
-        let scene, camera, renderer, rocketModel, starSphere;
-        const loader = new THREE.GLTLoader();
-
-        function init3D() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
-            camera.position.set(0, 50, 250);
-
-            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-
-            // -- Premium Lighting --
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-            scene.add(ambientLight);
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(50, 100, 50);
-            scene.add(directionalLight);
-
-            // -- Load 3D Rocket Model (Using a placeholder GLTF) --
-            loader.load('https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/models/gltf/RocketShip.glb', (gltf) => {
-                rocketModel = gltf.scene;
-                rocketModel.scale.set(10, 10, 10); // Adjust size as needed
-                rocketModel.position.y = -50; // Position it below the content initially
-                rocketModel.rotation.x = Math.PI / 2; // Orient correctly
-                scene.add(rocketModel);
-                
-                // Once model is loaded, start intro animations
-                startAnimations();
-            });
-
-            // -- Subdued Star Field --
-            const starGeometry = new THREE.BufferGeometry();
-            const stars = [];
-            for ( let i = 0; i < 6000; i ++ ) {
-                stars.push( (Math.random() - 0.5) * 800, (Math.random() - 0.5) * 800, (Math.random() - 0.5) * 800 );
-            }
-            starGeometry.setAttribute( 'position', new THREE.Float32BufferAttribute( stars, 3 ) );
-            const starMaterial = new THREE.PointsMaterial({ size: 0.5, color: 0xffffff, transparent: true, opacity: 0.3 });
-            starSphere = new THREE.Points(starGeometry, starMaterial);
-            scene.add(starSphere);
-
-            animate();
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            if (rocketModel) {
-                // Subtle rotation pre-launch
-                rocketModel.rotation.y += 0.001; 
-            }
-            starSphere.rotation.x += 0.0005;
-            renderer.render(scene, camera);
-        }
-
-        function startAnimations() {
-            const tl = gsap.timeline();
-            tl.to("#overlay", { opacity: 1, duration: 2, ease: "power2.out" })
-              .from("#overlay *", { y: 30, stagger: 0.1, duration: 1, opacity: 0, ease: "power2.out" }, "-=1.5");
-        }
-
-        // --- Countdown Update Loop (Target: May 20, 2026) ---
-        const launchDate = new Date("May 20, 2026 09:00:00").getTime();
+        // Set your target launch day right here
+        const targetLaunchDate = new Date("May 20, 2026 09:00:00").getTime();
         
-        const interval = setInterval(() => {
-            const now = new Date().getTime();
-            const gap = launchDate - now;
+        let systemsDecrypted = false;
+        const targetZone = document.getElementById('activation-target');
+        const alertBanner = document.getElementById('status-alert');
 
-            const second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24;
+        // --- COUNTDOWN SCHEDULER ENGINE ---
+        const syncTimerLoop = setInterval(() => {
+            const currentTime = new Date().getTime();
+            const timeDifference = targetLaunchDate - currentTime;
 
-            if (gap <= 0) {
-                clearInterval(interval);
-                // Zero out the display
-                document.querySelectorAll("#countdown-container span").forEach(s => s.innerText = "00");
-                activateLaunchSequence();
+            // Calculations for display parsing
+            const secUnit = 1000, minUnit = secUnit * 60, hrUnit = minUnit * 60, dayUnit = hrUnit * 24;
+
+            if (timeDifference <= 0) {
+                clearInterval(syncTimerLoop);
+                
+                // Zero everything explicitly
+                document.getElementById('days-val').innerText = "00";
+                document.getElementById('hours-val').innerText = "00";
+                document.getElementById('minutes-val').innerText = "00";
+                document.getElementById('seconds-val').innerText = "00";
+                
+                authorizeSystemUnlock();
                 return;
             }
 
-            document.getElementById('days').innerText = String(Math.floor(gap / day)).padStart(2, '0');
-            document.getElementById('hours').innerText = String(Math.floor((gap % day) / hour)).padStart(2, '0');
-            document.getElementById('minutes').innerText = String(Math.floor((gap % hour) / minute)).padStart(2, '0');
-            document.getElementById('seconds').innerText = String(Math.floor((gap % minute) / second)).padStart(2, '0');
+            document.getElementById('days-val').innerText = String(Math.floor(timeDifference / dayUnit)).padStart(2, '0');
+            document.getElementById('hours-val').innerText = String(Math.floor((timeDifference % dayUnit) / hrUnit)).padStart(2, '0');
+            document.getElementById('minutes-val').innerText = String(Math.floor((timeDifference % hrUnit) / minUnit)).padStart(2, '0');
+            document.getElementById('seconds-val').innerText = String(Math.floor((timeDifference % minUnit) / secUnit)).padStart(2, '0');
         }, 1000);
 
-        // --- PHASE 1: Activate the Trigger Button ---
-        function activateLaunchSequence() {
-            // Hide "Locked" text
-            gsap.to("#countdown-lock", { duration: 0.5, opacity: 0, y: -10, onComplete: () => {
-                document.getElementById('countdown-lock').style.display = 'none';
-            }});
-
-            // Reveal "Launch Digital Future" button
-            const triggerBtn = document.getElementById('launch-trigger');
-            triggerBtn.style.display = 'flex';
-            gsap.fromTo("#launch-trigger", { scale: 0.5, opacity: 0 }, { duration: 1.5, scale: 1, opacity: 1, ease: "elastic.out(1, 0.5)" });
+        // --- AUTHORIZE ACTION (Timer hits 0) ---
+        function authorizeSystemUnlock() {
+            systemsDecrypted = true;
+            targetZone.style.cursor = 'pointer'; // Turn pointer switch style active
             
-            // Add click listener
-            triggerBtn.addEventListener('click', startRocketLaunch);
+            // Pulse a gold indicator right over the image button handle area
+            gsap.to("#glow-emitter", { opacity: 1, duration: 1.5, repeat: -1, yoyo: true });
+            
+            alertBanner.innerHTML = `<i class="fas fa-unlock-alt mr-2 animate-pulse"></i> Systems Active • Click Button to Launch Portal`;
+            
+            // Wire interaction click logic handler
+            targetZone.addEventListener('click', engagePortalBlastOff);
         }
 
-        // --- PHASE 2: The actual Rocket Launch sequence ---
-        function startRocketLaunch() {
-            // 1. Hide the trigger button permanently
-            gsap.to("#launch-trigger", { duration: 0.5, opacity: 0, scale: 0.8, onComplete: () => {
-                document.getElementById('launch-trigger').style.display = 'none';
-            }});
+        // --- CINEMATIC BLAST OFF TRANSITION SCENE ---
+        function engagePortalBlastOff() {
+            if (!systemsDecrypted) return;
+            systemsDecrypted = false; // Guard duplicate triggers
+            
+            targetZone.style.cursor = 'default';
+            alertBanner.innerHTML = `<i class="fas fa-satellite mr-2 animate-spin"></i> Launching Into The Future...`;
 
-            const launchTL = gsap.timeline();
+            // 1. Instantly swell the fire/plasma glow element over the rocket exhaust graphics
+            gsap.to("#launch-firewash", { opacity: 1, duration: 1.2, ease: "power2.out" });
 
-            // 2. Focus camera on Rocket (Zoom in)
-            launchTL.to(camera.position, { z: 150, y: 30, duration: 2, ease: "power3.inOut" });
+            // 2. Tectonic Core Shake Effect (Vibrates the frame background wrapper)
+            const shakeTimeline = gsap.timeline();
+            shakeTimeline.to("#launch-stage", { duration: 0.05, x: "+=12", yoyo: true, repeat: 25 })
+                         .to("#launch-stage", { duration: 0.05, y: "+=8", yoyo: true, repeat: 25 }, 0);
 
-            // 3. Shake the scene (GSAP random vibration)
-            launchTL.to("#three-canvas", { duration: 0.1, x: "+=5", yoyo: true, repeat: 10 }, "-=1");
+            // 3. Vertical Propulsion Lift Upward (Rocket lifts off, screen drops down)
+            gsap.to("#launch-stage", { 
+                y: "120%", 
+                scale: 0.95,
+                duration: 3.5, 
+                delay: 1.5,
+                ease: "power4.in",
+                onComplete: () => {
+                    // 4. Force global destination router path transfer redirect
+                    window.location.href = "https://paramountschooledu.in/";
+                }
+            });
 
-            // 4. Fire/Smoke effect (Simplified with lighting color shift)
-            if (rocketModel) {
-                 scene.add(new THREE.PointLight(0xffaa00, 2, 100).position.set(0, -60, 0)); // Intense engine light
-                 scene.fog = new THREE.FogExp2( 0x111111, 0.005 ); // Add 'smoke'
-            }
-
-            // 5. Rocket Ascension (Launch!)
-            launchTL.to(rocketModel.position, { y: 300, duration: 4, ease: "power4.in" }, "+=0.5");
-
-            // 6. Fade out the whole sequence
-            launchTL.to("body", { backgroundColor: "#000000", opacity: 0, duration: 1.5, onComplete: () => {
-                // 7. FINALLY REDIRECT to the actual portal
-                window.location.href = "https://paramountschooledu.in/";
-            }}, "+=1");
+            // Fade body tone gracefully into void space background setting
+            gsap.to("body", { backgroundColor: "#020813", duration: 4, delay: 1 });
         }
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // Initialize 3D on load
-        init3D();
     </script>
 </body>
 </html>
