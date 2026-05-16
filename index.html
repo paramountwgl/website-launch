@@ -18,7 +18,7 @@
 
     html, body {
       overflow-x: hidden;
-      background-color: #030712; /* Deep space dark base */
+      background-color: #030712;
       color: white;
       min-height: 100vh;
       position: relative;
@@ -71,7 +71,6 @@
       animation-delay: var(--delay);
     }
 
-    /* 3D Flight depth perspective warp space loop */
     @keyframes flyOutwards {
       0% {
         transform: translate(-50%, -50%) translate3d(var(--tx), var(--ty), 0) scale(0.1);
@@ -90,7 +89,7 @@
       }
     }
 
-    /* Cosmic Orbital Rings to match Solar System aesthetic */
+    /* Cosmic Orbital Rings */
     .orbit-ring {
       position: fixed;
       top: 50%;
@@ -319,70 +318,145 @@
       cursor: not-allowed;
     }
 
-    /* 3D Dynamic Rocket Core Infrastructure */
+    /* ========================================================
+       PROFESSIONAL HIGH-FIDELITY VECTOR CSS ROCKET DESIGN
+       ======================================================== */
     .rocket-container {
       position: fixed;
-      bottom: 40px;
+      bottom: 60px;
       left: 8%;
       display: flex;
       flex-direction: column;
       align-items: center;
       z-index: 10;
       pointer-events: none;
+      transform: rotate(15deg); /* Slight space tilt angle */
+      transition: transform 0.5s ease-in;
     }
 
-    .rocket-body {
-      font-size: 90px;
-      line-height: 1;
-      filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
+    .rocket-model {
+      position: relative;
+      width: 50px;
+      height: 110px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .rocket-fire {
-      width: 16px;
-      height: 0px;
-      background: linear-gradient(to bottom, #ffea00, #ff5100, transparent);
+    /* Nose Cone curve structure */
+    .rocket-nose {
+      width: 32px;
+      height: 35px;
+      background: linear-gradient(90deg, #ef4444 0%, #b91c1c 100%);
+      border-top-left-radius: 100% 140%;
+      border-top-right-radius: 100% 140%;
+      z-index: 2;
+    }
+
+    /* Fuselage cylinder module */
+    .rocket-body-core {
+      width: 32px;
+      height: 60px;
+      background: linear-gradient(90deg, #f3f4f6 0%, #d1d5db 50%, #9ca3af 100%);
+      position: relative;
+      z-index: 1;
+      border-bottom: 3px solid #4b5563;
+    }
+
+    /* Portal window node structure */
+    .rocket-window {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 14px;
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      border: 2px solid #6b7280;
       border-radius: 50%;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* Structural fin matrices */
+    .rocket-fin {
+      position: absolute;
+      bottom: -4px;
+      width: 16px;
+      height: 32px;
+      background: linear-gradient(90deg, #ef4444 0%, #b91c1c 100%);
+      z-index: 0;
+    }
+    .fin-left {
+      left: -14px;
+      border-top-left-radius: 100% 20%;
+      border-bottom-left-radius: 20%;
+      transform: skewY(-15deg);
+    }
+    .fin-right {
+      right: -14px;
+      border-top-right-radius: 100% 20%;
+      border-bottom-right-radius: 20%;
+      transform: skewY(15deg);
+    }
+
+    /* Core exhaust nozzle port interface */
+    .rocket-engine-nozzle {
+      width: 18px;
+      height: 8px;
+      background: #374151;
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      z-index: 1;
+    }
+
+    /* Dynamic hyper flame rendering */
+    .rocket-fire {
+      width: 14px;
+      height: 0px;
+      background: linear-gradient(to bottom, #fffb00, #ff5100, transparent);
+      border-bottom-left-radius: 50% 100%;
+      border-bottom-right-radius: 50% 100%;
       opacity: 0;
       transition: height 0.4s, opacity 0.4s;
-      box-shadow: 0 0 30px #ff5100, 0 0 15px #ffea00;
-      animation: jetStream 0.15s infinite alternate;
+      box-shadow: 0 0 25px #ff5100, 0 0 10px #ffb700;
+      animation: jetStreamEngine 0.1s infinite alternate;
     }
 
-    @keyframes jetStream {
-      from { transform: scaleX(0.9) translateY(0); }
-      to { transform: scaleX(1.1) translateY(-3px); }
+    @keyframes jetStreamEngine {
+      from { transform: scaleX(0.85) translateY(0); }
+      to { transform: scaleX(1.15) translateY(-2px); }
     }
 
     .rocket-container.ignited .rocket-fire {
-      height: 70px;
+      height: 65px;
       opacity: 1;
     }
 
     .rocket-container.launched {
-      animation: blastOffToSpace 6s cubic-bezier(0.42, 0, 1, 1) forwards;
+      animation: blastOffToSpace 6s cubic-bezier(0.45, 0, 1, 1) forwards;
     }
 
     @keyframes blastOffToSpace {
-      0% { transform: translateY(0) scale(1); }
-      15% { transform: translateY(15px) scale(1); }
-      100% { transform: translateY(-130vh) scale(0.3); opacity: 0; }
+      0% { transform: rotate(15deg) translateY(0) scale(1); }
+      12% { transform: rotate(15deg) translateY(12px) scale(1); } /* Ignition recoil stomp rumble */
+      100% { transform: rotate(15deg) translateY(-140vh) scale(0.2); opacity: 0; }
     }
 
     .smoke-layer {
       position: absolute;
       width: 10px;
       height: 10px;
-      background: rgba(200, 200, 250, 0.3);
+      background: rgba(220, 225, 240, 0.35);
       border-radius: 50%;
-      filter: blur(8px);
+      filter: blur(6px);
       pointer-events: none;
       z-index: 9;
-      animation: dissipate 1.5s ease-out forwards;
+      animation: dissipate 1.4s ease-out forwards;
     }
 
     @keyframes dissipate {
       from { transform: scale(1) translateY(0); opacity: 0.5; }
-      to { transform: scale(6) translateY(50px); opacity: 0; }
+      to { transform: scale(7) translateY(40px); opacity: 0; }
     }
 
     /* Content Sections Styling */
@@ -489,7 +563,7 @@
     @media(max-width: 992px) {
       .school-name { font-size: 2.4rem; white-space: normal; }
       .about-grid { grid-template-columns: 1fr; text-align: center; }
-      .orbit-ring { display: none; } /* Hide heavy structural assets on complex mid layouts */
+      .orbit-ring { display: none; }
     }
     @media(max-width: 768px) {
       .hero-container { padding: 50px 15px; }
@@ -505,8 +579,7 @@
       .launch-button, .locked-button { margin-top: 30px; padding: 15px 30px; font-size: 0.9rem; }
       .preview-section { padding: 30px 20px; margin-bottom: 40px; }
       .section-title { font-size: 1.6rem; }
-      .rocket-container { left: 4%; bottom: 20px; }
-      .rocket-body { font-size: 60px; }
+      .rocket-container { left: 4%; bottom: 40px; transform: scale(0.7) rotate(15deg); }
       .cosmic-body { display: none; }
     }
     @media (max-width: 360px) {
@@ -528,7 +601,15 @@
   <div class="starfield" id="starfield"></div>
 
   <div class="rocket-container" id="rocketVehicle">
-    <div class="rocket-body">🚀</div>
+    <div class="rocket-model">
+      <div class="rocket-nose"></div>
+      <div class="rocket-body-core">
+        <div class="rocket-window"></div>
+      </div>
+      <div class="rocket-fin fin-left"></div>
+      <div class="rocket-fin fin-right"></div>
+      <div class="rocket-engine-nozzle"></div>
+    </div>
     <div class="rocket-fire"></div>
   </div>
 
@@ -680,12 +761,13 @@
         smoke.classList.add('smoke-layer');
         
         const rect = rocket.getBoundingClientRect();
+        // Calculates perfect placement relative to the bottom center engine position
         smoke.style.left = (rect.left + rect.width / 2 - 5) + 'px';
-        smoke.style.top = (rect.top + rect.height - 15) + 'px';
+        smoke.style.top = (rect.top + rect.height - 5) + 'px';
         
         document.body.appendChild(smoke);
         
-        setTimeout(() => { smoke.remove(); }, 1500);
+        setTimeout(() => { smoke.remove(); }, 1400);
       }, 50);
 
       setTimeout(() => {
@@ -699,7 +781,7 @@
     // =============================
     // COUNTDOWN INTERFACE RUNTIME
     // =============================
-    const launchDate = new Date('May 16, 2026 17:52:00').getTime();
+    const launchDate = new Date('May 30, 2026 14:00:00').getTime();
 
     const timer = setInterval(function() {
       const now = new Date().getTime();
