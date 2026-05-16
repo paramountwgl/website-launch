@@ -15,21 +15,24 @@
       font-family: 'Poppins', sans-serif;
     }
 
-  body {
-  overflow-x: hidden;
-  background: #000;
-  color: white;
-  min-height: 100vh;
-  position: relative;
-  
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  /* Hide scrollbar for IE, Edge and Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
+    body {
+      overflow-x: hidden;
+      background: #000;
+      color: white;
+      min-height: 100vh;
+      position: relative;
+      
+      /* Hide scrollbar for Firefox */
+      scrollbar-width: none;
+      /* Hide scrollbar for IE and Edge */
+      -ms-overflow-style: none;
+    }
+
+    /* Hide scrollbar for Chrome, Safari, and Opera (Separate rule ensures compatibility) */
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
     .background {
       position: fixed;
       top: 0;
@@ -128,10 +131,10 @@
     }
 
     .school-name {
-      font-size: 3.2rem; /* Adjusted for single-line presentation */
+      font-size: 3.2rem;
       font-weight: 800;
       line-height: 1.2;
-      white-space: nowrap; /* Forces text onto one line */
+      white-space: nowrap;
       background: linear-gradient(to right, #ffffff, #93c5fd, #d8b4fe);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -334,7 +337,7 @@
 
     @media(max-width: 768px) {
       .school-name {
-        font-size: 4.8vw; /* Uses viewport width to stay flawlessly in one line on small mobile screens */
+        font-size: 4.8vw;
         letter-spacing: 0.5px;
       }
 
@@ -379,7 +382,6 @@
 
   <div class="rocket">🚀</div>
 
-  <!-- Hero & Timer Section -->
   <div class="hero-container">
     <div class="logo-box">
       <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg" alt="School Logo">
@@ -430,10 +432,8 @@
   </div>
 
 
-  <!-- School Preview Sections Content -->
   <main class="main-content">
 
-    <!-- About Section -->
     <section class="preview-section glass-card">
       <h2 class="section-title">Shaping Tomorrow's Leaders</h2>
       <div class="about-grid">
@@ -448,7 +448,6 @@
       </div>
     </section>
 
-    <!-- Features / Highlights Section -->
     <section class="preview-section">
       <h2 class="section-title">Why Paramount School?</h2>
       <div class="features-grid">
