@@ -5,483 +5,384 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PARAMOUNT ENGLISH MEDIUM HIGH SCHOOL</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display+SC:wght@700;900&family=Tenor+Sans&family=Urbanist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* ==========================================================================
-       CORE RESET & SCROLLBAR CONFIGURATION (Clean Fullscreen View)
-       ========================================================================== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
     }
 
-    html, body {
-      background-color: #000206;
-      color: #fdfdfd;
-      font-family: 'Urbanist', sans-serif;
-      width: 100%;
-      overflow-x: hidden;
-      /* Hide scrollbar tracks completely */
-      -ms-overflow-style: none;  
-      scrollbar-width: none;  
+    body {
+      overflow: hidden;
+      background: #000;
+      color: white;
+      height: 100vh;
+      position: relative;
     }
 
-    html::-webkit-scrollbar, body::-webkit-scrollbar {
-      display: none; 
-    }
-
-    .hero-font { font-family: 'Playfair Display', serif; }
-    .sc-font { font-family: 'Playfair Display SC', serif; }
-
-    /* ==========================================================================
-       PREMIUM BACKGROUND SHARDS
-       ========================================================================== */
-    .nebula-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
+    .background {
+      position: absolute;
       width: 100%;
       height: 100%;
       background:
-        radial-gradient(circle at 15% 20%, rgba(226, 192, 105, 0.08), transparent 45%),
-        radial-gradient(circle at 85% 80%, rgba(184, 134, 11, 0.06), transparent 50%),
-        linear-gradient(180deg, #000206 0%, #000511 50%, #000206 100%);
+        radial-gradient(circle at top left, rgba(0,123,255,0.35), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(140,0,255,0.35), transparent 30%),
+        linear-gradient(135deg, #020617, #000000, #0f172a);
       z-index: -3;
     }
 
     .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
+      position: absolute;
       width: 100%;
       height: 100%;
       overflow: hidden;
       z-index: -2;
-      pointer-events: none;
     }
 
     .particle {
       position: absolute;
-      width: 2px;
-      height: 2px;
-      background: rgba(226, 192, 105, 0.4);
+      width: 3px;
+      height: 3px;
+      background: rgba(255,255,255,0.8);
       border-radius: 50%;
-      animation: ambientFloat 12s linear infinite;
+      animation: float 10s linear infinite;
     }
 
-    @keyframes ambientFloat {
-      from { transform: translateY(105vh) scale(0.5); opacity: 0; }
-      30% { opacity: 0.8; }
-      90% { opacity: 0.4; }
-      to { transform: translateY(-5vh) scale(1.2); opacity: 0; }
+    @keyframes float {
+      from {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-10vh) scale(1);
+        opacity: 0;
+      }
     }
 
-    .premium-glass {
-      border: 1px solid rgba(226, 192, 105, 0.15);
-      background: linear-gradient(135deg, rgba(2, 6, 12, 0.7) 0%, rgba(0, 2, 6, 0.4) 100%);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
-    }
-
-    .gold-gradient-text {
-      background: linear-gradient(135deg, #ffffff 10%, #e2c069 60%, #b8860b 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    /* ==========================================================================
-       HERO WRAPPER SECTION
-       ========================================================================== */
-    .hero-section {
-      min-height: 100vh;
+    .container {
+      height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 60px 20px;
+      padding: 20px;
       position: relative;
+      z-index: 5;
     }
 
-    .logo-glow-ring {
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      border: 2px solid #e2c069;
-      background: rgba(0,0,0,0.6);
-      box-shadow: 0 0 40px rgba(226, 192, 105, 0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 25px;
-    }
-
-    .school-title {
-      font-size: 3.8rem;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      margin-bottom: 20px;
-    }
-
-    .school-location {
-      font-size: 1.8rem;
-      letter-spacing: 0.6em;
-      color: #ffffff;
-      opacity: 0.9;
-      text-transform: uppercase;
-      margin-top: 5px;
-      font-weight: 300;
-    }
-
-    .hero-summary {
-      font-size: 1.25rem;
-      color: #94a3b8;
-      max-width: 800px;
-      line-height: 1.8;
-      font-weight: 300;
-      margin: 25px auto 45px;
-    }
-
-    /* ==========================================================================
-       PREMIUM LOOK COUNTDOWN MODULE
-       ========================================================================== */
-    .countdown-wrapper {
-      display: flex;
-      gap: 30px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 40px;
-    }
-
-    .luxury-timer-box {
-      position: relative;
+    .logo-box {
       width: 140px;
       height: 140px;
       border-radius: 50%;
-      background: radial-gradient(circle at center, rgba(226, 192, 105, 0.06) 0%, rgba(0,2,6,0.6) 80%);
-      border: 1px solid rgba(226, 192, 105, 0.2);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 20px rgba(226, 192, 105, 0.05);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+      box-shadow: 0 0 50px rgba(255,255,255,0.1);
+      animation: pulse 3s infinite;
+    }
+
+    .logo-box img {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .school-name {
+      font-size: 4rem;
+      font-weight: 800;
+      line-height: 1.1;
+      background: linear-gradient(to right, #ffffff, #93c5fd, #d8b4fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(255,255,255,0.1);
+      margin-bottom: 20px;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: #d1d5db;
+      max-width: 900px;
+      line-height: 1.7;
+      margin-bottom: 60px;
+    }
+
+    .countdown {
+      display: flex;
+      gap: 25px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .time-box {
+      width: 160px;
+      height: 170px;
+      border-radius: 30px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(20px);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(10px);
-      transition: all 0.5s ease;
+      box-shadow: 0 0 40px rgba(255,255,255,0.08);
+      transition: 0.4s ease;
     }
 
-    .luxury-timer-box::after {
-      content: '';
-      position: absolute;
-      inset: -5px;
-      border-radius: 50%;
-      border: 1px dashed rgba(226, 192, 105, 0.15);
-      pointer-events: none;
+    .time-box:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 0 60px rgba(147,197,253,0.3);
     }
 
-    .time-digits {
-      font-size: 3.2rem;
-      font-weight: 700;
-      color: #ffffff;
-      line-height: 1;
+    .time {
+      font-size: 4rem;
+      font-weight: 800;
     }
 
-    .time-label {
-      font-size: 0.75rem;
+    .label {
+      margin-top: 10px;
       text-transform: uppercase;
-      letter-spacing: 3px;
-      color: #e2c069;
-      font-weight: 600;
-      margin-top: 4px;
-    }
-
-    .launch-timestamp-notice {
-      font-size: 0.95rem;
-      letter-spacing: 5px;
-      color: #94a3b8;
-      text-transform: uppercase;
-      margin-bottom: 25px;
-      font-weight: 500;
-    }
-
-    /* ==========================================================================
-       SECURE TIMED ACTION LINK ELEMENTS
-       ========================================================================== */
-    .gated-action-wrapper {
-      min-height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .premium-lock-banner {
-      background: rgba(226, 192, 105, 0.03);
-      border: 1px solid rgba(226, 192, 105, 0.15);
       letter-spacing: 4px;
-      font-size: 0.85rem;
-      padding: 18px 45px;
-      border-radius: 100px;
-      text-transform: uppercase;
-      font-weight: 700;
-      color: #cbd5e1;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      display: block;
-    }
-
-    .premium-launch-cta {
-      background: linear-gradient(135deg, #b8860b, #e2c069, #ffffff, #e2c069);
-      background-size: 300% auto;
-      color: #000000;
-      padding: 22px 60px;
-      border-radius: 100px;
       font-size: 0.9rem;
-      font-weight: 900;
-      letter-spacing: 5px;
-      text-transform: uppercase;
-      text-decoration: none;
-      box-shadow: 0 0 50px rgba(226, 192, 105, 0.4);
-      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-      display: none; /* Completely hidden from view initially */
+      color: #cbd5e1;
     }
 
-    .premium-launch-cta:hover {
-      background-position: right center;
-      box-shadow: 0 0 70px rgba(226, 192, 105, 0.7);
-      transform: scale(1.04) translateY(-2px);
-    }
-
-    /* ==========================================================================
-       INSTITUTIONAL PORTFOLIO SECTIONS
-       ========================================================================== */
-    .institutional-showcase {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 100px 20px 140px;
-    }
-
-    .section-header-block {
-      text-align: center;
-      margin-bottom: 70px;
-    }
-
-    .section-tagline {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 5px;
-      color: #e2c069;
-      font-weight: 700;
-      margin-bottom: 12px;
-      display: block;
-    }
-
-    .section-main-title {
-      font-size: 2.6rem;
-      font-weight: 400;
-      color: #ffffff;
-    }
-
-    .matrix-ecosystem-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 30px;
-    }
-
-    .ecosystem-card {
-      padding: 45px;
-      border-radius: 24px;
-      transition: all 0.4s ease;
-    }
-
-    .ecosystem-card:hover {
-      border-color: rgba(226, 192, 105, 0.3);
-      transform: translateY(-5px);
-    }
-
-    .card-icon-container {
-      width: 60px;
-      height: 60px;
-      border-radius: 16px;
-      background: rgba(226, 192, 105, 0.1);
-      border: 1px solid rgba(226, 192, 105, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 25px;
-    }
-
-    .card-icon-container i {
-      font-size: 1.5rem;
-      color: #e2c069;
-    }
-
-    .card-title {
-      font-size: 1.6rem;
-      font-weight: 500;
-      color: #ffffff;
-      margin-bottom: 15px;
-    }
-
-    .card-body-text {
+    .launch-text {
+      margin-top: 50px;
       color: #94a3b8;
-      font-size: 1.05rem;
-      line-height: 1.7;
-      font-weight: 300;
+      letter-spacing: 6px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
     }
 
-    @media (max-width: 968px) {
-      .matrix-ecosystem-grid { grid-template-columns: 1fr; }
-      .school-title { font-size: 2.6rem; }
-      .school-location { font-size: 1.3rem; letter-spacing: 0.4em; }
-      .luxury-timer-box { width: 110px; height: 110px; }
-      .time-digits { font-size: 2.4rem; }
+    .launch-button {
+      margin-top: 45px;
+      padding: 22px 50px;
+      border-radius: 100px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: 0.4s ease;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+      color: white;
+      box-shadow: 0 0 60px rgba(168,85,247,0.6);
+      display: none;
+      text-decoration: none;
+    }
+
+    .launch-button:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 80px rgba(236,72,153,0.8);
+    }
+
+    .locked-button {
+      margin-top: 45px;
+      padding: 22px 50px;
+      border-radius: 100px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: #9ca3af;
+      backdrop-filter: blur(15px);
+      cursor: not-allowed;
+    }
+
+    .rocket {
+      position: absolute;
+      bottom: -200px;
+      font-size: 100px;
+      animation: rocketLaunch 8s linear infinite;
+      opacity: 0.15;
+      z-index: -1;
+    }
+
+    @keyframes rocketLaunch {
+      0% {
+        transform: translateY(0) translateX(0) rotate(-20deg);
+      }
+      100% {
+        transform: translateY(-120vh) translateX(50vw) rotate(20deg);
+      }
+    }
+
+    @media(max-width: 768px) {
+      body {
+        overflow-y: auto;
+      }
+
+      .school-name {
+        font-size: 2.2rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+
+      .time-box {
+        width: 120px;
+        height: 130px;
+      }
+
+      .time {
+        font-size: 2.8rem;
+      }
+
+      .label {
+        font-size: 0.7rem;
+      }
+
+      .launch-button,
+      .locked-button {
+        padding: 18px 35px;
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="nebula-bg"></div>
-  <div class="particles" id="ambientParticles"></div>
+  <div class="background"></div>
+  <div class="particles" id="particles"></div>
 
-  <div class="container-scroller">
+  <div class="rocket">🚀</div>
 
-    <section class="hero-section">
-      
-      <div class="logo-glow-ring">
-        <i class="fas fa-graduation-cap text-[#e2c069] text-4xl"></i>
+  <div class="container">
+
+    <div class="logo-box">
+      <!-- Replace logo URL with your school logo -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg" alt="School Logo">
+    </div>
+
+    <h1 class="school-name">
+      PARAMOUNT ENGLISH <br>
+      MEDIUM HIGH SCHOOL
+    </h1>
+
+    <p class="subtitle">
+      The Future Of Smart Education Is About To Begin.<br>
+      Experience A New Digital Journey For Parents, Students & Teachers.
+    </p>
+
+    <div class="countdown">
+
+      <div class="time-box">
+        <div class="time" id="days">00</div>
+        <div class="label">Days</div>
       </div>
 
-      <h1 class="school-title hero-font">
-        PARAMOUNT ENGLISH <br>
-        <span class="gold-gradient-text italic font-bold">MEDIUM HIGH SCHOOL</span>
-      </h1>
-      
-      <div class="school-location hero-font">Warangal</div>
-
-      <p class="hero-summary">
-        The complete digital ecosystem of smart infrastructure metrics is preparing for ignition. Experience a unified administrative experience customized explicitly for the modern student and parent network.
-      </p>
-
-      <div class="launch-timestamp-notice">
-        <i class="far fa-calendar-check text-[#e2c069] mr-2"></i> Launching Live: June 30, 2026 at 00:00 Hours
+      <div class="time-box">
+        <div class="time" id="hours">00</div>
+        <div class="label">Hours</div>
       </div>
 
-      <div class="countdown-wrapper">
-        <div class="luxury-timer-box"><div class="time-digits hero-font" id="days">00</div><div class="time-label">Days</div></div>
-        <div class="luxury-timer-box"><div class="time-digits hero-font" id="hours">00</div><div class="time-label">Hours</div></div>
-        <div class="luxury-timer-box"><div class="time-digits hero-font" id="minutes">00</div><div class="time-label">Mins</div></div>
-        <div class="luxury-timer-box"><div class="time-digits hero-font" id="seconds">00</div><div class="time-label">Secs</div></div>
+      <div class="time-box">
+        <div class="time" id="minutes">00</div>
+        <div class="label">Minutes</div>
       </div>
 
-      <div class="gated-action-wrapper">
-        <div class="premium-lock-banner" id="gateLockedBanner">
-          <i class="fas fa-lock mr-2 text-red-400"></i> Portal Enforced Lock Active Until T-Zero
-        </div>
-        <a id="gateUnlockedCta" class="premium-launch-cta" target="_blank">
-          <i class="fas fa-rocket mr-2"></i> Enter Official Website
-        </a>
+      <div class="time-box">
+        <div class="time" id="seconds">00</div>
+        <div class="label">Seconds</div>
       </div>
 
-    </section>
+    </div>
 
-    <section class="institutional-showcase">
-      <div class="section-header-block">
-        <span class="section-tagline">// Matrix Units</span>
-        <h2 class="section-main-title hero-font">The Paramount Group of Institutions</h2>
-      </div>
+    <div class="launch-text">
+      GRAND WEBSITE LAUNCH COUNTDOWN
+    </div>
 
-      <div class="matrix-ecosystem-grid">
-        <div class="ecosystem-card premium-glass">
-          <div class="card-icon-container"><i class="fas fa-school"></i></div>
-          <h3 class="card-title hero-font">Paramount English Medium High School</h3>
-          <p class="card-body-text">Our central foundation campus providing secondary education parameters. Engineered with modern science labs and integrated portal tools.</p>
-        </div>
+    <button class="locked-button" id="lockedBtn">
+      WEBSITE WILL UNLOCK SOON
+    </button>
 
-        <div class="ecosystem-card premium-glass">
-          <div class="card-icon-container"><i class="fas fa-atom"></i></div>
-          <h3 class="card-title hero-font">Paramount Polycet Coaching Center</h3>
-          <p class="card-body-text">Specialized admissions entrance preparation module. Delivering conceptual guidance to secure top technical diploma track allocations.</p>
-        </div>
-
-        <div class="ecosystem-card premium-glass">
-          <div class="card-icon-container"><i class="fas fa-shield-alt"></i></div>
-          <h3 class="card-title hero-font">Paramount SI & PC Coaching Center</h3>
-          <p class="card-body-text">Elite professional training frameworks tailored for Sub-Inspector and Police Constable competitive tracks.</p>
-        </div>
-
-        <div class="ecosystem-card premium-glass">
-          <div class="card-icon-container"><i class="fas fa-trophy"></i></div>
-          <h3 class="card-title hero-font">Paramount Hockey Academy</h3>
-          <p class="card-body-text">Our dedicated athletic guild asset. Fostering regional talent prospects using state-of-the-art conditioning and skills development layout matrices.</p>
-        </div>
-      </div>
-    </section>
+    <!-- Replace your website link below -->
+    <a href="https://yourwebsite.com" class="launch-button" id="launchBtn" target="_blank">
+      🚀 ENTER OFFICIAL WEBSITE
+    </a>
 
   </div>
 
   <script>
-    // Procedural Particle Background Loop
-    const particlesContainer = document.getElementById('ambientParticles');
-    for (let i = 0; i < 50; i++) {
-      const dot = document.createElement('div');
-      dot.classList.add('particle');
-      dot.style.left = Math.random() * 100 + '%';
-      dot.style.animationDuration = (6 + Math.random() * 8) + 's';
-      dot.style.animationDelay = Math.random() * 6 + 's';
-      dot.style.opacity = (0.2 + Math.random() * 0.6).toString();
-      particlesContainer.appendChild(dot);
+
+    // =============================
+    // PARTICLES
+    // =============================
+
+    const particlesContainer = document.getElementById('particles');
+
+    for(let i = 0; i < 60; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.animationDuration = (5 + Math.random() * 10) + 's';
+      particle.style.animationDelay = Math.random() * 5 + 's';
+      particle.style.opacity = Math.random();
+
+      particlesContainer.appendChild(particle);
     }
 
-    // Secure Target Launch Configuration
-    const explicitLaunchTimestamp = new Date('June 30, 2026 00:00:00').getTime();
 
-    const timelineSyncThread = setInterval(function() {
-      const dynamicNow = new Date().getTime();
-      const remainingDistanceDelta = explicitLaunchTimestamp - dynamicNow;
+    // =============================
+    // COUNTDOWN TIMER
+    // =============================
 
-      const days = Math.floor(remainingDistanceDelta / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((remainingDistanceDelta % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((remainingDistanceDelta % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((remainingDistanceDelta % (1000 * 60)) / 1000);
+    // SET YOUR GRAND LAUNCH DATE HERE
+    const launchDate = new Date('June 30, 2026 00:00:00').getTime();
+
+    const timer = setInterval(function() {
+
+      const now = new Date().getTime();
+      const distance = launchDate - now;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
       document.getElementById('days').innerHTML = String(days).padStart(2, '0');
       document.getElementById('hours').innerHTML = String(hours).padStart(2, '0');
       document.getElementById('minutes').innerHTML = String(minutes).padStart(2, '0');
       document.getElementById('seconds').innerHTML = String(seconds).padStart(2, '0');
 
-      // SECURE DEPLOYMENT CHECKER: Triggers exclusively upon timer expiration
-      if (remainingDistanceDelta <= 0) {
-        clearInterval(timelineSyncThread);
+      if(distance < 0) {
+        clearInterval(timer);
 
         document.getElementById('days').innerHTML = '00';
         document.getElementById('hours').innerHTML = '00';
         document.getElementById('minutes').innerHTML = '00';
         document.getElementById('seconds').innerHTML = '00';
 
-        // 1. Hide the locked alert banner completely
-        document.getElementById('gateLockedBanner').style.display = 'none';
-        
-        // 2. Safely capture the button reference
-        const dynamicButton = document.getElementById('gateUnlockedCta');
-        
-        // 3. Inject the real destination address context precisely at runtime
-        dynamicButton.setAttribute('href', 'https://paramountschooledu.in/');
-        
-        // 4. Reveal and make clickable
-        dynamicButton.style.display = 'inline-block';
-        
-        // Smooth luxury drop-in reveal animation
-        gsap.fromTo(dynamicButton, 
-          { scale: 0.9, opacity: 0 }, 
-          { scale: 1, opacity: 1, duration: 0.8, ease: "power3.out" }
-        );
+        document.getElementById('lockedBtn').style.display = 'none';
+        document.getElementById('launchBtn').style.display = 'inline-block';
       }
+
     }, 1000);
+
   </script>
 
 </body>
