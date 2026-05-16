@@ -109,50 +109,45 @@
       z-index: 5;
     }
 
-    /* Optimized Logo Box with responsive pulse glow animation matrix */
+    /* Logo Box with borders removed and optimized layout for flawless circular fit */
     .logo-box {
       width: 140px;
       height: 140px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.06);
-      border: 2px solid rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: transparent; /* Allows your logo's native design to blend perfectly */
+      border: none !important; /* Forcefully removes the visible hard border ring */
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 25px;
-      padding: 12px; /* Protects logo edges from touching the frame */
+      padding: 0; /* Removed padding so logo fits cleanly to the edge of the glow matrix */
       animation: logoGlowPulse 4s infinite ease-in-out;
-      overflow: hidden;
     }
 
     .logo-box img {
       width: 100%;
       height: 100%;
-      object-fit: contain; /* Ensures uniform scaling without distorting geometry */
+      object-fit: contain; 
+      border-radius: 50%; /* Ensures the image edge tracks perfectly with the outer glow */
     }
 
-    /* Seamless glowing animation cycle scaling dynamic color layers */
+    /* Premium seamless glowing animation matrix without hard color lines */
     @keyframes logoGlowPulse {
       0% {
         transform: scale(1);
-        border-color: rgba(255, 255, 255, 0.4);
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1), 
-                    0 0 40px rgba(59, 130, 246, 0.2);
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.08), 
+                    0 0 45px rgba(59, 130, 246, 0.25);
       }
       50% {
         transform: scale(1.04);
-        border-color: rgba(147, 197, 253, 0.8);
-        box-shadow: 0 0 30px rgba(147, 197, 253, 0.4), 
-                    0 0 60px rgba(139, 92, 246, 0.6),
-                    0 0 90px rgba(59, 130, 246, 0.3);
+        box-shadow: 0 0 35px rgba(147, 197, 253, 0.45), 
+                    0 0 65px rgba(139, 92, 246, 0.65),
+                    0 0 95px rgba(59, 130, 246, 0.35);
       }
       100% {
         transform: scale(1);
-        border-color: rgba(255, 255, 255, 0.4);
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1), 
-                    0 0 40px rgba(59, 130, 246, 0.2);
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.08), 
+                    0 0 45px rgba(59, 130, 246, 0.25);
       }
     }
 
@@ -412,7 +407,6 @@
         width: 110px;
         height: 110px;
         margin-bottom: 20px;
-        padding: 8px; /* Scales down padding area on smaller screens */
       }
 
       .school-name {
