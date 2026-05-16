@@ -42,42 +42,53 @@
       width: 100%;
       height: 100%;
       background:
-        radial-gradient(circle at 30% 20%, rgba(0, 123, 255, 0.18), transparent 45%),
-        radial-gradient(circle at 70% 80%, rgba(140, 0, 255, 0.18), transparent 45%),
-        linear-gradient(180deg, #02040a, #050b18, #000000);
+        radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.4), #000000),
+        radial-gradient(circle at 20% 30%, rgba(0, 123, 255, 0.15), transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(140, 0, 255, 0.15), transparent 50%);
       z-index: -3;
     }
 
-    .particles {
+    /* Moving Starfield Container positioned behind everything */
+    .starfield {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      overflow: hidden;
       z-index: -2;
       pointer-events: none;
-      perspective: 600px;
+      background: transparent;
     }
 
-    /* Dynamic 3D depth field particles */
-    .particle {
+    .star {
       position: absolute;
-      background: rgba(255, 255, 255, 0.8);
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 2px;
+      background: #fff;
       border-radius: 50%;
-      animation: hyperDrive 8s linear infinite;
+      opacity: 0;
+      /* Animation parameters are dynamically randomized via JS */
+      animation: flyOutwards var(--duration) linear infinite;
+      animation-delay: var(--delay);
     }
 
-    @keyframes hyperDrive {
-      from {
-        transform: translateZ(-600px) translateY(100vh);
+    /* Live moving space warp-speed animation loop */
+    @keyframes flyOutwards {
+      0% {
+        transform: translate(-50%, -50%) translate3d(var(--tx), var(--ty), 0) scale(0.1);
         opacity: 0;
       }
       10% {
         opacity: 1;
       }
-      to {
-        transform: translateZ(200px) translateY(-15vh);
+      90% {
+        opacity: 1;
+      }
+      100% {
+        /* Pushes the stars out and exponentially increases scale to simulate spatial depth motion */
+        transform: translate(-50%, -50%) translate3d(calc(var(--tx) * 12), calc(var(--ty) * 12), 0) scale(4);
         opacity: 0;
       }
     }
@@ -153,7 +164,6 @@
       margin-bottom: 30px;
     }
 
-    /* Grand Reveal Badge Style */
     .reveal-badge {
       display: inline-flex;
       align-items: center;
@@ -269,19 +279,17 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      z-index: 1;
-      transform: translate52(0);
-      transition: transform 0.5s ease-in;
+      z-index: 10;
+      pointer-events: none;
     }
 
     .rocket-body {
       font-size: 90px;
       line-height: 1;
       filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
-      transform: rotate(0deg);
     }
 
-    /* Animated continuous trail thrusters */
+    /* Thruster plume effects */
     .rocket-fire {
       width: 16px;
       height: 0px;
@@ -298,7 +306,6 @@
       to { transform: scaleX(1.1) translateY(-3px); }
     }
 
-    /* Launch Execution Class triggers */
     .rocket-container.ignited .rocket-fire {
       height: 70px;
       opacity: 1;
@@ -310,11 +317,11 @@
 
     @keyframes blastOffToSpace {
       0% { transform: translateY(0) scale(1); }
-      15% { transform: translateY(15px) scale(1); } /* Small base recoil rumble */
+      15% { transform: translateY(15px) scale(1); }
       100% { transform: translateY(-130vh) scale(0.3); opacity: 0; }
     }
 
-    /* Smoke plume particle container generator */
+    /* Smoke plume generator styling */
     .smoke-layer {
       position: absolute;
       width: 10px;
@@ -323,6 +330,7 @@
       border-radius: 50%;
       filter: blur(8px);
       pointer-events: none;
+      z-index: 9;
       animation: dissipate 1.5s ease-out forwards;
     }
 
@@ -428,7 +436,7 @@
       font-weight: 600;
     }
 
-    /* Media Queries for full mobile responsiveness */
+    /* Media Queries for full responsiveness */
     @media(max-width: 1200px) {
       .school-name { font-size: 4vw; }
     }
@@ -465,7 +473,7 @@
 <body>
 
   <div class="background"></div>
-  <div class="particles" id="particles"></div>
+  <div class="starfield" id="starfield"></div>
 
   <div class="rocket-container" id="rocketVehicle">
     <div class="rocket-body">🚀</div>
@@ -572,27 +580,29 @@
 
   <script>
     // =============================
-    // 3D DEPTH FIELDS STAR GENERATOR
+    // LIVE MOVING SPACE WARP GENERATOR
     // =============================
-    const particlesContainer = document.getElementById('particles');
+    const starfield = document.getElementById('starfield');
+    const starCount = 100;
 
-    for(let i = 0; i < 75; i++) {
-      const particle = document.createElement('div');
-      particle.classList.add('particle');
-
-      let size = Math.random() * 3 + 1;
-      particle.style.width = size + 'px';
-      particle.style.height = size + 'px';
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
       
-      particle.style.left = Math.random() * 100 + '%';
-      particle.style.animationDuration = (4 + Math.random() * 8) + 's';
-      particle.style.animationDelay = Math.random() * 6 + 's';
+      // Generate radial trajectory angles outwards from screen center (50%, 50%)
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 50 + Math.random() * 150; // Distance radius offset
       
-      // Calculate random depth layers to fulfill perspective rules
-      particle.style.transform = `translateZ(${Math.random() * 400 - 200}px)`;
-      particle.style.opacity = Math.random();
+      const tx = Math.cos(angle) * distance + 'px';
+      const ty = Math.sin(angle) * distance + 'px';
+      
+      // Assign unique custom CSS variable coordinates to each individual element
+      star.style.setProperty('--tx', tx);
+      star.style.setProperty('--ty', ty);
+      star.style.setProperty('--duration', (2 + Math.random() * 4) + 's');
+      star.style.setProperty('--delay', (Math.random() * 5) + 's');
 
-      particlesContainer.appendChild(particle);
+      starfield.appendChild(star);
     }
 
     // =============================
@@ -605,17 +615,15 @@
       if (hasLaunched) return;
       hasLaunched = true;
 
-      // Stage 1: Ignite engine systems
       rocket.classList.add('ignited');
 
-      // Loop generation matrix for ground exhaust smoke
+      // Loop generation matrix for heavy engine exhaust plume smoke particles
       let smokeInterval = setInterval(() => {
         if(!rocket) { clearInterval(smokeInterval); return; }
         
         const smoke = document.createElement('div');
         smoke.classList.add('smoke-layer');
         
-        // Position smoke perfectly at the engine base nozzle area
         const rect = rocket.getBoundingClientRect();
         smoke.style.left = (rect.left + rect.width / 2 - 5) + 'px';
         smoke.style.top = (rect.top + rect.height - 15) + 'px';
@@ -623,9 +631,9 @@
         document.body.appendChild(smoke);
         
         setTimeout(() => { smoke.remove(); }, 1500);
-      }, 60);
+      }, 50);
 
-      // Stage 2: Lift-off sequence departure delay 
+      // Launch rocket out of bounds into the upper viewport layers
       setTimeout(() => {
         rocket.classList.add('launched');
         setTimeout(() => {
@@ -637,7 +645,7 @@
     // =============================
     // COUNTDOWN INTERFACE RUNTIME
     // =============================
-    // Adjusted Launch Date to match reveal section text: May 30th, 2026 at 2:00 PM (14:00:00)
+    // Set Grand Reveal Time: May 30th, 2026 at 2:00 PM (14:00:00)
     const launchDate = new Date('May 30, 2026 14:00:00').getTime();
 
     const timer = setInterval(function() {
@@ -647,17 +655,14 @@
       if(distance <= 0) {
         clearInterval(timer);
 
-        // Terminate variables strictly at zero state
         document.getElementById('days').innerHTML = '00';
         document.getElementById('hours').innerHTML = '00';
         document.getElementById('minutes').innerHTML = '00';
         document.getElementById('seconds').innerHTML = '00';
 
-        // Swap UI access buttons instantly
         document.getElementById('lockedBtn').style.display = 'none';
         document.getElementById('launchBtn').style.display = 'inline-block';
 
-        // Execute background vehicle departure tracking sequence
         triggerRocketLaunch();
       } else {
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -672,7 +677,7 @@
       }
     }, 1000);
 
-    // Run safe-check loop instantly on load to protect status against client manual refresh calls
+    // Dynamic state listener triggers automatically on refresh if deadline has already matured
     window.addEventListener('load', () => {
       if (new Date().getTime() >= launchDate) {
         triggerRocketLaunch();
