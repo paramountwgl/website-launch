@@ -218,9 +218,12 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
+        // Global variables initialized smoothly without multi-declaration collision errors
         let scene, camera, renderer, starParticles, rocketMasterGroup;
-        let fireAudienceParticles, engineFireGlow, launchpadBase;
-        let audienceGroup, fireAudienceParticles, audiencePositions = [], audienceState = "idle";
+        let engineFireGlow, launchpadBase, fireParticles;
+        let audienceGroup, fireAudienceParticles;
+        let audiencePositions = [];
+        let audienceState = "idle";
         let launchTriggerActive = false;
 
         function buildCosmosStage() {
@@ -235,7 +238,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-            const ambient = new THREE.AmbientLight(0xffffff, 0.5); // Brighter lighting base
+            const ambient = new THREE.AmbientLight(0xffffff, 0.5); 
             scene.add(ambient);
 
             const platformLight = new THREE.DirectionalLight(0xfff5df, 1.5);
@@ -249,7 +252,7 @@
             // Stars Background System
             const starGeom = new THREE.BufferGeometry();
             const starPoints = [];
-            for(let i=0; i<4000; i++) { // Optimized density for hardware rendering
+            for(let i=0; i<4000; i++) { 
                 starPoints.push((Math.random()-0.5)*1000, (Math.random()-0.5)*1000, (Math.random()-0.5)*1000);
             }
             starGeom.setAttribute('position', new THREE.Float32BufferAttribute(starPoints, 3));
@@ -278,9 +281,9 @@
             }
             scene.add(stadiumGroup);
 
-            // --- OPTIMIZED GENERATION FOR THE CROWD PARTICLES ---
+            // Crowd Particles Generation
             audienceGroup = new THREE.Group();
-            const audienceCount = 750; // Performance friendly array size
+            const audienceCount = 750; 
             const audienceGeom = new THREE.BufferGeometry();
             const initialPosArr = [];
 
@@ -289,7 +292,7 @@
                 let stepLevel = Math.floor(Math.random() * 12);
                 
                 let targetX = sideIdx * (115 + (stepLevel * 5) + (Math.random() * 12 - 6));
-                let targetY = -60 + (stepLevel * 2) + 4.5; // Offset higher over the staircase elements
+                let targetY = -60 + (stepLevel * 4) + 6; 
                 let targetZ = (Math.random() * 90) - 45;
 
                 audiencePositions.push({
@@ -306,10 +309,9 @@
             
             audienceGeom.setAttribute('position', new THREE.Float32BufferAttribute(initialPosArr, 3));
             
-            // Premium Bright Material Highlighting
             const audienceMat = new THREE.PointsMaterial({
-                size: 4.5, // Amplified item vector size for clean clarity
-                color: 0xffd700, // True luxury gold tint
+                size: 4.5, 
+                color: 0xffd700, 
                 transparent: true,
                 opacity: 0.95,
                 blending: THREE.AdditiveBlending
@@ -394,7 +396,7 @@
                 fireParticles.geometry.attributes.position.needsUpdate = true;
             }
 
-            // --- ANIMATE AUDIENCE ENGINE GRAPHICS INTERACTIVE MATRIX ---
+            // Interactive Audience Animations Engine Loop
             if(fireAudienceParticles) {
                 const audPositions = fireAudienceParticles.geometry.attributes.position.array;
                 let pointer = 0;
@@ -460,7 +462,6 @@
                 return;
             }
 
-            // If countdown enters final minute, anchor the crowd to seats
             if (timeDelta < 60000 && audienceState === "idle") {
                 audienceState = "gathering"; 
             }
@@ -531,7 +532,6 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Stable initialization handler
         document.addEventListener("DOMContentLoaded", () => {
             buildCosmosStage();
         });
