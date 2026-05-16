@@ -279,81 +279,94 @@
             }
             scene.add(stadiumGroup);
 
-            // Procedural Low-Poly 3D Sitting Human Objects Generation
+            // PACKED STADIUM: Generated highly detailed crowd 3D components 
             audienceGroup = new THREE.Group();
-            const audienceCount = 350; // Balanced volume for hyper-performance loading
+            const audienceCount = 950; // Drastically packed count for dense structural tracking
             
-            // Premium Translucent Architectural Gold Glass Material
-            const humanMaterial = new THREE.MeshStandardMaterial({
+            const goldGlassMaterial = new THREE.MeshStandardMaterial({
                 color: 0xe2c069,
-                metalness: 0.7,
+                metalness: 0.8,
                 roughness: 0.2,
                 transparent: true,
-                opacity: 0.85,
+                opacity: 0.9,
                 emissive: 0xb8860b,
                 emissiveIntensity: 0.2
             });
 
-            // Single Reusable Shared Geometries for Memory Efficiency
-            const headGeom = new THREE.SphereGeometry(0.8, 8, 8);
-            const torsoGeom = new THREE.CylinderGeometry(0.7, 0.5, 2.2, 6);
-            const limbGeom = new THREE.BoxGeometry(0.3, 1.4, 0.3);
+            // Reusable body structures for seamless programmatic generation
+            const headGeom = new THREE.SphereGeometry(0.7, 8, 8);
+            const torsoGeom = new THREE.CylinderGeometry(0.5, 0.4, 2.0, 6);
+            const limbGeom = new THREE.BoxGeometry(0.25, 1.2, 0.25);
 
             for(let i=0; i<audienceCount; i++) {
                 let sideIdx = Math.random() > 0.5 ? 1 : -1;
+                // Distribute evenly among all 12 steps from top row down to floor row
                 let stepLevel = Math.floor(Math.random() * 12);
                 
-                // Placement directly mapped along the dimensional stairs
-                let targetX = sideIdx * (115 + (stepLevel * 5) + (Math.random() * 14 - 7));
-                let targetY = -60 + (stepLevel * 4) + 3.5; 
-                let targetZ = (Math.random() * 96) - 48;
+                // Fine-tuned placement formulas to ground humans directly on top of step planes
+                let targetX = sideIdx * (115 + (stepLevel * 5) + (Math.random() * 16 - 8));
+                let targetY = -60 + (stepLevel * 4) + 3.2; 
+                let targetZ = (Math.random() * 100) - 50;
 
-                // Create individual compound Human Object Group
-                const humanGroup = new THREE.Group();
+                const humanContainer = new THREE.Group();
 
-                // Torso
-                const torso = new THREE.Mesh(torsoGeom, humanMaterial);
-                torso.position.y = 1.1;
-                torso.rotation.x = 0.15; // Slanted lean sitting position
-                humanGroup.add(torso);
+                // Detailed Sub-mesh Layout Setup
+                const torso = new THREE.Mesh(torsoGeom, goldGlassMaterial);
+                torso.position.y = 1.0;
+                humanContainer.add(torso);
 
-                // Head
-                const head = new THREE.Mesh(headGeom, humanMaterial);
-                head.position.set(0, 2.5, -0.1);
-                humanGroup.add(head);
+                const head = new THREE.Mesh(headGeom, goldGlassMaterial);
+                head.position.set(0, 2.3, 0);
+                humanContainer.add(head);
 
-                // Sitting Lap Legs
-                const upperLegL = new THREE.Mesh(limbGeom, humanMaterial);
-                upperLegL.position.set(-0.35, 0.4, 0.6);
-                upperLegL.rotation.x = Math.PI / 2; // Forward projection lap leg
-                
-                const upperLegR = upperLegL.clone();
-                upperLegR.position.x = 0.35;
-                humanGroup.add(upperLegL, upperLegR);
+                // Split behavior modes right at generation phase: 0=Sitting, 1=Standing/Cheering, 2=Walking
+                let naturalBehavior = Math.floor(Math.random() * 3);
 
-                // Sitting Calves Drop down
-                const lowerLegL = new THREE.Mesh(limbGeom, humanMaterial);
-                lowerLegL.position.set(-0.35, -0.3, 1.2);
-                
-                const lowerLegR = lowerLegL.clone();
-                lowerLegR.position.x = 0.35;
-                humanGroup.add(lowerLegL, lowerLegR);
+                const leftArm = new THREE.Mesh(limbGeom, goldGlassMaterial);
+                leftArm.position.set(-0.7, 1.4, 0);
+                const rightArm = leftArm.clone();
+                rightArm.position.x = 0.7;
+                humanContainer.add(leftArm, rightArm);
 
-                // Assembly offset configuration inside the space
-                humanGroup.position.set(targetX, targetY, targetZ);
-                
-                // Turn human meshes towards center focus rocket pad base orientation
-                humanGroup.lookAt(0, -20, 0);
+                const leftLeg = new THREE.Mesh(limbGeom, goldGlassMaterial);
+                const rightLeg = leftLeg.clone();
 
-                // Track animation seeds individually
+                if (naturalBehavior === 0) {
+                    // SITTING POSTURE
+                    torso.rotation.x = 0.12; 
+                    
+                    leftLeg.position.set(-0.25, 0.4, 0.5);
+                    leftLeg.rotation.x = Math.PI / 2;
+                    rightLeg.position.set(0.25, 0.4, 0.5);
+                    rightLeg.rotation.x = Math.PI / 2;
+
+                    leftArm.rotation.x = 0.4;
+                    rightArm.rotation.x = 0.4;
+                } else {
+                    // STANDING / WALKING POSTURE
+                    leftLeg.position.set(-0.25, 0.3, 0);
+                    rightLeg.position.set(0.25, 0.3, 0);
+                }
+                humanContainer.add(leftLeg, rightLeg);
+
+                // Initial alignment positions setup
+                humanContainer.position.set(targetX, targetY, targetZ);
+                humanContainer.lookAt(0, -10, 0); // Focus gaze onto core rocket engine vector
+
                 audienceMeshArray.push({
-                    mesh: humanGroup,
+                    mesh: humanContainer,
+                    behavior: naturalBehavior,
+                    homeX: targetX,
                     homeY: targetY,
-                    noiseSeed: Math.random() * 500,
-                    cheerSpeed: 15 + Math.random() * 15
+                    homeZ: targetZ,
+                    noiseSeed: Math.random() * 100,
+                    leftArmRef: leftArm,
+                    rightArmRef: rightArm,
+                    leftLegRef: leftLeg,
+                    rightLegRef: rightLeg
                 });
 
-                audienceGroup.add(humanGroup);
+                audienceGroup.add(humanContainer);
             }
             scene.add(audienceGroup);
 
@@ -433,26 +446,47 @@
                 fireParticles.geometry.attributes.position.needsUpdate = true;
             }
 
-            // Real-time Mesh Animation Mechanics Engine Loop
+            // Real-Time Differentiated Individual Humans Mechanical Animation Loop
             for(let i=0; i<audienceMeshArray.length; i++) {
                 let human = audienceMeshArray[i];
-                
-                if(audienceState === "idle") {
-                    // Micro breathing and head look adjustment simulations
-                    let subtleNudge = Math.sin(elapsedTicks * 1.5 + human.noiseSeed) * 0.08;
-                    human.mesh.position.y = human.homeY + subtleNudge;
+                let seed = elapsedTicks * 2.0 + human.noiseSeed;
+
+                if (audienceState === "cheering") {
+                    // Overrides behaviors for universal high intensity excitement jumping configuration
+                    let velocity = 20 + (human.noiseSeed % 15);
+                    let jumpHeight = Math.max(0, Math.sin(elapsedTicks * velocity) * 5.0);
+                    human.mesh.position.y = human.homeY + jumpHeight;
                     
-                } else if(audienceState === "gathering") {
-                    // Attention anchor posture adjustments
-                    human.mesh.position.y += (human.homeY - human.mesh.position.y) * 0.1;
-                    
-                } else if(audienceState === "cheering") {
-                    // Full kinetic jump vertical cheering loop sequence during launch blastoff
-                    let verticalCheer = Math.max(0, Math.sin(elapsedTicks * human.cheerSpeed + human.noiseSeed) * 4.5);
-                    human.mesh.position.y = human.homeY + verticalCheer;
-                    
-                    // Kinetic hand hands swing excitement lean rotation tracking
-                    human.mesh.rotation.z = Math.sin(elapsedTicks * human.cheerSpeed) * 0.1;
+                    // Swing hands upwards aggressively celebrating launch blast off
+                    human.leftArmRef.rotation.x = -Math.PI + Math.sin(elapsedTicks * velocity) * 0.5;
+                    human.rightArmRef.rotation.x = -Math.PI + Math.cos(elapsedTicks * velocity) * 0.5;
+                } 
+                else {
+                    // INDIVIDUAL LIVE IDLE BEHAVIORS
+                    if (human.behavior === 0) { 
+                        // SITTING AMBIENT BREATHING
+                        human.mesh.position.y = human.homeY + Math.sin(seed) * 0.05;
+                        human.leftArmRef.rotation.x = 0.4 + Math.sin(seed) * 0.08;
+                        human.rightArmRef.rotation.x = 0.4 + Math.cos(seed) * 0.08;
+                    } 
+                    else if (human.behavior === 1) { 
+                        // STANDING AND LOOKING AROUND
+                        human.mesh.position.y = human.homeY;
+                        human.mesh.rotation.y = Math.sin(seed * 0.3) * 0.15; // Shift body posture sight slightly
+                        human.leftArmRef.rotation.z = Math.sin(seed) * 0.05 - 0.1;
+                        human.rightArmRef.rotation.z = -Math.sin(seed) * 0.05 + 0.1;
+                    } 
+                    else if (human.behavior === 2) { 
+                        // WALKING / PACING BACK AND FORTH ON ROW STEPS
+                        let walkStroll = Math.sin(elapsedTicks * 0.8 + human.noiseSeed) * 3.5;
+                        human.mesh.position.z = human.homeZ + walkStroll;
+                        
+                        // Linear swing walking legs and arms synchronization
+                        human.leftLegRef.rotation.x = Math.sin(elapsedTicks * 4.0 + human.noiseSeed) * 0.4;
+                        human.rightLegRef.rotation.x = -Math.sin(elapsedTicks * 4.0 + human.noiseSeed) * 0.4;
+                        human.leftArmRef.rotation.x = -Math.sin(elapsedTicks * 4.0 + human.noiseSeed) * 0.3;
+                        human.rightArmRef.rotation.x = Math.sin(elapsedTicks * 4.0 + human.noiseSeed) * 0.3;
+                    }
                 }
             }
 
@@ -488,10 +522,6 @@
                 document.querySelectorAll("#countdown-container span").forEach(box => box.innerText = "00");
                 unlockLaunchMechanics();
                 return;
-            }
-
-            if (timeDelta < 60000 && audienceState === "idle") {
-                audienceState = "gathering"; 
             }
 
             document.getElementById('days').innerText = String(Math.floor(timeDelta / dayUnit)).padStart(2, '0');
