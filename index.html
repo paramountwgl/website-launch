@@ -3,189 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramount School | The Grand Unveiling</title>
+    <title>Website-launch🚀| Paramount School</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Playfair+Display+SC:wght@700;900&family=Tenor+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <style>
-        :root { --gold: #ffd700; --p-green: #004d26; }
-        body { margin: 0; background: #000; color: white; font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
-        .cinzel { font-family: 'Cinzel', serif; }
+        :root {
+            --brand-green: #004d26;
+            --brand-gold: #c7a13c;
+            --deep-dark: #000408;
+            --off-white: #fdfdfd;
+        }
 
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
+        body {
+            margin: 0;
+            background: var(--deep-dark);
+            color: var(--off-white);
+            font-family: 'Tenor Sans', sans-serif;
+            overflow: hidden;
+        }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .hero-font { font-family: 'Playfair Display', serif; }
+        .sc-font { font-family: 'Playfair Display SC', serif; }
+
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .content-overlay {
+            position: relative;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .content-overlay * {
+            pointer-events: auto;
+        }
+
+        /* Ultimate Button */
+        .ultimate-btn {
+            background: linear-gradient(135deg, var(--brand-gold), #e6c166, var(--brand-gold));
+            background-size: 200% auto;
+            color: var(--deep-dark);
+            box-shadow: 0 10px 40px rgba(199, 161, 60, 0.3);
+            display: none; /* Crucial: Hidden by default */
+        }
+
+        .ultimate-btn:hover {
+            animation: moveGradient 2s infinite linear;
+            box-shadow: 0 10px 60px rgba(199, 161, 60, 0.5);
+            transform: translateY(-5px);
+        }
+
+        @keyframes moveGradient {
+            to { background-position: 200% center; }
+        }
+
+        .gold-border {
+            border: 1px solid rgba(199, 161, 60, 0.2);
         }
 
         .gold-text {
-            background: linear-gradient(to right, #ffd700, #ffffff, #ffd700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            animation: shine 3s linear infinite;
+            color: var(--brand-gold);
         }
 
-        @keyframes shine { to { background-position: 200% center; } }
-
-        .premium-btn {
-            background: linear-gradient(135deg, #ffd700, #b8860b);
-            color: #000;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-            display: none; /* Hidden until launch */
+        #countdown-container {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .locked-msg {
-            color: rgba(255, 215, 0, 0.5);
-            font-size: 0.8rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
+        .lock-notice {
+            letter-spacing: 5px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.4);
         }
 
-        /* Branding Section Styling */
-        .branding-section {
-            background: linear-gradient(to bottom, transparent, var(--p-green));
-            padding: 100px 20px;
-        }
     </style>
 </head>
 <body>
 
-    <canvas id="bg-canvas"></canvas>
+    <canvas id="three-canvas"></canvas>
 
-    <section class="min-h-screen flex flex-col items-center justify-center px-4 text-center">
-        <div id="hero-content">
-            <h2 class="cinzel text-gold text-lg tracking-[0.6em] mb-4 font-bold uppercase text-yellow-500">Paramount English Medium High School</h2>
-            <h1 class="cinzel gold-text text-5xl md:text-8xl font-black mb-8 uppercase tracking-tighter">The Future of Education starts here..</h1>
-            
-            <div id="countdown" class="glass-panel rounded-3xl p-8 md:p-12 flex gap-6 md:gap-14 justify-center mb-12 border border-white/5">
-                <div class="text-center">
-                    <span id="days" class="block text-4xl md:text-6xl font-bold">00</span>
-                    <small class="text-[10px] uppercase tracking-widest text-yellow-500 font-bold">Days</small>
+    <div class="content-overlay h-screen flex flex-col justify-between p-12 text-center" id="overlay">
+        
+        <header class="opacity-fade">
+            <h2 class="sc-font gold-text text-sm md:text-lg tracking-[0.6em] font-bold uppercase">Paramount English Medium High School</h2>
+            <div class="sc-font text-5xl md:text-8xl tracking-tight leading-tight hero-font italic opacity-70">Warangal</div>
+        </header>
+
+        <main class="max-w-4xl mx-auto opacity-fade">
+            <h1 class="hero-font text-5xl md:text-9xl leading-none font-black opacity-90 tracking-tighter mb-10">THE DIGITAL <br> HORIZON AWAITS</h1>
+            <p class="max-w-lg mx-auto text-gray-400 font-light leading-relaxed mb-16 text-sm md:text-base">
+                An institution redefining intelligence. We are preparing to unveil the ultimate platform for education management. Experience innovation on **May 20, 2026** at 2:00PM.
+            </p>
+
+            <div id="countdown-container" class="py-12 px-6 flex gap-6 md:gap-14 justify-center gold-border backdrop-blur-md bg-white/5 rounded-2xl mb-16">
+                <div class="w-20 md:w-32">
+                    <span id="days" class="hero-font block text-6xl md:text-9xl font-black">00</span>
+                    <small class="sc-font text-[10px] uppercase tracking-widest text-gold opacity-60">Days</small>
                 </div>
-                <div class="text-center">
-                    <span id="hours" class="block text-4xl md:text-6xl font-bold">00</span>
-                    <small class="text-[10px] uppercase tracking-widest text-yellow-500 font-bold">Hours</small>
+                <div class="w-20 md:w-32">
+                    <span id="hours" class="hero-font block text-6xl md:text-9xl font-black">00</span>
+                    <small class="sc-font text-[10px] uppercase tracking-widest text-gold opacity-60">Hours</small>
                 </div>
-                <div class="text-center">
-                    <span id="minutes" class="block text-4xl md:text-6xl font-bold">00</span>
-                    <small class="text-[10px] uppercase tracking-widest text-yellow-500 font-bold">Mins</small>
+                <div class="w-20 md:w-32">
+                    <span id="minutes" class="hero-font block text-6xl md:text-9xl font-black">00</span>
+                    <small class="sc-font text-[10px] uppercase tracking-widest text-gold opacity-60">Mins</small>
                 </div>
-                <div class="text-center">
-                    <span id="seconds" class="block text-4xl md:text-6xl font-bold text-yellow-500">00</span>
-                    <small class="text-[10px] uppercase tracking-widest text-white/40 font-bold">Secs</small>
+                <div class="w-20 md:w-32">
+                    <span id="seconds" class="hero-font block text-6xl md:text-9xl font-black text-gold">00</span>
+                    <small class="sc-font text-[10px] uppercase tracking-widest text-white/30">Secs</small>
                 </div>
             </div>
 
-            <div id="action-container" class="h-20 flex items-center justify-center">
-                <div id="lock-status" class="locked-msg">
-                    <i class="fas fa-lock mr-2"></i> Portal Encrypted Until Launch
-                </div>
+            <div id="action-area" class="h-20 flex justify-center items-center">
+                <p id="countdown-lock" class="sc-font lock-notice"><i class="fas fa-lock mr-2"></i> Unveiling Sequence Active</p>
                 
-                <a id="launch-link" href="https://paramountschooledu.in/" 
-                   class="premium-btn px-12 py-5 rounded-full font-extrabold uppercase tracking-widest text-sm flex items-center gap-3">
-                    <i class="fas fa-rocket"></i> Enter Official Portal
+                <a href="https://paramountschooledu.in/" id="launch-btn" class="ultimate-btn px-16 py-6 rounded-full font-extrabold uppercase tracking-widest text-sm flex items-center gap-3">
+                    <i class="fas fa-eye mr-2"></i> Enter Official Portal
                 </a>
             </div>
-            
-            <div class="mt-8 animate-bounce text-white/30 text-xs tracking-widest uppercase">
-                Scroll to explore our legacy <br> <i class="fas fa-chevron-down mt-2"></i>
-            </div>
-        </div>
-    </section>
+        </main>
 
-    <section class="branding-section">
-        <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-            <div class="reveal-text">
-                <h3 class="cinzel text-3xl text-gold mb-6">Est. 2019</h3>
-                <p class="text-gray-300 leading-loose font-light">
-                    From our roots in Warangal to the digital frontier. Paramount School has always stood for **Academic Excellence**, **Character Building**, and **Innovation**. This new portal marks our commitment to a seamless education experience for every student and parent.
-                </p>
-            </div>
-            <div class="glass-panel p-8 rounded-2xl border-gold/20 reveal-text">
-                <h4 class="cinzel text-gold mb-4 uppercase text-sm tracking-widest">Institutions</h4>
-                <ul class="space-y-3 text-sm text-gray-400 font-semibold">
-                    <li><i class="fas fa-check text-gold mr-2"></i> Paramount English Medium School</li>
-                </ul>
-            </div>
-        </div>
-    </section>
+        <footer class="text-xs text-white/30 sc-font tracking-widest uppercase py-4 opacity-fade">
+            Warangal, Telangana • Paramount Educational Society
+        </footer>
+
+    </div>
 
     <script>
-        gsap.registerPlugin(ScrollTrigger);
+        let scene, camera, renderer, particles, starSphere;
 
-        // --- THREE.JS BACKGROUND ---
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        function init3D() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+            camera.position.z = 250;
 
-        const starsGeometry = new THREE.BufferGeometry();
-        const starsCount = 4000;
-        const posArray = new Float32Array(starsCount * 3);
-        for(let i=0; i < starsCount * 3; i++) { posArray[i] = (Math.random() - 0.5) * 1000; }
-        starsGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const starsMaterial = new THREE.PointsMaterial({ size: 0.7, color: 0xffd700, transparent: true, opacity: 0.4 });
-        const starsMesh = new THREE.Points(starsGeometry, starsMaterial);
-        scene.add(starsMesh);
-        camera.position.z = 150;
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // -- Interacting Particle Sphere --
+            const geometry = new THREE.SphereGeometry( 80, 64, 64 );
+            const material = new THREE.PointsMaterial({ size: 1.2, color: 0xc7a13c, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // -- Subdued Star Field --
+            const starGeometry = new THREE.BufferGeometry();
+            const stars = [];
+            for ( let i = 0; i < 6000; i ++ ) {
+                stars.push( (Math.random() - 0.5) * 800, (Math.random() - 0.5) * 800, (Math.random() - 0.5) * 800 );
+            }
+            starGeometry.setAttribute( 'position', new THREE.Float32BufferAttribute( stars, 3 ) );
+            const starMaterial = new THREE.PointsMaterial({ size: 0.5, color: 0xffffff, transparent: true, opacity: 0.3 });
+            starSphere = new THREE.Points(starGeometry, starMaterial);
+            scene.add(starSphere);
+
+            // Start Intro Animations
+            startAnimations();
+            animate();
+        }
 
         function animate() {
             requestAnimationFrame(animate);
-            starsMesh.rotation.y += 0.0005;
+            particles.rotation.y += 0.002;
+            starSphere.rotation.x += 0.0005;
             renderer.render(scene, camera);
         }
-        animate();
 
-        // --- SCROLL ANIMATIONS ---
-        gsap.from(".reveal-text", {
-            scrollTrigger: { trigger: ".branding-section", start: "top 80%" },
-            y: 50, opacity: 0, duration: 1, stagger: 0.3
-        });
-
-        // --- COUNTDOWN & LOCK LOGIC ---
-        const targetDate = new Date("May 20, 2026 09:00:00").getTime();
-        const lockStatus = document.getElementById('lock-status');
-        const launchLink = document.getElementById('launch-link');
-
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const gap = targetDate - now;
-
-            if (gap <= 0) {
-                // STOP TIMER & REVEAL LINK
-                document.getElementById('days').innerText = "00";
-                document.getElementById('hours').innerText = "00";
-                document.getElementById('minutes').innerText = "00";
-                document.getElementById('seconds').innerText = "00";
-                
-                lockStatus.style.display = 'none';
-                launchLink.style.display = 'flex';
-                gsap.fromTo(launchLink, {scale: 0.8, opacity: 0}, {scale: 1, opacity: 1, duration: 1, ease: "elastic.out"});
-                return;
-            }
-
-            const second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24;
-            document.getElementById('days').innerText = String(Math.floor(gap / day)).padStart(2, '0');
-            document.getElementById('hours').innerText = String(Math.floor((gap % day) / hour)).padStart(2, '0');
-            document.getElementById('minutes').innerText = String(Math.floor((gap % hour) / minute)).padStart(2, '0');
-            document.getElementById('seconds').innerText = String(Math.floor((gap % minute) / second)).padStart(2, '0');
+        function startAnimations() {
+            const tl = gsap.timeline();
+            tl.to("#overlay", { opacity: 1, duration: 2, ease: "power2.out" })
+              .from("#overlay *", { y: 30, stagger: 0.1, duration: 1, opacity: 0, ease: "power2.out" }, "-=1.5")
+              .to(particles.rotation, { y: 50, duration: 200, ease: "none" }, 0); // Very slow background rotation
         }
-        setInterval(updateCountdown, 1000);
 
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
+
+        // Initialize Countdown May 20, 2026
+        const launchDate = new Date("May 20, 2026 14:00:00").getTime();
+        
+        // --- Countdown Update Loop ---
+        const interval = setInterval(() => {
+            const now = new Date().getTime();
+            const gap = launchDate - now;
+
+            const second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24;
+
+            if (gap <= 0) {
+                // Timer is complete
+                clearInterval(interval);
+                document.getElementById('days').innerText = "00";
+                document.getElementById('hours').innerText = "00";
+                document.getElementById('minutes').innerText = "00";
+                document.getElementById('seconds').innerText = "00";
+                revealPortalButton();
+                return;
+            }
+
+            document.getElementById('days').innerText = String(Math.floor(gap / day)).padStart(2, '0');
+            document.getElementById('hours').innerText = String(Math.floor((gap % day) / hour)).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(Math.floor((gap % hour) / minute)).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(Math.floor((gap % minute) / second)).padStart(2, '0');
+        }, 1000);
+
+        // --- Handle Button Reveal and Locking ---
+        function revealPortalButton() {
+            // Hide the 'Locked' message
+            gsap.to("#countdown-lock", { duration: 0.5, opacity: 0, y: -10, onComplete: () => {
+                document.getElementById('countdown-lock').style.display = 'none';
+            }});
+
+            // Show the button
+            const btn = document.getElementById('launch-btn');
+            btn.style.display = 'flex'; // Make it flex so layout is correct
+            gsap.fromTo("#launch-btn", { scale: 0.5, opacity: 0 }, { duration: 1.5, scale: 1, opacity: 1, ease: "elastic.out(1, 0.5)" });
+        }
+
+        // Initialize 3D on load
+        init3D();
     </script>
 </body>
 </html>
