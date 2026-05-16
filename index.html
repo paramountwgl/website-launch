@@ -16,16 +16,21 @@
       font-family: 'Poppins', sans-serif;
     }
 
+    /* Target both HTML and BODY root levels to forcefully strip the browser scrollbar structure */
     html, body {
       overflow-x: hidden;
-      background: #000;
+      background-color: #02040a; /* Deep space space black base */
       color: white;
       min-height: 100vh;
       position: relative;
+      
+      /* Hide scrollbar for Firefox */
       scrollbar-width: none;
+      /* Hide scrollbar for IE and Edge */
       -ms-overflow-style: none;
     }
 
+    /* Universal Webkit selector to catch Chrome, Safari, Edge Chromium, and Opera */
     html::-webkit-scrollbar,
     body::-webkit-scrollbar,
     *::-webkit-scrollbar {
@@ -34,7 +39,7 @@
       height: 0 !important;
     }
 
-    /* Cinematic 3D space backdrop */
+    /* Cinematic 3D space backdrop nebulae */
     .background {
       position: fixed;
       top: 0;
@@ -42,9 +47,9 @@
       width: 100%;
       height: 100%;
       background:
-        radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.4), #000000),
-        radial-gradient(circle at 20% 30%, rgba(0, 123, 255, 0.15), transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(140, 0, 255, 0.15), transparent 50%);
+        radial-gradient(circle at 20% 30%, rgba(0, 123, 255, 0.2), transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(140, 0, 255, 0.2), transparent 50%),
+        linear-gradient(180deg, #02040a 0%, #050b18 50%, #000000 100%);
       z-index: -3;
     }
 
@@ -64,9 +69,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 2px;
-      height: 2px;
-      background: #fff;
+      background: #ffffff;
       border-radius: 50%;
       opacity: 0;
       /* Animation parameters are dynamically randomized via JS */
@@ -78,21 +81,24 @@
     @keyframes flyOutwards {
       0% {
         transform: translate(-50%, -50%) translate3d(var(--tx), var(--ty), 0) scale(0.1);
+        box-shadow: 0 0 4px rgba(255, 255, 255, 0);
         opacity: 0;
       }
       10% {
-        opacity: 1;
+        opacity: var(--max-opacity);
       }
       90% {
-        opacity: 1;
+        opacity: var(--max-opacity);
       }
       100% {
         /* Pushes the stars out and exponentially increases scale to simulate spatial depth motion */
-        transform: translate(-50%, -50%) translate3d(calc(var(--tx) * 12), calc(var(--ty) * 12), 0) scale(4);
+        transform: translate(-50%, -50%) translate3d(calc(var(--tx) * 10), calc(var(--ty) * 10), 0) scale(var(--max-scale));
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
         opacity: 0;
       }
     }
 
+    /* Shared Glassmorphism Card Style */
     .glass-card {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -102,6 +108,7 @@
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     }
 
+    /* Hero/Countdown Container */
     .hero-container {
       min-height: 100vh;
       display: flex;
@@ -114,38 +121,50 @@
       z-index: 5;
     }
 
+    /* Logo Box with borders removed and optimized layout for flawless circular fit */
     .logo-box {
       width: 140px;
       height: 140px;
       border-radius: 50%;
-      background: transparent;
-      border: none !important;
+      background: transparent; /* Allows your logo's native design to blend perfectly */
+      border: none !important; /* Forcefully removes the visible hard border ring */
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 20px;
-      padding: 0;
+      margin-bottom: 25px;
+      padding: 0; /* Removed padding so logo fits cleanly to the edge of the glow matrix */
       animation: logoGlowPulse 4s infinite ease-in-out;
     }
 
     .logo-box img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
-      border-radius: 50%;
+      object-fit: contain; 
+      border-radius: 50%; /* Ensures the image edge tracks perfectly with the outer glow */
     }
 
+    /* Premium seamless glowing animation matrix without hard color lines */
     @keyframes logoGlowPulse {
-      0% { transform: scale(1); box-shadow: 0 0 25px rgba(59, 130, 246, 0.25); }
-      50% { transform: scale(1.04); box-shadow: 0 0 55px rgba(139, 92, 246, 0.55), 0 0 85px rgba(59, 130, 246, 0.25); }
-      100% { transform: scale(1); box-shadow: 0 0 25px rgba(59, 130, 246, 0.25); }
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 25px rgba(59, 130, 246, 0.25);
+      }
+      50% {
+        transform: scale(1.04);
+        box-shadow: 0 0 55px rgba(139, 92, 246, 0.55), 
+                    0 0 85px rgba(59, 130, 246, 0.25);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 25px rgba(59, 130, 246, 0.25);
+      }
     }
 
     .school-name {
       font-size: 3.2rem;
       font-weight: 800;
       line-height: 1.2;
-      white-space: nowrap;
+      white-space: nowrap; /* Kept on 1 line for standard monitors */
       background: linear-gradient(to right, #ffffff, #93c5fd, #d8b4fe);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -473,6 +492,7 @@
 <body>
 
   <div class="background"></div>
+  
   <div class="starfield" id="starfield"></div>
 
   <div class="rocket-container" id="rocketVehicle">
@@ -583,15 +603,20 @@
     // LIVE MOVING SPACE WARP GENERATOR
     // =============================
     const starfield = document.getElementById('starfield');
-    const starCount = 100;
+    const starCount = 130; // Increased density for rich spatial depth
 
     for (let i = 0; i < starCount; i++) {
       const star = document.createElement('div');
       star.classList.add('star');
       
+      // Randomize initial physical diameter parameters for stars
+      const starSize = Math.random() * 2 + 1;
+      star.style.width = starSize + 'px';
+      star.style.height = starSize + 'px';
+      
       // Generate radial trajectory angles outwards from screen center (50%, 50%)
       const angle = Math.random() * Math.PI * 2;
-      const distance = 50 + Math.random() * 150; // Distance radius offset
+      const distance = 30 + Math.random() * 170; // Distance radius offset
       
       const tx = Math.cos(angle) * distance + 'px';
       const ty = Math.sin(angle) * distance + 'px';
@@ -599,8 +624,10 @@
       // Assign unique custom CSS variable coordinates to each individual element
       star.style.setProperty('--tx', tx);
       star.style.setProperty('--ty', ty);
-      star.style.setProperty('--duration', (2 + Math.random() * 4) + 's');
+      star.style.setProperty('--duration', (1.5 + Math.random() * 3.5) + 's');
       star.style.setProperty('--delay', (Math.random() * 5) + 's');
+      star.style.setProperty('--max-opacity', 0.4 + Math.random() * 0.6);
+      star.style.setProperty('--max-scale', 2 + Math.random() * 3);
 
       starfield.appendChild(star);
     }
