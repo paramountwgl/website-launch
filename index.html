@@ -57,7 +57,6 @@
             pointer-events: auto;
         }
 
-        /* Golden Aura Glow Effects */
         .glowing-brand-panel {
             filter: drop-shadow(0 0 25px var(--neon-glow));
         }
@@ -221,11 +220,10 @@
 
         let scene, camera, renderer, starParticles, rocketMasterGroup;
         let fireParticles, engineFireGlow, launchpadBase;
-        let audienceGroup, audiencePositions = [], audienceState = "idle"; // States: "idle", "gathering", "cheering"
+        let audienceGroup, fireAudienceParticles, audiencePositions = [], audienceState = "idle";
         let launchTriggerActive = false;
 
         function buildCosmosStage() {
-            // --- 1. ENGINES SETTINGS & INITIALIZATION ---
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x000206);
             scene.fog = new THREE.FogExp2(0x000206, 0.0018);
@@ -237,40 +235,39 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-            // --- 2. PREMIUM AMBIENT STUDIO LIGHTING MATRIX ---
-            const ambient = new THREE.AmbientLight(0xffffff, 0.35);
+            const ambient = new THREE.AmbientLight(0xffffff, 0.5); // Brighter lighting base
             scene.add(ambient);
 
-            const platformLight = new THREE.DirectionalLight(0xfff5df, 1.4);
+            const platformLight = new THREE.DirectionalLight(0xfff5df, 1.5);
             platformLight.position.set(40, 150, 60);
             scene.add(platformLight);
 
-            const cosmicFillLight = new THREE.PointLight(0x3a86ff, 1.8, 300);
+            const cosmicFillLight = new THREE.PointLight(0x3a86ff, 2.0, 300);
             cosmicFillLight.position.set(-80, 50, -50);
             scene.add(cosmicFillLight);
 
-            // --- 3. SPACE BACKGROUND MATRICES ---
+            // Stars Background System
             const starGeom = new THREE.BufferGeometry();
             const starPoints = [];
-            for(let i=0; i<6000; i++) {
+            for(let i=0; i<4000; i++) { // Optimized density for hardware rendering
                 starPoints.push((Math.random()-0.5)*1000, (Math.random()-0.5)*1000, (Math.random()-0.5)*1000);
             }
             starGeom.setAttribute('position', new THREE.Float32BufferAttribute(starPoints, 3));
-            const starMat = new THREE.PointsMaterial({ size: 0.5, color: 0xffffff, transparent: true, opacity: 0.5 });
+            const starMat = new THREE.PointsMaterial({ size: 0.7, color: 0xffffff, transparent: true, opacity: 0.6 });
             starParticles = new THREE.Points(starGeom, starMat);
             scene.add(starParticles);
 
-            // Structural Concrete Launchpad Base
+            // Launchpad Frame
             const baseGeom = new THREE.CylinderGeometry(80, 90, 8, 4);
-            const baseMat = new THREE.MeshStandardMaterial({ color: 0x0f131a, roughness: 0.8, metalness: 0.4 });
+            const baseMat = new THREE.MeshStandardMaterial({ color: 0x111622, roughness: 0.7, metalness: 0.5 });
             launchpadBase = new THREE.Mesh(baseGeom, baseMat);
             launchpadBase.position.y = -64;
             launchpadBase.rotation.y = Math.PI / 4;
             scene.add(launchpadBase);
 
-            // 3D Stadium Seating Grid Assemblies
+            // Seating Steps Structure
             const stadiumGroup = new THREE.Group();
-            const blockMat = new THREE.MeshStandardMaterial({ color: 0x06090e, roughness: 0.9 });
+            const blockMat = new THREE.MeshStandardMaterial({ color: 0x090d14, roughness: 0.8 });
             for(let i=0; i<12; i++) {
                 const stepGeom = new THREE.BoxGeometry(45, 4 + (i*4), 110);
                 const leftStep = new THREE.Mesh(stepGeom, blockMat);
@@ -281,9 +278,9 @@
             }
             scene.add(stadiumGroup);
 
-            // --- 4. LIVING STADIUM AUDIENCE SIMULATION ENGINE ---
+            // --- OPTIMIZED GENERATION FOR THE CROWD PARTICLES ---
             audienceGroup = new THREE.Group();
-            const audienceCount = 800;
+            const audienceCount = 750; // Performance friendly array size
             const audienceGeom = new THREE.BufferGeometry();
             const initialPosArr = [];
 
@@ -291,9 +288,8 @@
                 let sideIdx = Math.random() > 0.5 ? 1 : -1;
                 let stepLevel = Math.floor(Math.random() * 12);
                 
-                // Mathematical anchoring coordinates relative to structural seating blocks
-                let targetX = sideIdx * (115 + (stepLevel * 5) + (Math.random() * 15 - 7.5));
-                let targetY = -60 + (stepLevel * 2) + 3; 
+                let targetX = sideIdx * (115 + (stepLevel * 5) + (Math.random() * 12 - 6));
+                let targetY = -60 + (stepLevel * 2) + 4.5; // Offset higher over the staircase elements
                 let targetZ = (Math.random() * 90) - 45;
 
                 audiencePositions.push({
@@ -302,30 +298,30 @@
                     homeZ: targetZ,
                     side: sideIdx,
                     step: stepLevel,
-                    noiseSeed: Math.random() * 100
+                    noiseSeed: Math.random() * 200
                 });
 
-                // Scatter positions initially across wide spectrum boundaries
-                initialPosArr.push(targetX + (Math.random()*20-10), targetY, targetZ + (Math.random()*20-10));
+                initialPosArr.push(targetX, targetY, targetZ);
             }
             
             audienceGeom.setAttribute('position', new THREE.Float32BufferAttribute(initialPosArr, 3));
+            
+            // Premium Bright Material Highlighting
             const audienceMat = new THREE.PointsMaterial({
-                size: 2.0,
-                color: 0xe2c069,
+                size: 4.5, // Amplified item vector size for clean clarity
+                color: 0xffd700, // True luxury gold tint
                 transparent: true,
-                opacity: 0.85,
+                opacity: 0.95,
                 blending: THREE.AdditiveBlending
             });
             fireAudienceParticles = new THREE.Points(audienceGeom, audienceMat);
             audienceGroup.add(fireAudienceParticles);
             scene.add(audienceGroup);
 
-            // --- 5. HIERARCHICAL ROCKET PROPULSION ASSEMBLY ---
+            // Rocket Object Build
             rocketMasterGroup = new THREE.Group();
-
             const goldChromeMat = new THREE.MeshStandardMaterial({ color: 0xe2c069, roughness: 0.15, metalness: 0.85 });
-            const darkTitaniumMat = new THREE.MeshStandardMaterial({ color: 0x13171f, roughness: 0.5, metalness: 0.6 });
+            const darkTitaniumMat = new THREE.MeshStandardMaterial({ color: 0x1a1e26, roughness: 0.4, metalness: 0.7 });
             const enginePlumeMat = new THREE.MeshBasicMaterial({ color: 0xff5500, transparent: true, opacity: 0.75 });
 
             const coreGeom = new THREE.CylinderGeometry(7, 7.5, 55, 32);
@@ -365,7 +361,7 @@
 
             const fireGeom = new THREE.BufferGeometry();
             const firePositions = [];
-            for(let i=0; i<300; i++) {
+            for(let i=0; i<200; i++) {
                 firePositions.push((Math.random()-0.5)*8, -6 - (Math.random()*15), (Math.random()-0.5)*8);
             }
             fireGeom.setAttribute('position', new THREE.Float32BufferAttribute(firePositions, 3));
@@ -380,14 +376,12 @@
             renderEngineLoop();
         }
 
-        // --- TICK FRAME RUNTIME RENDERING TICK INTERACTION LOOP ---
         function renderEngineLoop() {
             requestAnimationFrame(renderEngineLoop);
             const elapsedTicks = performance.now() * 0.001;
 
-            if(starParticles) { starParticles.rotation.y = elapsedTicks * 0.006; }
+            if(starParticles) { starParticles.rotation.y = elapsedTicks * 0.004; }
             
-            // Rocket Idling Core Systems Motion Array mapping
             if(rocketMasterGroup && !launchTriggerActive) {
                 rocketMasterGroup.rotation.y = Math.sin(elapsedTicks) * 0.03;
                 engineFireGlow.scale.set(1 + Math.sin(elapsedTicks*22)*0.1, 1 + Math.cos(elapsedTicks*22)*0.1, 1);
@@ -400,7 +394,7 @@
                 fireParticles.geometry.attributes.position.needsUpdate = true;
             }
 
-            // --- ANIMATE LIVING AUDIENCE MOVEMENT MATRIX MATRIX LOGIC ---
+            // --- ANIMATE AUDIENCE ENGINE GRAPHICS INTERACTIVE MATRIX ---
             if(fireAudienceParticles) {
                 const audPositions = fireAudienceParticles.geometry.attributes.position.array;
                 let pointer = 0;
@@ -409,24 +403,21 @@
                     let atom = audiencePositions[i];
                     
                     if(audienceState === "idle") {
-                        // Some sit, some shift positions, some simulate random walking vectors
-                        let movementOffset = Math.sin(elapsedTicks * 2 + atom.noiseSeed) * 0.3;
-                        let walkTrigger = Math.cos(elapsedTicks * 0.5 + atom.noiseSeed) > 0.75;
+                        let movementOffset = Math.sin(elapsedTicks * 2.0 + atom.noiseSeed) * 0.35;
+                        let walkTrigger = Math.cos(elapsedTicks * 0.4 + atom.noiseSeed) > 0.84;
                         
-                        audPositions[pointer] = atom.homeX + (walkTrigger ? movementOffset * 3 : 0);
+                        audPositions[pointer] = atom.homeX + (walkTrigger ? movementOffset * 2.0 : 0);
                         audPositions[pointer+1] = atom.homeY + (walkTrigger ? Math.abs(movementOffset) * 0.5 : 0);
-                        audPositions[pointer+2] = atom.homeZ + (walkTrigger ? movementOffset * 2 : 0);
+                        audPositions[pointer+2] = atom.homeZ + (walkTrigger ? movementOffset * 1.5 : 0);
 
                     } else if(audienceState === "gathering") {
-                        // Interpolate and smoothly transition particles back onto structural steps cleanly
-                        audPositions[pointer] += (atom.homeX - audPositions[pointer]) * 0.08;
-                        audPositions[pointer+1] += (atom.homeY - audPositions[pointer+1]) * 0.08;
-                        audPositions[pointer+2] += (atom.homeZ - audPositions[pointer+2]) * 0.08;
+                        audPositions[pointer] += (atom.homeX - audPositions[pointer]) * 0.12;
+                        audPositions[pointer+1] += (atom.homeY - audPositions[pointer+1]) * 0.12;
+                        audPositions[pointer+2] += (atom.homeZ - audPositions[pointer+2]) * 0.12;
 
                     } else if(audienceState === "cheering") {
-                        // High intensity kinetic vertical vibration tracking cheering arrays
-                        let excitementFactor = Math.sin(elapsedTicks * 35 + atom.noiseSeed) * 2.8;
-                        audPositions[pointer] = atom.homeX + (Math.random() - 0.5) * 0.5;
+                        let excitementFactor = Math.sin(elapsedTicks * 42 + atom.noiseSeed) * 3.5;
+                        audPositions[pointer] = atom.homeX + (Math.random() - 0.5) * 0.8;
                         audPositions[pointer+1] = atom.homeY + Math.max(0, excitementFactor);
                         audPositions[pointer+2] = atom.homeZ;
                     }
@@ -441,7 +432,6 @@
         function startSystemUIRenders() {
             gsap.to("#overlay", { opacity: 1, duration: 1.2, ease: "power2.out" });
 
-            // Premium ScrollTrigger structural reveals
             gsap.utils.toArray(".reveal-fold").forEach(fold => {
                 gsap.from(fold, {
                     scrollTrigger: {
@@ -457,7 +447,6 @@
             });
         }
 
-        // --- SYSTEM CHRONOMETER COUNTDOWNS SYNCHRONIZER TIMELINE ---
         const scheduledTime = new Date("May 20, 2026 09:00:00").getTime();
 
         const timeSyncLoop = setInterval(() => {
@@ -471,9 +460,9 @@
                 return;
             }
 
-            // Track time proximity parameters to trigger audience clustering modifications
+            // If countdown enters final minute, anchor the crowd to seats
             if (timeDelta < 60000 && audienceState === "idle") {
-                audienceState = "gathering"; // Force crowd to anchor points as countdown draws near
+                audienceState = "gathering"; 
             }
 
             document.getElementById('days').innerText = String(Math.floor(timeDelta / dayUnit)).padStart(2, '0');
@@ -495,7 +484,6 @@
             if(launchTriggerActive) return;
             launchTriggerActive = true;
 
-            // Immediately switch audience state to energetic celebration
             audienceState = "cheering";
             document.body.style.overflow = "hidden";
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -526,7 +514,6 @@
             const launchTimeline = gsap.timeline();
             launchTimeline.to(camera.position, { z: 130, y: 15, duration: 3, ease: "power2.inOut" });
 
-            // Intense Structural Shake Dynamics
             launchTimeline.to("#three-canvas", { duration: 0.05, x: "+=15", yoyo: true, repeat: 40 }, "-=2.0")
                           .to("#three-canvas", { duration: 0.05, y: "+=10", yoyo: true, repeat: 40 }, "-=2.0");
 
@@ -544,6 +531,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
+        // Stable initialization handler
         document.addEventListener("DOMContentLoaded", () => {
             buildCosmosStage();
         });
