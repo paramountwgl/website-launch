@@ -5,384 +5,661 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PARAMOUNT ENGLISH MEDIUM HIGH SCHOOL</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display+SC:wght@700;900&family=Tenor+Sans&family=Urbanist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
+    /* ==========================================================================
+       CORE RESET & SCROLLBAR CONFIGURATION (Clean Fullscreen View)
+       ========================================================================== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
     }
 
-    body {
-      overflow: hidden;
-      background: #000;
-      color: white;
-      height: 100vh;
+    html, body {
+      background-color: #000206;
+      color: #fdfdfd;
+      font-family: 'Urbanist', sans-serif;
+      width: 100%;
+      overflow-x: hidden;
+      /* Hide scrollbar tracks completely while keeping mouse wheel functionality intact */
+      -ms-overflow-style: none;  
+      scrollbar-width: none;  
+    }
+
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none; 
+    }
+
+    .hero-font { font-family: 'Playfair Display', serif; }
+    .sc-font { font-family: 'Playfair Display SC', serif; }
+
+    #three-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .content-overlay {
       position: relative;
-    }
-
-    .background {
-      position: absolute;
+      z-index: 2;
       width: 100%;
-      height: 100%;
-      background:
-        radial-gradient(circle at top left, rgba(0,123,255,0.35), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(140,0,255,0.35), transparent 30%),
-        linear-gradient(135deg, #020617, #000000, #0f172a);
-      z-index: -3;
+      pointer-events: none;
     }
 
-    .particles {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: -2;
+    .content-overlay * {
+      pointer-events: auto;
     }
 
-    .particle {
-      position: absolute;
-      width: 3px;
-      height: 3px;
-      background: rgba(255,255,255,0.8);
+    .glowing-brand-panel {
+      filter: drop-shadow(0 0 25px rgba(226, 192, 105, 0.6));
+    }
+
+    /* ==========================================================================
+       PREMIUM LOOK COUNTDOWN MODULE
+       ========================================================================== */
+    .countdown-wrapper {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .luxury-timer-box {
+      position: relative;
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
-      animation: float 10s linear infinite;
-    }
-
-    @keyframes float {
-      from {
-        transform: translateY(100vh) scale(0);
-        opacity: 0;
-      }
-      50% {
-        opacity: 1;
-      }
-      to {
-        transform: translateY(-10vh) scale(1);
-        opacity: 0;
-      }
-    }
-
-    .container {
-      height: 100vh;
+      background: radial-gradient(circle at center, rgba(226, 192, 105, 0.06) 0%, rgba(0,2,6,0.6) 80%);
+      border: 1px solid rgba(226, 192, 105, 0.2);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 20px rgba(226, 192, 105, 0.05);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      padding: 20px;
-      position: relative;
-      z-index: 5;
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      transition: all 0.5s ease;
     }
 
-    .logo-box {
-      width: 140px;
-      height: 140px;
+    .luxury-timer-box::after {
+      content: '';
+      position: absolute;
+      inset: -5px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.2);
-      backdrop-filter: blur(20px);
+      border: 1px dashed rgba(226, 192, 105, 0.15);
+      pointer-events: none;
+    }
+
+    .time-digits {
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    .time-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #e2c069;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .launch-timestamp-notice {
+      font-size: 0.95rem;
+      letter-spacing: 5px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      margin-bottom: 25px;
+      font-weight: 500;
+    }
+
+    .premium-glass {
+      border: 1px solid rgba(226, 192, 105, 0.15);
+      background: linear-gradient(135deg, rgba(2, 6, 12, 0.75) 0%, rgba(0, 2, 6, 0.45) 100%);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9);
+    }
+
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #ffffff 10%, #e2c069 60%, #b8860b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ==========================================================================
+       HERO WRAPPER SECTION
+       ========================================================================== */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+      padding: 60px 20px 40px;
+      position: relative;
+    }
+
+    .logo-glow-ring {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 2px solid #e2c069;
+      background: rgba(0,0,0,0.6);
+      box-shadow: 0 0 40px rgba(226, 192, 105, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 25px;
+    }
+
+    .school-title {
+      font-size: 3.8rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .school-location {
+      font-size: 1.8rem;
+      letter-spacing: 0.6em;
+      color: #ffffff;
+      opacity: 0.9;
+      text-transform: uppercase;
+      margin-top: 5px;
+      font-weight: 300;
+    }
+
+    .hero-summary {
+      font-size: 1.25rem;
+      color: #94a3b8;
+      max-width: 800px;
+      line-height: 1.8;
+      font-weight: 300;
+      margin: 25px auto 35px;
+    }
+
+    /* ==========================================================================
+       SECURE TIMED ACTION LINK ELEMENTS
+       ========================================================================== */
+    .gated-action-wrapper {
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .premium-lock-banner {
+      background: rgba(0, 2, 6, 0.8);
+      border: 1px solid rgba(226, 192, 105, 0.15);
+      letter-spacing: 4px;
+      font-size: 0.85rem;
+      padding: 18px 45px;
+      border-radius: 100px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #cbd5e1;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    .premium-launch-cta {
+      background: linear-gradient(135deg, #b8860b, #e2c069, #ffffff, #e2c069);
+      background-size: 300% auto;
+      color: #000000;
+      padding: 22px 60px;
+      border-radius: 100px;
+      font-size: 0.9rem;
+      font-weight: 900;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      box-shadow: 0 0 50px rgba(226, 192, 105, 0.4);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      display: none; 
+    }
+
+    .premium-launch-cta:hover {
+      background-position: right center;
+      box-shadow: 0 0 70px rgba(226, 192, 105, 0.7);
+      transform: scale(1.04) translateY(-2px);
+    }
+
+    /* ==========================================================================
+       INSTITUTIONAL PORTFOLIO SECTIONS
+       ========================================================================== */
+    .section-blend {
+      background: linear-gradient(to bottom, transparent, #000206 15%, #000611 100%);
+    }
+
+    .institutional-showcase {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 140px 20px 140px;
+    }
+
+    .section-header-block {
+      text-align: center;
+      margin-bottom: 70px;
+    }
+
+    .section-tagline {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 5px;
+      color: #e2c069;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .section-main-title {
+      font-size: 2.6rem;
+      font-weight: 400;
+      color: #ffffff;
+    }
+
+    .matrix-ecosystem-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+    }
+
+    .ecosystem-card {
+      padding: 45px;
+      border-radius: 24px;
+      transition: all 0.4s ease;
+    }
+
+    .ecosystem-card:hover {
+      border-color: rgba(226, 192, 105, 0.3);
+      transform: translateY(-5px);
+    }
+
+    .card-icon-container {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: rgba(226, 192, 105, 0.1);
+      border: 1px solid rgba(226, 192, 105, 0.2);
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 25px;
-      box-shadow: 0 0 50px rgba(255,255,255,0.1);
-      animation: pulse 3s infinite;
     }
 
-    .logo-box img {
-      width: 90px;
-      height: 90px;
-      object-fit: contain;
+    .card-icon-container i {
+      font-size: 1.5rem;
+      color: #e2c069;
     }
 
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.05);
-      }
-      100% {
-        transform: scale(1);
-      }
+    .card-title {
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #ffffff;
+      margin-bottom: 15px;
     }
 
-    .school-name {
-      font-size: 4rem;
-      font-weight: 800;
-      line-height: 1.1;
-      background: linear-gradient(to right, #ffffff, #93c5fd, #d8b4fe);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(255,255,255,0.1);
-      margin-bottom: 20px;
-    }
-
-    .subtitle {
-      font-size: 1.3rem;
-      color: #d1d5db;
-      max-width: 900px;
-      line-height: 1.7;
-      margin-bottom: 60px;
-    }
-
-    .countdown {
-      display: flex;
-      gap: 25px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .time-box {
-      width: 160px;
-      height: 170px;
-      border-radius: 30px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      backdrop-filter: blur(20px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 40px rgba(255,255,255,0.08);
-      transition: 0.4s ease;
-    }
-
-    .time-box:hover {
-      transform: translateY(-10px) scale(1.05);
-      box-shadow: 0 0 60px rgba(147,197,253,0.3);
-    }
-
-    .time {
-      font-size: 4rem;
-      font-weight: 800;
-    }
-
-    .label {
-      margin-top: 10px;
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      font-size: 0.9rem;
-      color: #cbd5e1;
-    }
-
-    .launch-text {
-      margin-top: 50px;
+    .card-body-text {
       color: #94a3b8;
-      letter-spacing: 6px;
-      font-size: 0.9rem;
-      text-transform: uppercase;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      font-weight: 300;
     }
 
-    .launch-button {
-      margin-top: 45px;
-      padding: 22px 50px;
-      border-radius: 100px;
-      font-size: 1.2rem;
-      font-weight: 700;
-      border: none;
-      cursor: pointer;
-      transition: 0.4s ease;
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
-      color: white;
-      box-shadow: 0 0 60px rgba(168,85,247,0.6);
-      display: none;
-      text-decoration: none;
-    }
-
-    .launch-button:hover {
-      transform: scale(1.08);
-      box-shadow: 0 0 80px rgba(236,72,153,0.8);
-    }
-
-    .locked-button {
-      margin-top: 45px;
-      padding: 22px 50px;
-      border-radius: 100px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.08);
-      color: #9ca3af;
-      backdrop-filter: blur(15px);
-      cursor: not-allowed;
-    }
-
-    .rocket {
-      position: absolute;
-      bottom: -200px;
-      font-size: 100px;
-      animation: rocketLaunch 8s linear infinite;
-      opacity: 0.15;
-      z-index: -1;
-    }
-
-    @keyframes rocketLaunch {
-      0% {
-        transform: translateY(0) translateX(0) rotate(-20deg);
-      }
-      100% {
-        transform: translateY(-120vh) translateX(50vw) rotate(20deg);
-      }
-    }
-
-    @media(max-width: 768px) {
-      body {
-        overflow-y: auto;
-      }
-
-      .school-name {
-        font-size: 2.2rem;
-      }
-
-      .subtitle {
-        font-size: 1rem;
-      }
-
-      .time-box {
-        width: 120px;
-        height: 130px;
-      }
-
-      .time {
-        font-size: 2.8rem;
-      }
-
-      .label {
-        font-size: 0.7rem;
-      }
-
-      .launch-button,
-      .locked-button {
-        padding: 18px 35px;
-        font-size: 1rem;
-      }
+    @media (max-width: 968px) {
+      .matrix-ecosystem-grid { grid-template-columns: 1fr; }
+      .school-title { font-size: 2.6rem; }
+      .school-location { font-size: 1.3rem; letter-spacing: 0.4em; }
+      .luxury-timer-box { width: 110px; height: 110px; }
+      .time-digits { font-size: 2.4rem; }
     }
   </style>
 </head>
 <body>
 
-  <div class="background"></div>
-  <div class="particles" id="particles"></div>
+  <canvas id="three-canvas"></canvas>
 
-  <div class="rocket">🚀</div>
+  <div class="content-overlay" id="overlay">
 
-  <div class="container">
+    <section class="hero-section">
+      
+      <header class="w-full pt-4 tracking-widest glowing-brand-panel">
+        <div class="logo-glow-ring">
+          <i class="fas fa-graduation-cap text-[#e2c069] text-4xl"></i>
+        </div>
+        <h1 class="school-title hero-font">
+          PARAMOUNT ENGLISH <br>
+          <span class="gold-gradient-text italic font-bold">MEDIUM HIGH SCHOOL</span>
+        </h1>
+        <div class="school-location hero-font">Warangal</div>
+      </header>
 
-    <div class="logo-box">
-      <!-- Replace logo URL with your school logo -->
-      <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg" alt="School Logo">
+      <div class="w-full max-w-4xl mx-auto">
+        <p class="hero-summary">
+          The complete digital ecosystem of smart infrastructure metrics is preparing for ignition. Experience a unified administrative experience customized explicitly for the modern student and parent network.
+        </p>
+
+        <div class="launch-timestamp-notice">
+          <i class="far fa-calendar-check text-[#e2c069] mr-2"></i> Launching Live: June 30, 2026 at 00:00 Hours
+        </div>
+
+        <div class="countdown-wrapper">
+          <div class="luxury-timer-box"><div class="time-digits hero-font" id="days">00</div><div class="time-label">Days</div></div>
+          <div class="luxury-timer-box"><div class="time-digits hero-font" id="hours">00</div><div class="time-label">Hours</div></div>
+          <div class="luxury-timer-box"><div class="time-digits hero-font" id="minutes">00</div><div class="time-label">Mins</div></div>
+          <div class="luxury-timer-box"><div class="time-digits hero-font" id="seconds">00</div><div class="time-label">Secs</div></div>
+        </div>
+
+        <div class="gated-action-wrapper">
+          <div class="premium-lock-banner" id="gateLockedBanner">
+            <i class="fas fa-lock mr-2 text-red-400"></i> Portal Enforced Lock Active Until T-Zero
+          </div>
+          <a id="gateUnlockedCta" class="premium-launch-cta" target="_blank">
+            <i class="fas fa-rocket mr-2"></i> Enter Official Website
+          </a>
+        </div>
+      </div>
+
+      <div class="animate-bounce text-[10px] tracking-[0.5em] uppercase opacity-40 text-white pb-2">
+          Scroll to Explore Campus Dimensions <br> <i class="fas fa-chevron-down mt-2 text-xs text-[#e2c069]"></i>
+      </div>
+
+    </section>
+
+    <div class="section-blend">
+      <section class="institutional-showcase">
+        <div class="section-header-block">
+          <span class="section-tagline">// Matrix Units</span>
+          <h2 class="section-main-title hero-font">The Paramount Group of Institutions</h2>
+        </div>
+
+        <div class="matrix-ecosystem-grid">
+          <div class="ecosystem-card premium-glass">
+            <div class="card-icon-container"><i class="fas fa-school"></i></div>
+            <h3 class="card-title hero-font">Paramount English Medium High School</h3>
+            <p class="card-body-text">Our central foundation campus providing secondary education parameters. Engineered with modern science labs and integrated portal tools.</p>
+          </div>
+
+          <div class="ecosystem-card premium-glass">
+            <div class="card-icon-container"><i class="fas fa-atom"></i></div>
+            <h3 class="card-title hero-font">Paramount Polycet Coaching Center</h3>
+            <p class="card-body-text">Specialized admissions entrance preparation module. Delivering conceptual guidance to secure top technical diploma track allocations.</p>
+          </div>
+
+          <div class="ecosystem-card premium-glass">
+            <div class="card-icon-container"><i class="fas fa-shield-alt"></i></div>
+            <h3 class="card-title hero-font">Paramount SI & PC Coaching Center</h3>
+            <p class="card-body-text">Elite professional training frameworks tailored for Sub-Inspector and Police Constable competitive tracks.</p>
+          </div>
+
+          <div class="ecosystem-card premium-glass">
+            <div class="card-icon-container"><i class="fas fa-trophy"></i></div>
+            <h3 class="card-title hero-font">Paramount Hockey Academy</h3>
+            <p class="card-body-text">Our dedicated athletic guild asset. Fostering regional talent prospects using state-of-the-art conditioning and skills development layout matrices.</p>
+          </div>
+        </div>
+      </section>
     </div>
-
-    <h1 class="school-name">
-      PARAMOUNT ENGLISH <br>
-      MEDIUM HIGH SCHOOL
-    </h1>
-
-    <p class="subtitle">
-      The Future Of Smart Education Is About To Begin.<br>
-      Experience A New Digital Journey For Parents, Students & Teachers.
-    </p>
-
-    <div class="countdown">
-
-      <div class="time-box">
-        <div class="time" id="days">00</div>
-        <div class="label">Days</div>
-      </div>
-
-      <div class="time-box">
-        <div class="time" id="hours">00</div>
-        <div class="label">Hours</div>
-      </div>
-
-      <div class="time-box">
-        <div class="time" id="minutes">00</div>
-        <div class="label">Minutes</div>
-      </div>
-
-      <div class="time-box">
-        <div class="time" id="seconds">00</div>
-        <div class="label">Seconds</div>
-      </div>
-
-    </div>
-
-    <div class="launch-text">
-      GRAND WEBSITE LAUNCH COUNTDOWN
-    </div>
-
-    <button class="locked-button" id="lockedBtn">
-      WEBSITE WILL UNLOCK SOON
-    </button>
-
-    <!-- Replace your website link below -->
-    <a href="https://yourwebsite.com" class="launch-button" id="launchBtn" target="_blank">
-      🚀 ENTER OFFICIAL WEBSITE
-    </a>
 
   </div>
 
   <script>
+    // ==========================================================================
+    // THREE.JS REAL-TIME CORE DESIGN ENVIRONMENT (Cosmos Launch Dock Gantry)
+    // ==========================================================================
+    let scene, camera, renderer, starParticles, rocketMasterGroup;
+    let engineFireGlow, launchpadBase, fireParticles, leftForcefield, rightForcefield, baseGridFloor;
 
-    // =============================
-    // PARTICLES
-    // =============================
+    function buildCosmosStage() {
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000206);
+        scene.fog = new THREE.FogExp2(0x000206, 0.0012);
 
-    const particlesContainer = document.getElementById('particles');
+        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+        camera.position.set(0, 25, 185); 
 
-    for(let i = 0; i < 60; i++) {
-      const particle = document.createElement('div');
-      particle.classList.add('particle');
+        renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-      particle.style.left = Math.random() * 100 + '%';
-      particle.style.animationDuration = (5 + Math.random() * 10) + 's';
-      particle.style.animationDelay = Math.random() * 5 + 's';
-      particle.style.opacity = Math.random();
+        // Setup clear high contrast lighting rigs
+        const ambient = new THREE.AmbientLight(0xffffff, 1.2); 
+        scene.add(ambient);
 
-      particlesContainer.appendChild(particle);
+        const platformLight = new THREE.DirectionalLight(0xfff5df, 2.5);
+        platformLight.position.set(0, 180, 100);
+        scene.add(platformLight);
+
+        // Constellation Space Particle Matrix
+        const starGeom = new THREE.BufferGeometry();
+        const starPoints = [];
+        for(let i=0; i<3000; i++) { 
+            starPoints.push((Math.random()-0.5)*1000, (Math.random()-0.5)*1000, (Math.random()-0.5)*1000);
+        }
+        starGeom.setAttribute('position', new THREE.Float32BufferAttribute(starPoints, 3));
+        const starMat = new THREE.PointsMaterial({ size: 0.8, color: 0xffffff, transparent: true, opacity: 0.5 });
+        starParticles = new THREE.Points(starGeom, starMat);
+        scene.add(starParticles);
+
+        // Architectural Laser Containment Gantry Beams
+        const pillarGeom = new THREE.CylinderGeometry(1.5, 2.5, 200, 4, 1, true);
+        const pillarMat = new THREE.MeshStandardMaterial({
+            color: 0xe2c069,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.35,
+            emissive: 0xb8860b,
+            emissiveIntensity: 0.6
+        });
+        leftForcefield = new THREE.Mesh(pillarGeom, pillarMat);
+        leftForcefield.position.set(-75, 20, -30);
+        rightForcefield = leftForcefield.clone();
+        rightForcefield.position.x = 75;
+        scene.add(leftForcefield, rightForcefield);
+
+        // Gantry Dock Geometric Floor Floor Mesh
+        const gridGeom = new THREE.PlaneGeometry(400, 400, 40, 40);
+        const gridMat = new THREE.MeshStandardMaterial({ color: 0x0c1930, wireframe: true, transparent: true, opacity: 0.2 });
+        baseGridFloor = new THREE.Mesh(gridGeom, gridMat);
+        baseGridFloor.rotation.x = -Math.PI / 2;
+        baseGridFloor.position.y = -64;
+        scene.add(baseGridFloor);
+
+        // Launchpad Center Hub Base
+        const baseGeom = new THREE.CylinderGeometry(70, 80, 8, 4);
+        const baseMat = new THREE.MeshStandardMaterial({ color: 0x111622, roughness: 0.6, metalness: 0.6 });
+        launchpadBase = new THREE.Mesh(baseGeom, baseMat);
+        launchpadBase.position.y = -64;
+        launchpadBase.rotation.y = Math.PI / 4;
+        scene.add(launchpadBase);
+
+        // Heavy Multi-Stage Gold Chrome Rocket Assembly
+        rocketMasterGroup = new THREE.Group();
+        const goldChromeMat = new THREE.MeshStandardMaterial({ color: 0xe2c069, roughness: 0.15, metalness: 0.85 });
+        const darkTitaniumMat = new THREE.MeshStandardMaterial({ color: 0x1a1e26, roughness: 0.4, metalness: 0.7 });
+        
+        const enginePlumeMat = new THREE.MeshBasicMaterial({ 
+            color: 0xffcc44, 
+            transparent: true, 
+            opacity: 0.98,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false 
+        });
+
+        const coreGeom = new THREE.CylinderGeometry(7, 7.5, 55, 32);
+        const coreBooster = new THREE.Mesh(coreGeom, goldChromeMat);
+        coreBooster.position.y = 27.5;
+        rocketMasterGroup.add(coreBooster);
+
+        const noseGeom = new THREE.ConeGeometry(7, 18, 32);
+        const noseCone = new THREE.Mesh(noseGeom, darkTitaniumMat);
+        noseCone.position.y = 64;
+        rocketMasterGroup.add(noseCone);
+
+        const sidePodGeom = new THREE.CylinderGeometry(3, 3.2, 38, 16);
+        const leftPod = new THREE.Mesh(sidePodGeom, goldChromeMat);
+        leftPod.position.set(-10.5, 19, 0);
+        const rightPod = leftPod.clone();
+        rightPod.position.x = 10.5;
+        rocketMasterGroup.add(leftPod, rightPod);
+
+        const sideNoseGeom = new THREE.ConeGeometry(3, 8, 16);
+        const leftSideNose = new THREE.Mesh(sideNoseGeom, darkTitaniumMat);
+        leftSideNose.position.set(-10.5, 42, 0);
+        const rightSideNose = leftSideNose.clone();
+        rightSideNose.position.x = 10.5;
+        rocketMasterGroup.add(leftSideNose, rightSideNose);
+
+        const nozzleGeom = new THREE.CylinderGeometry(4, 6, 6, 16);
+        const mainNozzle = new THREE.Mesh(nozzleGeom, darkTitaniumMat);
+        mainNozzle.position.y = -3;
+        rocketMasterGroup.add(mainNozzle);
+
+        // Core Launch Jet Fire Plume
+        const flameGeom = new THREE.ConeGeometry(5.2, 22, 16);
+        flameGeom.rotateX(Math.PI);
+        engineFireGlow = new THREE.Mesh(flameGeom, enginePlumeMat);
+        engineFireGlow.position.set(0, -13, 14); 
+        engineFireGlow.renderOrder = 999; 
+        rocketMasterGroup.add(engineFireGlow);
+
+        const fireGeom = new THREE.BufferGeometry();
+        const firePositions = [];
+        for(let i=0; i<250; i++) {
+            firePositions.push((Math.random()-0.5)*9, -6 - (Math.random()*18), 14 + (Math.random()-0.5)*4);
+        }
+        fireGeom.setAttribute('position', new THREE.Float32BufferAttribute(firePositions, 3));
+        const fireMat = new THREE.PointsMaterial({ 
+            size: 3.8, 
+            color: 0xff6600, 
+            transparent: true, 
+            opacity: 0.95, 
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        fireParticles = new THREE.Points(fireGeom, fireMat);
+        fireParticles.renderOrder = 1000;
+        rocketMasterGroup.add(fireParticles);
+
+        rocketMasterGroup.position.set(0, -56, 0);
+        scene.add(rocketMasterGroup);
+
+        renderEngineLoop();
     }
 
+    function renderEngineLoop() {
+        requestAnimationFrame(renderEngineLoop);
+        const elapsedTicks = performance.now() * 0.001;
 
-    // =============================
-    // COUNTDOWN TIMER
-    // =============================
+        if(starParticles) { starParticles.rotation.y = elapsedTicks * 0.002; }
+        
+        if(leftForcefield && rightForcefield) {
+            leftForcefield.rotation.y = elapsedTicks * 0.3;
+            rightForcefield.rotation.y = -elapsedTicks * 0.3;
+        }
 
-    // SET YOUR GRAND LAUNCH DATE HERE
-    const launchDate = new Date('June 30, 2026 00:00:00').getTime();
+        if(rocketMasterGroup && !launchTriggerActive) {
+            rocketMasterGroup.rotation.y = Math.sin(elapsedTicks) * 0.03;
+            engineFireGlow.scale.set(1 + Math.sin(elapsedTicks*25)*0.15, 1 + Math.cos(elapsedTicks*25)*0.15, 1);
+            
+            const positions = fireParticles.geometry.attributes.position.array;
+            for(let i=1; i<positions.length; i+=3) {
+                positions[i] -= 0.45;
+                if(positions[i] < -28) positions[i] = -6;
+            }
+            fireParticles.geometry.attributes.position.needsUpdate = true;
+        }
 
-    const timer = setInterval(function() {
+        renderer.render(scene, camera);
+    }
 
-      const now = new Date().getTime();
-      const distance = launchDate - now;
+    // ==========================================================================
+    // CRITICAL ENCRYPTED TIMER LINK GATE CONTROLLERS
+    // ==========================================================================
+    const explicitLaunchTimestamp = new Date('June 30, 2026 00:00:00').getTime();
 
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    const timelineSyncThread = setInterval(function() {
+      const dynamicNow = new Date().getTime();
+      const remainingDistanceDelta = explicitLaunchTimestamp - dynamicNow;
+
+      const days = Math.floor(remainingDistanceDelta / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((remainingDistanceDelta % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((remainingDistanceDelta % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((remainingDistanceDelta % (1000 * 60)) / 1000);
 
       document.getElementById('days').innerHTML = String(days).padStart(2, '0');
       document.getElementById('hours').innerHTML = String(hours).padStart(2, '0');
       document.getElementById('minutes').innerHTML = String(minutes).padStart(2, '0');
       document.getElementById('seconds').innerHTML = String(seconds).padStart(2, '0');
 
-      if(distance < 0) {
-        clearInterval(timer);
+      // GATE CHECK EXECUTION TRACE
+      if (remainingDistanceDelta <= 0) {
+        clearInterval(timelineSyncThread);
 
         document.getElementById('days').innerHTML = '00';
         document.getElementById('hours').innerHTML = '00';
         document.getElementById('minutes').innerHTML = '00';
         document.getElementById('seconds').innerHTML = '00';
 
-        document.getElementById('lockedBtn').style.display = 'none';
-        document.getElementById('launchBtn').style.display = 'inline-block';
+        // 1. Terminate structural locked security banner
+        document.getElementById('gateLockedBanner').style.display = 'none';
+        
+        // 2. Instantiate and inject actual encrypted destination URL context at T-Zero
+        const actionButton = document.getElementById('gateUnlockedCta');
+        actionButton.setAttribute('href', 'https://paramountschooledu.in/');
+        actionButton.style.display = 'inline-block';
+        
+        // 3. Bind kinetic click launch engine triggers
+        actionButton.addEventListener('click', activateKineticPropulsionBlastOff);
       }
-
     }, 1000);
 
+    function activateKineticPropulsionBlastOff(e) {
+        if(launchTriggerActive) return;
+        launchTriggerActive = true;
+
+        document.body.style.overflow = "hidden";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        gsap.to(["#gateUnlockedCta", ".countdown-wrapper", "header", ".animate-bounce", ".launch-timestamp-notice"], { opacity: 0, duration: 0.5, stagger: 0.05 });
+
+        gsap.to(engineFireGlow.scale, { x: 4, z: 4, y: 5, duration: 1.2 });
+        engineFireGlow.material.color.setHex(0x00ffff);
+        fireParticles.material.color.setHex(0x00ffcc);
+
+        const launchTimeline = gsap.timeline();
+        launchTimeline.to(camera.position, { z: 130, y: 15, duration: 3, ease: "power2.inOut" });
+        launchTimeline.to(rocketMasterGroup.position, { y: 550, duration: 4.8, ease: "power4.in" }, "+=0.1");
+
+        launchTimeline.to("body", { opacity: 0, duration: 1.5, onComplete: () => {
+            // Execution complete, perform link transfer pass
+        }}, "+=0.4");
+    }
+
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        buildCosmosStage();
+    });
   </script>
 
 </body>
