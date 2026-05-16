@@ -308,7 +308,7 @@
             }
             scene.add(stadiumGroup);
 
-            // RIGID MATRIX GENERATION MECHANICS WITH MATHEMATICAL CO-EFFICIENTS FOR ANGLE MATCHING
+            // AUDIENCE CONTAINER
             audienceGroup = new THREE.Group();
 
             const clothColors = [0xe2c069, 0xa62626, 0x164e63, 0x2d3748, 0xd4af37];
@@ -319,30 +319,29 @@
             const armGeom = new THREE.CylinderGeometry(0.24, 0.2, 2.0, 8);
             const legGeom = new THREE.CylinderGeometry(0.32, 0.26, 2.4, 8);
 
-            // Map rows along the actual angled structural layout lines (Left side 115 deg, Right side -65 deg)
-            const sideAngles = {
-                "-1": 115 * (Math.PI / 180), // Left Side angled vector
-                "1": -65 * (Math.PI / 180)   // Right Side angled vector
-            };
-
-            for (let sideIdx of [-1, 1]) {
-                let angleOffset = sideAngles[sideIdx];
-
+            // PERFECT DIRECT STEP ALIGNMENT LOOP (Locks directly to the physical steps geometry equations)
+            for (let side of [-1, 1]) { // -1 = Left Side Steps, 1 = Right Side Steps
                 for (let stepLevel = 0; stepLevel < 12; stepLevel++) {
-                    // Exactly 12 seats evenly spaced along the diagonal step depth row line
-                    for (let seatIdx = 0; seatIdx < 12; seatIdx++) {
+                    // Maximum of 10 neatly columns sitting along each row depth lane
+                    for (let seatIdx = 0; seatIdx < 10; seatIdx++) {
                         
-                        if (Math.random() > 0.85) continue; // Natural empty spaces configuration
+                        if (Math.random() > 0.85) continue; 
 
-                        // Map horizontal steps along width and depth systematically using trigonometry 
-                        let rowRadius = 120 + (stepLevel * 5.2);
-                        let spreadAlongRowDepth = -40 + (seatIdx * 7.5); 
-
-                        let targetX = (rowRadius * Math.cos(angleOffset)) + (spreadAlongRowDepth * Math.sin(angleOffset));
-                        let targetZ = (rowRadius * Math.sin(angleOffset)) - (spreadAlongRowDepth * Math.cos(angleOffset));
+                        // CRITICAL CORRECTION: Map X directly using the exact equation of your stairs:
+                        // LeftSide: -115 - (stepLevel * 5) | RightSide: 115 + (stepLevel * 5)
+                        let baseStepX = side * (115 + (stepLevel * 5));
                         
-                        // Height elevation matching ensuring they fit directly on step plane tops
-                        let targetY = -60 + (stepLevel * 4.0) + 4.9; 
+                        // Center them perfectly inside the 45-unit thickness width of each step block mesh
+                        let horizontalCentering = side * (Math.random() * 20 - 10); 
+                        let targetX = baseStepX + horizontalCentering;
+
+                        // Calculate perfect structural height platform match
+                        let stepHeightBase = -60 + (stepLevel * 2);
+                        let topOfStepSurface = stepHeightBase + (4 + (stepLevel * 4)) / 2;
+                        let targetY = topOfStepSurface + 1.2; // Tiny safety margin to keep shoes clear
+
+                        // Distribute evenly along the 110-unit length depth of the stadium staircase blocks
+                        let targetZ = -45 + (seatIdx * 10.0) + (Math.random() * 2.0 - 1.0);
 
                         const humanContainer = new THREE.Group();
 
@@ -380,6 +379,7 @@
                         const rightLeg = leftLeg.clone();
 
                         if (naturalBehavior === 0) {
+                            // Sitting Position configuration
                             torso.rotation.x = 0.15; 
                             leftLeg.position.set(-0.45, 0.5, 1.0);
                             leftLeg.rotation.x = Math.PI / 2;
@@ -388,6 +388,7 @@
                             leftArm.rotation.x = 0.4;
                             rightArm.rotation.x = 0.4;
                         } else {
+                            // Standing positions configuration
                             leftLeg.position.set(-0.45, 0.2, 0);
                             rightLeg.position.set(0.45, 0.2, 0);
                         }
@@ -395,7 +396,7 @@
 
                         humanContainer.position.set(targetX, targetY, targetZ);
                         
-                        // Face the center launch platform directly
+                        // Face the center launchpad booster directly
                         humanContainer.lookAt(0, targetY, 0); 
 
                         audienceMeshArray.push({
@@ -422,9 +423,8 @@
             const goldChromeMat = new THREE.MeshStandardMaterial({ color: 0xe2c069, roughness: 0.15, metalness: 0.85 });
             const darkTitaniumMat = new THREE.MeshStandardMaterial({ color: 0x1a1e26, roughness: 0.4, metalness: 0.7 });
             
-            // Premium high intensity radiant rocket engine fire material setup
             const enginePlumeMat = new THREE.MeshBasicMaterial({ 
-                color: 0xffaa00, 
+                color: 0xffcc44, 
                 transparent: true, 
                 opacity: 0.98,
                 blending: THREE.AdditiveBlending,
@@ -460,11 +460,11 @@
             mainNozzle.position.y = -3;
             rocketMasterGroup.add(mainNozzle);
 
-            // ENGINE ROCKET FLAME LAYER (Brought completely forward to render over backgrounds)
-            const flameGeom = new THREE.ConeGeometry(5.2, 18, 16);
+            // ROCKET FLAME CONFIGURATION (Brought fully forward to prevent step clipping)
+            const flameGeom = new THREE.ConeGeometry(5.2, 20, 16);
             flameGeom.rotateX(Math.PI);
             engineFireGlow = new THREE.Mesh(flameGeom, enginePlumeMat);
-            engineFireGlow.position.set(0, -11, 14); 
+            engineFireGlow.position.set(0, -12, 14); 
             engineFireGlow.renderOrder = 999; 
             rocketMasterGroup.add(engineFireGlow);
 
@@ -476,7 +476,7 @@
             fireGeom.setAttribute('position', new THREE.Float32BufferAttribute(firePositions, 3));
             const fireMat = new THREE.PointsMaterial({ 
                 size: 3.8, 
-                color: 0xff5500, 
+                color: 0xff6600, 
                 transparent: true, 
                 opacity: 0.95, 
                 blending: THREE.AdditiveBlending,
@@ -539,7 +539,7 @@
                         human.rightArmRef.rotation.z = -Math.sin(seed * 0.4) * 0.06 + 0.12;
                     } 
                     else if (human.behavior === 2) { 
-                        // Diagonal Row Walking Pacing Animation Cycles
+                        // Walking Pacing Animation Cycles
                         let walkStroll = Math.sin(elapsedTicks * 0.7 + human.noiseSeed) * 5.0;
                         human.mesh.position.z = human.homeZ + walkStroll;
                         
