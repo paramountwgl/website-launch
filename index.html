@@ -109,31 +109,51 @@
       z-index: 5;
     }
 
+    /* Optimized Logo Box with responsive pulse glow animation matrix */
     .logo-box {
       width: 140px;
       height: 140px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.06);
+      border: 2px solid rgba(255, 255, 255, 0.4);
       backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 25px;
-      box-shadow: 0 0 50px rgba(255,255,255,0.1);
-      animation: pulse 3s infinite;
+      padding: 12px; /* Protects logo edges from touching the frame */
+      animation: logoGlowPulse 4s infinite ease-in-out;
+      overflow: hidden;
     }
 
     .logo-box img {
-      width: 90px;
-      height: 90px;
-      object-fit: contain;
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* Ensures uniform scaling without distorting geometry */
     }
 
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+    /* Seamless glowing animation cycle scaling dynamic color layers */
+    @keyframes logoGlowPulse {
+      0% {
+        transform: scale(1);
+        border-color: rgba(255, 255, 255, 0.4);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1), 
+                    0 0 40px rgba(59, 130, 246, 0.2);
+      }
+      50% {
+        transform: scale(1.04);
+        border-color: rgba(147, 197, 253, 0.8);
+        box-shadow: 0 0 30px rgba(147, 197, 253, 0.4), 
+                    0 0 60px rgba(139, 92, 246, 0.6),
+                    0 0 90px rgba(59, 130, 246, 0.3);
+      }
+      100% {
+        transform: scale(1);
+        border-color: rgba(255, 255, 255, 0.4);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1), 
+                    0 0 40px rgba(59, 130, 246, 0.2);
+      }
     }
 
     .school-name {
@@ -392,11 +412,7 @@
         width: 110px;
         height: 110px;
         margin-bottom: 20px;
-      }
-
-      .logo-box img {
-        width: 70px;
-        height: 70px;
+        padding: 8px; /* Scales down padding area on smaller screens */
       }
 
       .school-name {
