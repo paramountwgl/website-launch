@@ -7,11 +7,12 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Playfair+Display+SC:wght@700;900&family=Tenor+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Playfair+Display+SC:wght@700;900&family=Tenor+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <style>
@@ -24,11 +25,10 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            height: 100%;
             background-color: #000408;
             color: var(--off-white);
             font-family: 'Tenor Sans', sans-serif;
-            overflow: hidden;
+            overflow-x: hidden; /* Vertical scrolling enabled, sideways bounce blocked */
             user-select: none;
         }
 
@@ -44,35 +44,62 @@
             height: 100%;
         }
 
-        /* Responsive UI Overlay layer sitting over WebGL scene */
+        /* Responsive Content Overlay Engine */
         .content-overlay {
             position: relative;
             z-index: 2;
             width: 100%;
-            height: 100%;
-            display: flex;
-            flex-col: justify-between;
-            pointer-events: none; /* Let clicks pass through to 3D elements */
+            pointer-events: none;
+            opacity: 0; /* Animated into view by GSAP */
         }
 
-        .interactive-element {
-            pointer-events: auto; /* Re-enable clicks for buttons */
+        .content-overlay * {
+            pointer-events: auto; /* Restores interactive clicking targets */
         }
 
-        /* Gold-Line Digital Countdown Display Window */
-        .premium-countdown-board {
-            border: 1px solid rgba(226, 192, 105, 0.3);
-            background: rgba(0, 4, 8, 0.4);
-            backdrop-filter: blur(25px);
-            box-shadow: 0 0 50px rgba(226, 192, 105, 0.1), inset 0 0 20px rgba(226, 192, 105, 0.05);
+        /* High-End Frosted Glass Panel Aesthetics */
+        .premium-glass {
+            border: 1px solid rgba(226, 192, 105, 0.25);
+            background: linear-gradient(135deg, rgba(2, 8, 19, 0.6) 0%, rgba(0, 4, 8, 0.3) 100%);
+            backdrop-filter: blur(30px);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
-        .gold-text { color: var(--brand-gold); }
+        /* Dynamic Liquid Gold Luxury Button */
+        .premium-gold-btn {
+            background: linear-gradient(135deg, #b8860b, #e2c069, #fff, #e2c069, #b8860b);
+            background-size: 400% auto;
+            color: #000000;
+            font-weight: 900;
+            letter-spacing: 4px;
+            box-shadow: 0 0 40px rgba(226, 192, 105, 0.3);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .premium-gold-btn:hover {
+            background-position: 100% center;
+            box-shadow: 0 0 60px rgba(226, 192, 105, 0.6);
+            transform: scale(1.04) translateY(-4px);
+        }
+
+        .gold-text {
+            background: linear-gradient(135deg, #fff, var(--brand-gold), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
         .status-pill {
-            background: rgba(0,0,0,0.8);
+            background: rgba(0, 4, 8, 0.85);
             border: 1px solid rgba(226, 192, 105, 0.2);
-            letter-spacing: 5px;
+            letter-spacing: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Elegant Blend Transition For Information Fold */
+        .branding-content {
+            background: linear-gradient(to bottom, transparent, #000408 20%, #000a14 100%);
+            position: relative;
+            z-index: 3;
         }
     </style>
 </head>
@@ -80,58 +107,90 @@
 
     <canvas id="three-canvas"></canvas>
 
-    <div class="content-overlay h-screen flex flex-col justify-between p-8 md:p-12 text-center" id="overlay">
+    <div class="content-overlay flex flex-col items-center" id="overlay">
         
-        <header class="w-full">
-            <h2 class="sc-font gold-text text-sm md:text-lg tracking-[0.6em] font-bold uppercase">Paramount School</h2>
-            <div class="sc-font text-4xl md:text-7xl tracking-tight hero-font italic opacity-90 text-white">Warangal</div>
-        </header>
+        <div class="h-screen w-full flex flex-col justify-between p-8 md:p-12 text-center">
+            <header class="w-full">
+                <h2 class="sc-font text-yellow-500/80 text-xs md:text-sm tracking-[0.7em] font-bold uppercase">Paramount School</h2>
+                <div class="sc-font text-5xl md:text-8xl tracking-tight hero-font italic opacity-95 text-white">Warangal</div>
+            </header>
 
-        <main class="w-full max-w-4xl mx-auto">
-            
-            <div id="countdown-container" class="premium-countdown-board py-8 px-4 md:px-12 flex gap-4 md:gap-16 justify-center rounded-3xl mb-12">
-                <div class="w-16 md:w-28">
-                    <span id="days" class="hero-font block text-4xl md:text-7xl font-black text-white">00</span>
-                    <small class="sc-font text-[9px] md:text-[10px] uppercase tracking-widest gold-text font-bold">Days</small>
+            <main class="w-full max-w-4xl mx-auto">
+                <h1 class="hero-font text-4xl md:text-8xl leading-none font-black text-white tracking-tighter mb-10 uppercase">
+                    The Digital <br><span class="gold-text">Cosmos Unveiled</span>
+                </h1>
+                
+                <div id="countdown-container" class="premium-glass py-10 px-6 md:px-14 flex gap-4 md:gap-16 justify-center rounded-3xl mb-12 border border-white/5">
+                    <div class="w-16 md:w-28">
+                        <span id="days" class="hero-font block text-4xl md:text-7xl font-black text-white">00</span>
+                        <small class="sc-font text-[9px] md:text-[10px] uppercase tracking-widest text-yellow-500/70 font-bold">Days</small>
+                    </div>
+                    <div class="w-16 md:w-28">
+                        <span id="hours" class="hero-font block text-4xl md:text-7xl font-black text-white">00</span>
+                        <small class="sc-font text-[9px] md:text-[10px] uppercase tracking-widest text-yellow-500/70 font-bold">Hours</small>
+                    </div>
+                    <div class="w-16 md:w-28">
+                        <span id="minutes" class="hero-font block text-4xl md:text-7xl font-black text-white">00</span>
+                        <small class="sc-font text-[9px] md:text-[10px] uppercase tracking-widest text-yellow-500/70 font-bold">Mins</small>
+                    </div>
+                    <div class="w-16 md:w-28">
+                        <span id="seconds" class="hero-font block text-4xl md:text-7xl font-black text-yellow-400">00</span>
+                        <small class="sc-font text-[9px] md:text-[10px] uppercase tracking-widest text-white/40">Secs</small>
+                    </div>
                 </div>
-                <div class="w-16 md:w-28">
-                    <span id="hours" class="hero-font block text-4xl md:text-7xl font-black text-white">00</span>
-                    <small class="sc-font text-[9px] md:text-[10px] uppercase tracking-widest gold-text font-bold">Hours</small>
+
+                <div id="action-area" class="h-24 flex flex-col items-center justify-center">
+                    <div id="system-lock-notice" class="status-pill text-[10px] px-8 py-3 rounded-full uppercase font-bold text-white/70">
+                        <i class="fas fa-satellite-dish mr-2 text-yellow-500 animate-pulse"></i> Systems Encrypted Until T-Zero
+                    </div>
+                    
+                    <button id="html-launch-btn" class="interactive-element hidden premium-gold-btn px-16 py-6 rounded-full uppercase text-xs shadow-2xl">
+                        <i class="fas fa-fire-alt mr-2"></i> Ignite Digital Future
+                    </button>
                 </div>
-                <div class="w-16 md:w-28">
-                    <span id="minutes" class="hero-font block text-4xl md:text-7xl font-black text-white">00</span>
-                    <small class="sc-font text-[9px] md:text-[10px] uppercase tracking-widest gold-text font-bold">Mins</small>
-                </div>
-                <div class="w-16 md:w-28">
-                    <span id="seconds" class="hero-font block text-4xl md:text-7xl font-black gold-text">00</span>
-                    <small class="sc-font text-[9px] md:text-[10px] uppercase tracking-widest text-white/40">Secs</small>
-                </div>
+            </main>
+
+            <div class="animate-bounce text-[10px] tracking-[0.4em] uppercase opacity-40 text-white/80">
+                Scroll Down to Explore Our Legacy <br> <i class="fas fa-chevron-down mt-3"></i>
             </div>
+        </div>
 
-            <div class="h-24 flex flex-col items-center justify-center">
-                <div id="system-lock-notice" class="status-pill text-xs px-8 py-3 rounded-full uppercase font-bold text-white/50">
-                    <i class="fas fa-satellite-dish mr-2 text-yellow-500 animate-pulse"></i> Systems Locked Until T-Zero
+        <div class="w-full max-w-6xl mx-auto pt-44 pb-32 branding-content text-left px-6 md:px-12">
+            <hr class="border-t border-white/10 mb-24">
+            <div class="grid md:grid-cols-2 gap-16 items-center reveal-content">
+                <div>
+                    <h3 class="hero-font text-4xl md:text-6xl text-white font-light leading-tight mb-8">
+                        Established <br><span class="gold-text font-serif italic font-bold">In 2019</span>
+                    </h3>
+                    <p class="text-gray-400 font-light leading-loose text-base md:text-lg">
+                        Paramount English Medium School has consistently structured high academic standards across Warangal. Our complete digital shift marks a historical milestone—offering lightning-fast interactions for profiles, portal logins, and secure database lookups.
+                    </p>
                 </div>
                 
-                <button id="html-launch-btn" class="interactive-element hidden bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 px-16 py-5 rounded-full text-black font-black uppercase tracking-widest text-sm shadow-[0_0_50px_rgba(226,192,105,0.5)] hover:scale-105 transition-transform">
-                    <i class="fas fa-fire-alt mr-2"></i> Ignite Digital Future
-                </button>
+                <div class="premium-glass p-8 md:p-12 rounded-3xl shadow-2xl relative overflow-hidden group">
+                    <div class="absolute -right-16 -bottom-16 w-44 h-44 bg-yellow-500/5 rounded-full blur-3xl transition-all group-hover:scale-150"></div>
+                    <h4 class="sc-font text-yellow-500 tracking-[0.3em] mb-8 text-xs font-bold uppercase">The Paramount Ecosystem</h4>
+                    <ul class="space-y-5 text-sm text-gray-300 font-light">
+                        <li class="flex items-center gap-3"><i class="fas fa-certificate text-yellow-500/80 w-5"></i> Paramount English Medium High School</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-graduation-cap text-yellow-500/80 w-5"></i> Paramount Polycet Coaching Center</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-shield-alt text-yellow-500/80 w-5"></i> Paramount SI & PC Coaching Center</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-hockey-puck text-yellow-500/80 w-5"></i> Paramount Hockey Academy</li>
+                    </ul>
+                </div>
             </div>
+        </div>
 
-        </main>
-
-        <footer class="text-[10px] tracking-[0.3em] uppercase text-white/30">
-            Warangal, Telangana • Core Infrastructure Platform Init 2026
-        </footer>
     </div>
 
     <script>
+        gsap.registerPlugin(ScrollTrigger);
+
         let scene, camera, renderer, starParticles, rocketMasterGroup;
         let fireParticles, engineFireGlow, launchpadBase;
         let launchTriggerActive = false;
 
         function buildCosmosStage() {
-            // --- 1. INITIALIZE SCENE & ENGINE STAGE ---
+            // --- 1. SCENE SETUP ---
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x020813);
             scene.fog = new THREE.FogExp2(0x020813, 0.0015);
@@ -143,7 +202,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-            // --- 2. LUXURY STUDIO LIGHTING MATRIX ---
+            // --- 2. PREMIUM LIGHTING ---
             const ambient = new THREE.AmbientLight(0xffffff, 0.4);
             scene.add(ambient);
 
@@ -155,8 +214,7 @@
             cosmicFillLight.position.set(-80, 50, -50);
             scene.add(cosmicFillLight);
 
-            // --- 3. PROCEDURAL ENVIRONMENT SCENERY GENERATION ---
-            // High Density Star Arrays (The Space Backdrop)
+            // --- 3. BACKGROUND SCENERY MATRIX ---
             const starGeom = new THREE.BufferGeometry();
             const starPositions = [];
             for(let i=0; i<8000; i++) {
@@ -167,7 +225,7 @@
             starParticles = new THREE.Points(starGeom, starMat);
             scene.add(starParticles);
 
-            // Ground Launchpad Concrete Base
+            // Launchpad Base Engine
             const baseGeom = new THREE.CylinderGeometry(80, 90, 8, 4);
             const baseMat = new THREE.MeshStandardMaterial({ color: 0x1a2230, roughness: 0.7, metalness: 0.5 });
             launchpadBase = new THREE.Mesh(baseGeom, baseMat);
@@ -175,7 +233,7 @@
             launchpadBase.rotation.y = Math.PI / 4;
             scene.add(launchpadBase);
 
-            // 3D Audience Stadium Seating Frames (Flanking the Pad)
+            // 3D Audience Stadium Seating Structures
             const stadiumGroup = new THREE.Group();
             const blockMat = new THREE.MeshStandardMaterial({ color: 0x0c1017, roughness: 0.9 });
             for(let i=0; i<12; i++) {
@@ -188,26 +246,23 @@
             }
             scene.add(stadiumGroup);
 
-            // --- 4. PROCEDURAL HIERARCHICAL 3D ROCKET ASSEMBLY ---
+            // --- 4. ENGINE PROCEDURAL ROCKET ENGINE COMPONENT ASSEMBLY ---
             rocketMasterGroup = new THREE.Group();
 
             const goldChromeMat = new THREE.MeshStandardMaterial({ color: 0xe2c069, roughness: 0.15, metalness: 0.85 });
             const darkTitaniumMat = new THREE.MeshStandardMaterial({ color: 0x1f242d, roughness: 0.4, metalness: 0.7 });
             const enginePlumeMat = new THREE.MeshBasicMaterial({ color: 0xff4500, transparent: true, opacity: 0.7 });
 
-            // Main Core Cylinder Booster Body
             const coreGeom = new THREE.CylinderGeometry(7, 7.5, 55, 32);
             const coreBooster = new THREE.Mesh(coreGeom, goldChromeMat);
             coreBooster.position.y = 27.5;
             rocketMasterGroup.add(coreBooster);
 
-            // Aerodynamic Apex Nose Cone
             const noseGeom = new THREE.ConeGeometry(7, 18, 32);
             const noseCone = new THREE.Mesh(noseGeom, darkTitaniumMat);
             noseCone.position.y = 64;
             rocketMasterGroup.add(noseCone);
 
-            // Twin Side Strapon Booster Pod Cylinders
             const sidePodGeom = new THREE.CylinderGeometry(3, 3.2, 38, 16);
             const leftPod = new THREE.Mesh(sidePodGeom, goldChromeMat);
             leftPod.position.set(-10.5, 19, 0);
@@ -215,7 +270,6 @@
             rightPod.position.x = 10.5;
             rocketMasterGroup.add(leftPod, rightPod);
 
-            // Side Booster Nose Cones
             const sideNoseGeom = new THREE.ConeGeometry(3, 8, 16);
             const leftSideNose = new THREE.Mesh(sideNoseGeom, darkTitaniumMat);
             leftSideNose.position.set(-10.5, 42, 0);
@@ -223,20 +277,18 @@
             rightSideNose.position.x = 10.5;
             rocketMasterGroup.add(leftSideNose, rightSideNose);
 
-            // Primary Bell Thruster Nozzle
             const nozzleGeom = new THREE.CylinderGeometry(4, 6, 6, 16);
             const mainNozzle = new THREE.Mesh(nozzleGeom, darkTitaniumMat);
             mainNozzle.position.y = -3;
             rocketMasterGroup.add(mainNozzle);
 
-            // Idle Exhaust Internal Core Glow Element
             const flameGeom = new THREE.ConeGeometry(5, 12, 16);
             flameGeom.rotateX(Math.PI);
             engineFireGlow = new THREE.Mesh(flameGeom, enginePlumeMat);
             engineFireGlow.position.y = -9;
             rocketMasterGroup.add(engineFireGlow);
 
-            // --- 5. ROCKET ENGINE ENGINE FIRE PARTICLE VECTOR EMITTER ---
+            // Engine Active Exhaust Particles
             const fireGeom = new THREE.BufferGeometry();
             const firePositions = [];
             for(let i=0; i<300; i++) {
@@ -247,36 +299,28 @@
             fireParticles = new THREE.Points(fireGeom, fireMat);
             rocketMasterGroup.add(fireParticles);
 
-            // Set final structural baseline position
             rocketMasterGroup.position.set(0, -56, 0);
             scene.add(rocketMasterGroup);
 
-            // Render Core Systems
-            gsap.to("#overlay", { opacity: 1, duration: 1.5 });
+            // Initiate animations
+            startIntroAnimations();
             renderEngineLoop();
         }
 
-        // --- GLOBAL FRAME TICKING RENDER RENDERING ENGINE ---
         function renderEngineLoop() {
             requestAnimationFrame(renderEngineLoop);
-            
             const elapsedTicks = performance.now() * 0.001;
 
-            // Slow cinematic orbit rotational stabilization drift
             if(starParticles) { starParticles.rotation.y = elapsedTicks * 0.01; }
             
             if(rocketMasterGroup && !launchTriggerActive) {
-                // Pre-launch structure idling stabilization hum oscillation
                 rocketMasterGroup.rotation.y = Math.sin(elapsedTicks) * 0.04;
-                
-                // Animate idle engine heat micro pulsing waves
                 engineFireGlow.scale.set(1 + Math.sin(elapsedTicks*20)*0.1, 1 + Math.cos(elapsedTicks*20)*0.1, 1);
                 
-                // Cycle fire particles loop arrays array mapping offset vector
                 const positions = fireParticles.geometry.attributes.position.array;
                 for(let i=1; i<positions.length; i+=3) {
-                    positions[i] -= 0.4; // Force fluid descent velocity downward
-                    if(positions[i] < -25) positions[i] = -6; // Reset emitter boundary
+                    positions[i] -= 0.4;
+                    if(positions[i] < -25) positions[i] = -6;
                 }
                 fireParticles.geometry.attributes.position.needsUpdate = true;
             }
@@ -284,7 +328,24 @@
             renderer.render(scene, camera);
         }
 
-        // --- DIGITAL COUNTDOWN TIMER CHRONOMETER SYSTEM ---
+        function startIntroAnimations() {
+            gsap.to("#overlay", { opacity: 1, duration: 1.5, ease: "power3.out" });
+
+            // Smooth ScrollTrigger configuration linking branding card layouts
+            gsap.from(".reveal-content", {
+                scrollTrigger: { 
+                    trigger: ".branding-content", 
+                    start: "top 85%",
+                    toggleActions: "play none none none"
+                },
+                y: 70, 
+                opacity: 0, 
+                duration: 1.4, 
+                ease: "power4.out"
+            });
+        }
+
+        // --- DIGIT CHRONOMETER SCHEDULER ENGINE (May 20, 2026) ---
         const scheduledTime = new Date("May 20, 2026 09:00:00").getTime();
 
         const timeSyncLoop = setInterval(() => {
@@ -304,42 +365,41 @@
             document.getElementById('seconds').innerText = String(Math.floor((timeDelta % minuteUnit) / secondUnit)).padStart(2, '0');
         }, 1000);
 
-        // --- UNLOCK PORTAL CHANNELS SEQUENCE (Timer hits 0) ---
         function unlockLaunchMechanics() {
             document.getElementById('system-lock-notice').style.display = 'none';
             const actionButton = document.getElementById('html-launch-btn');
             actionButton.style.display = 'inline-block';
             
-            // Register execution event listeners handlers directly
             actionButton.addEventListener('click', activateKineticPropulsionBlastOff);
         }
 
-        // --- KINETIC PROPULSION IGNITION INITIATION LIFT SCENE ---
         function activateKineticPropulsionBlastOff() {
             if(launchTriggerActive) return;
             launchTriggerActive = true;
 
-            // Fade interactive interface layouts clean off the overlay layer immediately
-            gsap.to(["#html-launch-btn", "#countdown-container", "header", "footer"], { opacity: 0, duration: 0.8, stagger: 0.1 });
+            // Lock scrolling immediately during the takeoff sequence
+            document.body.style.overflow = "hidden";
 
-            // Intense thermal dynamic point lighting flash bloom ignition vectors
+            // Snap view window to top smoothly before blasting off
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            gsap.to(["#html-launch-btn", "#countdown-container", "header", ".animate-bounce"], { opacity: 0, duration: 0.6, stagger: 0.08 });
+
             const fusionFlashLight = new THREE.PointLight(0x00ffff, 8, 300);
             fusionFlashLight.position.set(0, -50, 20);
             scene.add(fusionFlashLight);
 
-            // Scale and warp procedural engine exhausts to full overdrive states
             gsap.to(engineFireGlow.scale, { x: 4, z: 4, y: 5, duration: 1.5 });
-            engineFireGlow.material.color.setHex(0x00ffff); // Shift standard flame spectrum to ultra high-temp Cyan Plasma
+            engineFireGlow.material.color.setHex(0x00ffff); // Shift spectrum to Cyan Plasma
 
-            // Mutate standard particles vector limits array dimensions dynamically on loop
             const hyperPositions = fireParticles.geometry.attributes.position.array;
             fireParticles.material.size = 6.0;
             fireParticles.material.color.setHex(0x00ffcc);
 
             setInterval(() => {
                 for(let i=0; i<hyperPositions.length; i+=3) {
-                    hyperPositions[i] += (Math.random()-0.5)*4;      // Violent outward expansion
-                    hyperPositions[i+1] -= 3.5;                      // Violent velocity downward acceleration
+                    hyperPositions[i] += (Math.random()-0.5)*4;
+                    hyperPositions[i+1] -= 3.5;
                     hyperPositions[i+2] += (Math.random()-0.5)*4;
                     if(hyperPositions[i+1] < -90) hyperPositions[i+1] = -6;
                 }
@@ -348,34 +408,30 @@
 
             const launchTimeline = gsap.timeline();
 
-            // Phase A: Camera structural framing focus adjustment zoom tracking positioning
             launchTimeline.to(camera.position, { z: 140, y: 10, duration: 2.5, ease: "power3.inOut" });
 
-            // Phase B: Tectonic platform seismic structural oscillation matrix hum shake (Vibrate Canvas)
-            launchTimeline.to("#three-canvas", { duration: 0.06, x: "+=12", yoyo: true, repeat: 30 }, "-=1.5")
-                          .to("#three-canvas", { duration: 0.06, y: "+=8", yoyo: true, repeat: 30 }, "-=1.5");
+            // Core Seismic Tremor shake matrix
+            launchTimeline.to("#three-canvas", { duration: 0.06, x: "+=12", yoyo: true, repeat: 35 }, "-=1.5")
+                          .to("#three-canvas", { duration: 0.06, y: "+=8", yoyo: true, repeat: 35 }, "-=1.5");
 
-            // Phase C: Kinetic lift-off rocket vehicle elevation escape acceleration velocity drive
-            launchTimeline.to(rocketMasterGroup.position, { y: 450, duration: 4.5, ease: "power4.in" }, "+=0.2");
-
-            // Phase D: Deep spatial environmental fog system dissipation sweep fade into dark void space
+            launchTimeline.to(rocketMasterGroup.position, { y: 500, duration: 4.5, ease: "power4.in" }, "+=0.2");
             launchTimeline.to(scene.fog, { density: 0.04, duration: 2 }, "-=3");
 
-            // Phase E: Global absolute system domain router path tracking transfer redirect execution
             launchTimeline.to("body", { opacity: 0, duration: 1.5, onComplete: () => {
                 window.location.href = "https://paramountschooledu.in/";
             }}, "+=0.5");
         }
 
-        // Viewport structural safety dynamic screen-scale resize auto calculations tracking metrics
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Fire rendering configurations setup execution on window load array context
-        window.onload = buildCosmosStage;
+        // Safe DOM Event Loading Initialization
+        document.addEventListener("DOMContentLoaded", () => {
+            buildCosmosStage();
+        });
     </script>
 </body>
 </html>
