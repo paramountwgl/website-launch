@@ -1,610 +1,598 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Paramount School | Premium Launch Experience</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramount School | Cinematic Grand Launch</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display+SC:wght@700;900&family=Tenor+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-gold: #e2c069;
+            --off-white: #fdfdfd;
+            --neon-glow: rgba(226, 192, 105, 0.6);
+        }
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128/build/three.min.js"></script>
-<script src="https://unpkg.com/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            background-color: #000206;
+            color: var(--off-white);
+            font-family: 'Tenor Sans', sans-serif;
+            overflow-x: hidden;
+            user-select: none;
+        }
 
-<style>
+        .hero-font { font-family: 'Playfair Display', serif; }
+        .sc-font { font-family: 'Playfair Display SC', serif; }
 
-:root{
---gold:#e2c069;
---bg:#02060d;
---glass:rgba(255,255,255,0.05);
-}
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+        }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+        .content-overlay {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            pointer-events: none;
+            opacity: 0;
+        }
 
-html,body{
-width:100%;
-background:#000206;
-overflow-x:hidden;
-scrollbar-width:none;
--ms-overflow-style:none;
-font-family:'Inter',sans-serif;
-color:white;
-}
+        .content-overlay * {
+            pointer-events: auto;
+        }
 
-body::-webkit-scrollbar{
-display:none;
-}
+        .glowing-brand-panel {
+            filter: drop-shadow(0 0 25px var(--neon-glow));
+        }
 
-#three-canvas{
-position:fixed;
-inset:0;
-width:100%;
-height:100%;
-z-index:1;
-}
+        .premium-glass {
+            border: 1px solid rgba(226, 192, 105, 0.15);
+            background: linear-gradient(135deg, rgba(2, 6, 12, 0.7) 0%, rgba(0, 2, 6, 0.4) 100%);
+            backdrop-filter: blur(25px);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9);
+        }
 
-.overlay{
-position:relative;
-z-index:2;
-}
+        .premium-gold-btn {
+            background: linear-gradient(135deg, #b8860b, #e2c069, #fff, #e2c069, #b8860b);
+            background-size: 400% auto;
+            color: #000;
+            font-weight: 900;
+            letter-spacing: 5px;
+            box-shadow: 0 0 50px rgba(226, 192, 105, 0.4);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
-.hero-font{
-font-family:'Playfair Display',serif;
-}
+        .premium-gold-btn:hover {
+            background-position: 100% center;
+            box-shadow: 0 0 70px rgba(226, 192, 105, 0.7);
+            transform: scale(1.05) translateY(-2px);
+        }
 
-.glass{
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(25px);
-border:1px solid rgba(255,255,255,0.08);
-box-shadow:0 15px 80px rgba(0,0,0,0.6);
-}
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fff, var(--brand-gold), #b8860b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-.gold-gradient{
-background:linear-gradient(90deg,#fff,var(--gold),#fff);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-}
-
-.hero-premium-glow{
-position:absolute;
-inset:0;
-background:radial-gradient(circle at center, rgba(226,192,105,0.18), transparent 70%);
-pointer-events:none;
-}
-
-.section{
-min-height:100vh;
-padding:120px 8%;
-display:flex;
-align-items:center;
-justify-content:center;
-position:relative;
-}
-
-.btn-premium{
-padding:20px 48px;
-border-radius:999px;
-background:linear-gradient(90deg,#b8860b,var(--gold),#fff,var(--gold));
-background-size:300%;
-color:black;
-font-weight:700;
-letter-spacing:4px;
-transition:0.5s;
-box-shadow:0 0 50px rgba(226,192,105,0.4);
-text-transform:uppercase;
-}
-
-.btn-premium:hover{
-transform:translateY(-5px) scale(1.03);
-background-position:right;
-box-shadow:0 0 100px rgba(226,192,105,0.7);
-}
-
-.card{
-padding:40px;
-border-radius:30px;
-transition:0.5s;
-}
-
-.card:hover{
-transform:translateY(-12px);
-}
-
-.grid-layout{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:30px;
-width:100%;
-}
-
-.footer{
-padding:50px;
-text-align:center;
-font-size:12px;
-letter-spacing:4px;
-text-transform:uppercase;
-color:#777;
-}
-
-</style>
+        .section-blend {
+            background: linear-gradient(to bottom, transparent, #000206 15%, #000611 100%);
+            position: relative;
+            z-index: 3;
+        }
+    </style>
 </head>
 <body>
 
-<canvas id="three-canvas"></canvas>
-
-<div class="overlay">
-
-<section class="section text-center">
-
-<div class="hero-premium-glow"></div>
-
-<div class="max-w-6xl mx-auto relative z-10">
-
-<p class="uppercase tracking-[10px] text-gray-400 mb-6">
-Paramount School • Warangal
-</p>
-
-<h1 class="hero-font text-[clamp(4rem,10vw,9rem)] leading-none font-black">
-<span class="gold-gradient">DIGITAL</span><br>
-FUTURE
-</h1>
-
-<p class="max-w-3xl mx-auto mt-10 text-gray-300 text-lg leading-loose">
-A cinematic launch experience engineered with premium visuals, immersive digital architecture, next-generation infrastructure, and advanced educational technology.
-</p>
-
-<div class="glass rounded-[40px] inline-block p-10 mt-16">
-
-<div class="flex gap-8 md:gap-16 text-center">
-
-<div>
-<h2 id="days" class="text-5xl md:text-7xl font-bold gold-gradient">00</h2>
-<p class="mt-2 uppercase tracking-[4px] text-xs text-gray-400">Days</p>
-</div>
-
-<div>
-<h2 id="hours" class="text-5xl md:text-7xl font-bold gold-gradient">00</h2>
-<p class="mt-2 uppercase tracking-[4px] text-xs text-gray-400">Hours</p>
-</div>
-
-<div>
-<h2 id="minutes" class="text-5xl md:text-7xl font-bold gold-gradient">00</h2>
-<p class="mt-2 uppercase tracking-[4px] text-xs text-gray-400">Minutes</p>
-</div>
-
-<div>
-<h2 id="seconds" class="text-5xl md:text-7xl font-bold gold-gradient">00</h2>
-<p class="mt-2 uppercase tracking-[4px] text-xs text-gray-400">Seconds</p>
-</div>
-
-</div>
-
-</div>
-
-<div class="mt-16 flex justify-center gap-6 flex-wrap">
-<button id="launch-btn" class="btn-premium">
-Ignite Launch
-</button>
-
-<a href="https://paramountschooledu.in/" class="btn-premium no-underline">
-Visit Website
-</a>
-</div>
-
-</div>
-
-</section>
-
-<section class="section">
-
-<div class="max-w-7xl w-full">
-
-<div class="text-center mb-24">
-<p class="uppercase tracking-[10px] text-gray-400 mb-6">Infrastructure</p>
-<h2 class="hero-font text-6xl font-bold">
-Academic <span class="gold-gradient">Excellence</span>
-</h2>
-</div>
-
-<div class="grid-layout">
-
-<div class="glass card">
-<h3 class="hero-font text-3xl mb-6 gold-gradient">Advanced Labs</h3>
-<p class="text-gray-300 leading-loose">
-Immersive learning labs engineered for science, robotics, AI systems, and future innovation.
-</p>
-</div>
-
-<div class="glass card">
-<h3 class="hero-font text-3xl mb-6 gold-gradient">Digital Learning</h3>
-<p class="text-gray-300 leading-loose">
-Next-generation smart classrooms integrated with real-time analytics and digital management.
-</p>
-</div>
-
-<div class="glass card">
-<h3 class="hero-font text-3xl mb-6 gold-gradient">Sports Arena</h3>
-<p class="text-gray-300 leading-loose">
-Professional sports infrastructure crafted to develop discipline, leadership, and elite athletes.
-</p>
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<div class="footer">
-PARAMOUNT SCHOOL • PREMIUM CINEMATIC EXPERIENCE 2026
-</div>
-
-</div>
-
-<script>
-
-gsap.registerPlugin(ScrollTrigger);
-
-const lenis = new Lenis({
-lerp:0.08,
-smoothWheel:true
-});
-
-function raf(time){
-lenis.raf(time);
-requestAnimationFrame(raf);
-}
-
-requestAnimationFrame(raf);
-
-let scene,camera,renderer;
-let starField,rocketGroup,flame;
-let audienceGroup;
-let audienceMeshArray=[];
-let launchActivated=false;
-
-function initScene(){
-
-scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x000000,0.0018);
-
-camera = new THREE.PerspectiveCamera(
-60,
-window.innerWidth/window.innerHeight,
-0.1,
-2000
-);
-
-camera.position.set(0,25,120);
-
-renderer = new THREE.WebGLRenderer({
-canvas:document.getElementById('three-canvas'),
-antialias:true,
-alpha:true
-});
-
-renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-renderer.outputEncoding = THREE.sRGBEncoding;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.4;
-renderer.physicallyCorrectLights = true;
-
-const ambient = new THREE.AmbientLight(0xffffff,0.8);
-scene.add(ambient);
-
-const light1 = new THREE.DirectionalLight(0xfff0c2,2);
-light1.position.set(20,50,20);
-scene.add(light1);
-
-const blueLight = new THREE.PointLight(0x0044ff,4,400);
-blueLight.position.set(-50,30,-40);
-scene.add(blueLight);
-
-const goldLight = new THREE.PointLight(0xffbb55,4,300);
-goldLight.position.set(40,20,40);
-scene.add(goldLight);
-
-const starsGeometry = new THREE.BufferGeometry();
-const stars = [];
-
-for(let i=0;i<5000;i++){
-stars.push(
-(Math.random()-0.5)*2000,
-(Math.random()-0.5)*2000,
-(Math.random()-0.5)*2000
-);
-}
-
-starsGeometry.setAttribute(
-'position',
-new THREE.Float32BufferAttribute(stars,3)
-);
-
-const starsMaterial = new THREE.PointsMaterial({
-color:0xffffff,
-size:1,
-transparent:true,
-opacity:0.8
-});
-
-starField = new THREE.Points(starsGeometry,starsMaterial);
-scene.add(starField);
-
-const floorGeometry = new THREE.CircleGeometry(180,100);
-
-const floorMaterial = new THREE.MeshPhysicalMaterial({
-color:0x111111,
-roughness:0.15,
-metalness:0.95,
-clearcoat:1,
-clearcoatRoughness:0.1
-});
-
-const floor = new THREE.Mesh(floorGeometry,floorMaterial);
-floor.rotation.x = -Math.PI/2;
-floor.position.y = -30;
-scene.add(floor);
-
-const stairsGroup = new THREE.Group();
-
-for(let i=0;i<14;i++){
-
-const geometry = new THREE.BoxGeometry(60,3,130);
-
-const material = new THREE.MeshPhysicalMaterial({
-color:0x0a0e17,
-roughness:0.8,
-metalness:0.2,
-clearcoat:0.5
-});
-
-const left = new THREE.Mesh(geometry,material);
-left.position.set(-120 - (i*7),-30 + (i*3),0);
-stairsGroup.add(left);
-
-const right = left.clone();
-right.position.x = 120 + (i*7);
-stairsGroup.add(right);
-
-}
-
-scene.add(stairsGroup);
-
-audienceGroup = new THREE.Group();
-
-const audienceCount =
-window.innerWidth < 768 ? 180 : 700;
-
-const humanMaterial1 = new THREE.MeshPhysicalMaterial({
-color:0xe2c069,
-roughness:0.2,
-metalness:1,
-transmission:0.15
-});
-
-const humanMaterial2 = new THREE.MeshPhysicalMaterial({
-color:0xffffff,
-roughness:0.3,
-metalness:0.7
-});
-
-for(let i=0; i<audienceCount; i++){
-
-const human = new THREE.Group();
-
-const material =
-Math.random() > 0.5
-? humanMaterial1
-: humanMaterial2;
-
-const body = new THREE.Mesh(
-new THREE.CapsuleGeometry(0.6, 2.2, 4, 8),
-material
-);
-
-const head = new THREE.Mesh(
-new THREE.SphereGeometry(0.65, 16, 16),
-material
-);
-
-head.position.y = 2.1;
-
-human.add(body);
-human.add(head);
-
-const side = Math.random() > 0.5 ? 1 : -1;
-const level = Math.floor(Math.random() * 12);
-
-human.position.set(
-side * (118 + level * 5 + (Math.random()*14-7)),
--58 + level * 4 + 2,
-(Math.random()*100)-50
-);
-
-human.rotation.y = Math.random() * Math.PI;
-
-human.userData = {
-seed: Math.random()*100,
-mode: Math.floor(Math.random()*3),
-originalZ: human.position.z
-};
-
-audienceMeshArray.push(human);
-audienceGroup.add(human);
-}
-
-scene.add(audienceGroup);
-
-rocketGroup = new THREE.Group();
-
-const rocketMaterial = new THREE.MeshPhysicalMaterial({
-color:0xe2c069,
-metalness:1,
-roughness:0.15
-});
-
-const rocketBody = new THREE.Mesh(
-new THREE.CylinderGeometry(6,7,50,32),
-rocketMaterial
-);
-rocketBody.position.y = 20;
-rocketGroup.add(rocketBody);
-
-const nose = new THREE.Mesh(
-new THREE.ConeGeometry(6,15,32),
-rocketMaterial
-);
-nose.position.y = 52;
-rocketGroup.add(nose);
-
-flame = new THREE.Mesh(
-new THREE.ConeGeometry(5,15,32),
-new THREE.MeshBasicMaterial({
-color:0x00ffff,
-transparent:true,
-opacity:0.8
-})
-);
-
-flame.rotation.x = Math.PI;
-flame.position.y = -12;
-rocketGroup.add(flame);
-
-rocketGroup.position.y = -25;
-scene.add(rocketGroup);
-
-animate();
-}
-
-function animate(){
-requestAnimationFrame(animate);
-
-const elapsed = performance.now()*0.001;
-
-starField.rotation.y += 0.0004;
-rocketGroup.rotation.y += 0.002;
-
-camera.position.x = Math.sin(elapsed * 0.15) * 8;
-camera.lookAt(0,0,0);
-
-flame.scale.y = 1 + Math.sin(Date.now()*0.02)*0.25;
-
-for(let i=0; i<audienceMeshArray.length; i++){
-
-const human = audienceMeshArray[i];
-const t = elapsed + human.userData.seed;
-
-if(launchActivated){
-
-human.position.y += Math.sin(t*20)*0.25;
-human.rotation.y += 0.01;
-
-}else{
-
-if(human.userData.mode === 0){
-human.position.y += Math.sin(t)*0.01;
-}
-
-if(human.userData.mode === 1){
-human.rotation.y += Math.sin(t*0.3)*0.002;
-}
-
-if(human.userData.mode === 2){
-human.position.z =
-human.userData.originalZ + Math.sin(t)*3;
-}
-
-}
-
-}
-
-renderer.render(scene,camera);
-}
-
-window.addEventListener('resize',()=>{
-
-camera.aspect = window.innerWidth/window.innerHeight;
-camera.updateProjectionMatrix();
-renderer.setSize(window.innerWidth,window.innerHeight);
-
-});
-
-const launchDate = new Date(
-"May 20, 2026 09:00:00"
-).getTime();
-
-setInterval(()=>{
-
-const now = new Date().getTime();
-const distance = launchDate - now;
-
-const days = Math.floor(distance / (1000*60*60*24));
-const hours = Math.floor((distance % (1000*60*60*24))/(1000*60*60));
-const minutes = Math.floor((distance % (1000*60*60))/(1000*60));
-const seconds = Math.floor((distance % (1000*60))/1000);
-
-const d = String(days).padStart(2,'0');
-const h = String(hours).padStart(2,'0');
-const m = String(minutes).padStart(2,'0');
-const s = String(seconds).padStart(2,'0');
-
-document.getElementById('days').innerHTML = d;
-document.getElementById('hours').innerHTML = h;
-document.getElementById('minutes').innerHTML = m;
-document.getElementById('seconds').innerHTML = s;
-
-},1000);
-
-const launchBtn = document.getElementById('launch-btn');
-
-launchBtn.addEventListener('click',()=>{
-
-if(launchActivated) return;
-launchActivated = true;
-
-const tl = gsap.timeline();
-
-tl.to(camera.position,{z:90,y:10,duration:2});
-tl.to(scene.fog,{density:0.015,duration:2},0);
-
-tl.to(rocketGroup.position,{
-y:700,
-duration:5,
-ease:'power4.in'
-},0.5);
-
-
-tl.to('#three-canvas',{
-duration:0.05,
-x:'+=10',
-yoyo:true,
-repeat:60
-},1);
-
-
-tl.to('body',{
-opacity:0,
-duration:1.5,
-onComplete:()=>{
-window.location.href='https://paramountschooledu.in/';
-}
-},4.8);
-
-});
-
-initScene();
-
-</script>
-
+    <canvas id="three-canvas"></canvas>
+
+    <div class="content-overlay flex flex-col items-center" id="overlay">
+        
+        <div class="h-screen w-full flex flex-col justify-between p-8 md:p-12 text-center">
+            
+            <header class="w-full pt-6 tracking-widest glowing-brand-panel">
+                <div class="mx-auto w-20 h-20 mb-4 border-2 border-[#e2c069] rounded-full flex items-center justify-center bg-black/60 shadow-[0_0_30px_rgba(226,192,105,0.4)]">
+                    <i class="fas fa-graduation-cap text-[#e2c069] text-3xl"></i>
+                </div>
+                <h2 class="sc-font text-[#e2c069] text-lg md:text-2xl font-black uppercase tracking-[0.8em]">Paramount School</h2>
+                <div class="sc-font text-3xl md:text-5xl font-light italic text-white/90 mt-1">Warangal</div>
+            </header>
+
+            <main class="w-full max-w-4xl mx-auto mb-6">
+                <div id="countdown-container" class="premium-glass py-12 px-6 md:px-16 flex gap-6 md:gap-20 justify-center rounded-3xl mb-12">
+                    <div class="w-16 md:w-24">
+                        <span id="days" class="hero-font block text-4xl md:text-6xl font-bold text-white">00</span>
+                        <small class="sc-font text-[10px] uppercase tracking-widest text-[#e2c069]/80 font-bold">Days</small>
+                    </div>
+                    <div class="w-16 md:w-24">
+                        <span id="hours" class="hero-font block text-4xl md:text-6xl font-bold text-white">00</span>
+                        <small class="sc-font text-[10px] uppercase tracking-widest text-[#e2c069]/80 font-bold">Hours</small>
+                    </div>
+                    <div class="w-16 md:w-24">
+                        <span id="minutes" class="hero-font block text-4xl md:text-6xl font-bold text-white">00</span>
+                        <small class="sc-font text-[10px] uppercase tracking-widest text-[#e2c069]/80 font-bold">Mins</small>
+                    </div>
+                    <div class="w-16 md:w-24">
+                        <span id="seconds" class="hero-font block text-4xl md:text-6xl font-bold text-[#e2c069]">00</span>
+                        <small class="sc-font text-[10px] uppercase tracking-widest text-white/40">Secs</small>
+                    </div>
+                </div>
+
+                <div id="action-area" class="h-24 flex flex-col items-center justify-center">
+                    <div id="system-lock-notice" class="bg-black/80 border border-[#e2c069]/20 tracking-[0.3em] text-[10px] px-10 py-3 rounded-full uppercase font-bold text-white/60 shadow-xl">
+                        <i class="fas fa-satellite-dish mr-2 text-yellow-500 animate-pulse"></i> Systems Secure Until Ignition T-Zero
+                    </div>
+                    
+                    <button id="html-launch-btn" class="interactive-element hidden premium-gold-btn px-16 py-6 rounded-full uppercase text-xs">
+                        <i class="fas fa-fire-alt mr-2"></i> Ignite Digital Future
+                    </button>
+                </div>
+            </main>
+
+            <div class="animate-bounce text-[10px] tracking-[0.5em] uppercase opacity-50 text-white pb-4">
+                Scroll to Explore Campus Dimensions <br> <i class="fas fa-chevron-down mt-3 text-xs text-[#e2c069]"></i>
+            </div>
+        </div>
+
+        <div class="w-full section-blend px-6 md:px-16 pt-32 pb-24">
+            
+            <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center reveal-fold mb-40">
+                <div>
+                    <span class="text-xs uppercase font-bold tracking-[0.4em] text-[#e2c069] block mb-4">// Core Foundation</span>
+                    <h3 class="hero-font text-3xl md:text-5xl text-white font-light leading-tight mb-8">
+                        Shaping Academic <br><span class="gold-gradient-text italic font-bold">Supremacy Since 2019</span>
+                    </h3>
+                    <p class="text-gray-400 font-light leading-loose text-base md:text-lg">
+                        Paramount English Medium School stands as a benchmark of modern education metrics in Warangal. Our complete structural leap into unified digital platforms offers students and parent networks instantaneous portal access and secure profiles.
+                    </p>
+                </div>
+                <div class="premium-glass p-8 md:p-12 rounded-3xl relative overflow-hidden">
+                    <h4 class="sc-font text-[#e2c069] tracking-[0.3em] mb-8 text-xs font-bold uppercase">The Institutional Matrix</h4>
+                    <ul class="space-y-6 text-sm text-gray-300 font-light">
+                        <li class="flex items-center gap-4"><i class="fas fa-school text-[#e2c069]/70 text-base w-6"></i> Paramount English Medium High School</li>
+                        <li class="flex items-center gap-4"><i class="fas fa-atom text-[#e2c069]/70 text-base w-6"></i> Paramount Polycet Academy</li>
+                        <li class="flex items-center gap-4"><i class="fas fa-user-shield text-[#e2c069]/70 text-base w-6"></i> SI & PC Specialized Training Center</li>
+                        <li class="flex items-center gap-4"><i class="fas fa-trophy text-[#e2c069]/70 text-base w-6"></i> Paramount Hockey Sports Guild</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="max-w-6xl mx-auto reveal-fold mb-40">
+                <div class="text-center max-w-2xl mx-auto mb-20">
+                    <span class="text-xs uppercase font-bold tracking-[0.4em] text-[#e2c069] block mb-4">// Excellence Parameters</span>
+                    <h2 class="hero-font text-3xl md:text-5xl text-white">Advanced Infrastructure Pillars</h2>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="premium-glass p-8 rounded-2xl">
+                        <i class="fas fa-flask text-3xl text-[#e2c069] mb-6"></i>
+                        <h5 class="sc-font text-white tracking-widest text-sm font-bold mb-3">Quantum Lab Tech</h5>
+                        <p class="text-gray-400 text-sm font-light leading-relaxed">State of the art empirical exploration environments outfitted with safety layout vectors.</p>
+                    </div>
+                    <div class="premium-glass p-8 rounded-2xl">
+                        <i class="fas fa-book-reader text-3xl text-[#e2c069] mb-6"></i>
+                        <h5 class="sc-font text-white tracking-widest text-sm font-bold mb-3">Digital Archives</h5>
+                        <p class="text-gray-400 text-sm font-light leading-relaxed">Over 15,000 algorithmic curriculum guides accessible instantly across campus networks.</p>
+                    </div>
+                    <div class="premium-glass p-8 rounded-2xl">
+                        <i class="fas fa-running text-3xl text-[#e2c069] mb-6"></i>
+                        <h5 class="sc-font text-white tracking-widest text-sm font-bold mb-3">Athletic Guilds</h5>
+                        <p class="text-gray-400 text-sm font-light leading-relaxed">Professional sports frameworks engineered to train national-level track prospects.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto text-center premium-glass p-12 md:p-20 rounded-3xl reveal-fold mb-16 relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-tr from-[#e2c069]/5 to-transparent pointer-events-none"></div>
+                <h3 class="hero-font text-3xl md:text-5xl text-white mb-6">Secure Your Student Portal Space</h3>
+                <p class="text-gray-400 text-sm md:text-base font-light max-w-xl mx-auto leading-loose mb-10">
+                    Admissions pathways for the 2026 academic timeline are managed under strict algorithmic registration sequences. Connect directly through our core administration desk.
+                </p>
+                <a href="https://paramountschooledu.in/" class="inline-block bg-white/5 border border-white/10 hover:border-[#e2c069]/40 text-white uppercase text-xs tracking-[0.3em] font-bold px-12 py-5 rounded-full transition-all hover:bg-white/10">
+                    Inquire Online Gateway <i class="fas fa-arrow-right ml-3 text-xs text-[#e2c069]"></i>
+                </a>
+            </div>
+
+            <footer class="text-center text-[10px] tracking-[0.4em] text-white/30 uppercase mt-24">
+                Warangal, Telangana • Infrastructure Architecture Matrix Init 2026
+            </footer>
+        </div>
+
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        let scene, camera, renderer, starParticles, rocketMasterGroup;
+        let engineFireGlow, launchpadBase, fireParticles;
+        let audienceGroup, audienceMeshArray = []; 
+        let audienceState = "idle";
+        let launchTriggerActive = false;
+
+        function buildCosmosStage() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000206);
+            scene.fog = new THREE.FogExp2(0x000206, 0.0018);
+
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+            camera.position.set(0, 35, 200);
+
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const ambient = new THREE.AmbientLight(0xffffff, 0.6); 
+            scene.add(ambient);
+
+            const platformLight = new THREE.DirectionalLight(0xfff5df, 1.8);
+            platformLight.position.set(40, 150, 60);
+            scene.add(platformLight);
+
+            const cosmicFillLight = new THREE.PointLight(0x3a86ff, 2.5, 300);
+            cosmicFillLight.position.set(-80, 50, -50);
+            scene.add(cosmicFillLight);
+
+            // Stars Background System
+            const starGeom = new THREE.BufferGeometry();
+            const starPoints = [];
+            for(let i=0; i<4000; i++) { 
+                starPoints.push((Math.random()-0.5)*1000, (Math.random()-0.5)*1000, (Math.random()-0.5)*1000);
+            }
+            starGeom.setAttribute('position', new THREE.Float32BufferAttribute(starPoints, 3));
+            const starMat = new THREE.PointsMaterial({ size: 0.7, color: 0xffffff, transparent: true, opacity: 0.6 });
+            starParticles = new THREE.Points(starGeom, starMat);
+            scene.add(starParticles);
+
+            // Launchpad Base
+            const baseGeom = new THREE.CylinderGeometry(80, 90, 8, 4);
+            const baseMat = new THREE.MeshStandardMaterial({ color: 0x111622, roughness: 0.7, metalness: 0.5 });
+            launchpadBase = new THREE.Mesh(baseGeom, baseMat);
+            launchpadBase.position.y = -64;
+            launchpadBase.rotation.y = Math.PI / 4;
+            scene.add(launchpadBase);
+
+            // Seating Steps Structure
+            const stadiumGroup = new THREE.Group();
+            const blockMat = new THREE.MeshStandardMaterial({ color: 0x090d14, roughness: 0.8 });
+            for(let i=0; i<12; i++) {
+                const stepGeom = new THREE.BoxGeometry(45, 4 + (i*4), 110);
+                const leftStep = new THREE.Mesh(stepGeom, blockMat);
+                leftStep.position.set(-115 - (i*5), -60 + (i*2), 0);
+                const rightStep = leftStep.clone();
+                rightStep.position.x = 115 + (i*5);
+                stadiumGroup.add(leftStep, rightStep);
+            }
+            scene.add(stadiumGroup);
+
+            // PACKED STADIUM: Generated highly detailed crowd 3D components 
+            audienceGroup = new THREE.Group();
+            const audienceCount = 950; // Drastically packed count for dense structural tracking
+            
+            const goldGlassMaterial = new THREE.MeshStandardMaterial({
+                color: 0xe2c069,
+                metalness: 0.8,
+                roughness: 0.2,
+                transparent: true,
+                opacity: 0.9,
+                emissive: 0xb8860b,
+                emissiveIntensity: 0.2
+            });
+
+            // Reusable body structures for seamless programmatic generation
+            const headGeom = new THREE.SphereGeometry(0.7, 8, 8);
+            const torsoGeom = new THREE.CylinderGeometry(0.5, 0.4, 2.0, 6);
+            const limbGeom = new THREE.BoxGeometry(0.25, 1.2, 0.25);
+
+            for(let i=0; i<audienceCount; i++) {
+                let sideIdx = Math.random() > 0.5 ? 1 : -1;
+                // Distribute evenly among all 12 steps from top row down to floor row
+                let stepLevel = Math.floor(Math.random() * 12);
+                
+                // Fine-tuned placement formulas to ground humans directly on top of step planes
+                let targetX = sideIdx * (115 + (stepLevel * 5) + (Math.random() * 16 - 8));
+                let targetY = -60 + (stepLevel * 4) + 3.2; 
+                let targetZ = (Math.random() * 100) - 50;
+
+                const humanContainer = new THREE.Group();
+
+                // Detailed Sub-mesh Layout Setup
+                const torso = new THREE.Mesh(torsoGeom, goldGlassMaterial);
+                torso.position.y = 1.0;
+                humanContainer.add(torso);
+
+                const head = new THREE.Mesh(headGeom, goldGlassMaterial);
+                head.position.set(0, 2.3, 0);
+                humanContainer.add(head);
+
+                // Split behavior modes right at generation phase: 0=Sitting, 1=Standing/Cheering, 2=Walking
+                let naturalBehavior = Math.floor(Math.random() * 3);
+
+                const leftArm = new THREE.Mesh(limbGeom, goldGlassMaterial);
+                leftArm.position.set(-0.7, 1.4, 0);
+                const rightArm = leftArm.clone();
+                rightArm.position.x = 0.7;
+                humanContainer.add(leftArm, rightArm);
+
+                const leftLeg = new THREE.Mesh(limbGeom, goldGlassMaterial);
+                const rightLeg = leftLeg.clone();
+
+                if (naturalBehavior === 0) {
+                    // SITTING POSTURE
+                    torso.rotation.x = 0.12; 
+                    
+                    leftLeg.position.set(-0.25, 0.4, 0.5);
+                    leftLeg.rotation.x = Math.PI / 2;
+                    rightLeg.position.set(0.25, 0.4, 0.5);
+                    rightLeg.rotation.x = Math.PI / 2;
+
+                    leftArm.rotation.x = 0.4;
+                    rightArm.rotation.x = 0.4;
+                } else {
+                    // STANDING / WALKING POSTURE
+                    leftLeg.position.set(-0.25, 0.3, 0);
+                    rightLeg.position.set(0.25, 0.3, 0);
+                }
+                humanContainer.add(leftLeg, rightLeg);
+
+                // Initial alignment positions setup
+                humanContainer.position.set(targetX, targetY, targetZ);
+                humanContainer.lookAt(0, -10, 0); // Focus gaze onto core rocket engine vector
+
+                audienceMeshArray.push({
+                    mesh: humanContainer,
+                    behavior: naturalBehavior,
+                    homeX: targetX,
+                    homeY: targetY,
+                    homeZ: targetZ,
+                    noiseSeed: Math.random() * 100,
+                    leftArmRef: leftArm,
+                    rightArmRef: rightArm,
+                    leftLegRef: leftLeg,
+                    rightLegRef: rightLeg
+                });
+
+                audienceGroup.add(humanContainer);
+            }
+            scene.add(audienceGroup);
+
+            // Rocket Object Build
+            rocketMasterGroup = new THREE.Group();
+            const goldChromeMat = new THREE.MeshStandardMaterial({ color: 0xe2c069, roughness: 0.15, metalness: 0.85 });
+            const darkTitaniumMat = new THREE.MeshStandardMaterial({ color: 0x1a1e26, roughness: 0.4, metalness: 0.7 });
+            const enginePlumeMat = new THREE.MeshBasicMaterial({ color: 0xff5500, transparent: true, opacity: 0.75 });
+
+            const coreGeom = new THREE.CylinderGeometry(7, 7.5, 55, 32);
+            const coreBooster = new THREE.Mesh(coreGeom, goldChromeMat);
+            coreBooster.position.y = 27.5;
+            rocketMasterGroup.add(coreBooster);
+
+            const noseGeom = new THREE.ConeGeometry(7, 18, 32);
+            const noseCone = new THREE.Mesh(noseGeom, darkTitaniumMat);
+            noseCone.position.y = 64;
+            rocketMasterGroup.add(noseCone);
+
+            const sidePodGeom = new THREE.CylinderGeometry(3, 3.2, 38, 16);
+            const leftPod = new THREE.Mesh(sidePodGeom, goldChromeMat);
+            leftPod.position.set(-10.5, 19, 0);
+            const rightPod = leftPod.clone();
+            rightPod.position.x = 10.5;
+            rocketMasterGroup.add(leftPod, rightPod);
+
+            const sideNoseGeom = new THREE.ConeGeometry(3, 8, 16);
+            const leftSideNose = new THREE.Mesh(sideNoseGeom, darkTitaniumMat);
+            leftSideNose.position.set(-10.5, 42, 0);
+            const rightSideNose = leftSideNose.clone();
+            rightSideNose.position.x = 10.5;
+            rocketMasterGroup.add(leftSideNose, rightSideNose);
+
+            const nozzleGeom = new THREE.CylinderGeometry(4, 6, 6, 16);
+            const mainNozzle = new THREE.Mesh(nozzleGeom, darkTitaniumMat);
+            mainNozzle.position.y = -3;
+            rocketMasterGroup.add(mainNozzle);
+
+            const flameGeom = new THREE.ConeGeometry(5, 12, 16);
+            flameGeom.rotateX(Math.PI);
+            engineFireGlow = new THREE.Mesh(flameGeom, enginePlumeMat);
+            engineFireGlow.position.y = -9;
+            rocketMasterGroup.add(engineFireGlow);
+
+            const fireGeom = new THREE.BufferGeometry();
+            const firePositions = [];
+            for(let i=0; i<200; i++) {
+                firePositions.push((Math.random()-0.5)*8, -6 - (Math.random()*15), (Math.random()-0.5)*8);
+            }
+            fireGeom.setAttribute('position', new THREE.Float32BufferAttribute(firePositions, 3));
+            const fireMat = new THREE.PointsMaterial({ size: 2.5, color: 0xffaa00, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+            fireParticles = new THREE.Points(fireGeom, fireMat);
+            rocketMasterGroup.add(fireParticles);
+
+            rocketMasterGroup.position.set(0, -56, 0);
+            scene.add(rocketMasterGroup);
+
+            startSystemUIRenders();
+            renderEngineLoop();
+        }
+
+        function renderEngineLoop() {
+            requestAnimationFrame(renderEngineLoop);
+            const elapsedTicks = performance.now() * 0.001;
+
+            if(starParticles) { starParticles.rotation.y = elapsedTicks * 0.004; }
+            
+            if(rocketMasterGroup && !launchTriggerActive) {
+                rocketMasterGroup.rotation.y = Math.sin(elapsedTicks) * 0.03;
+                engineFireGlow.scale.set(1 + Math.sin(elapsedTicks*22)*0.1, 1 + Math.cos(elapsedTicks*22)*0.1, 1);
+                
+                const positions = fireParticles.geometry.attributes.position.array;
+                for(let i=1; i<positions.length; i+=3) {
+                    positions[i] -= 0.35;
+                    if(positions[i] < -25) positions[i] = -6;
+                }
+                fireParticles.geometry.attributes.position.needsUpdate = true;
+            }
+
+            // Real-Time Differentiated Individual Humans Mechanical Animation Loop
+            for(let i=0; i<audienceMeshArray.length; i++) {
+                let human = audienceMeshArray[i];
+                let seed = elapsedTicks * 2.0 + human.noiseSeed;
+
+                if (audienceState === "cheering") {
+                    // Overrides behaviors for universal high intensity excitement jumping configuration
+                    let velocity = 20 + (human.noiseSeed % 15);
+                    let jumpHeight = Math.max(0, Math.sin(elapsedTicks * velocity) * 5.0);
+                    human.mesh.position.y = human.homeY + jumpHeight;
+                    
+                    // Swing hands upwards aggressively celebrating launch blast off
+                    human.leftArmRef.rotation.x = -Math.PI + Math.sin(elapsedTicks * velocity) * 0.5;
+                    human.rightArmRef.rotation.x = -Math.PI + Math.cos(elapsedTicks * velocity) * 0.5;
+                } 
+                else {
+                    // INDIVIDUAL LIVE IDLE BEHAVIORS
+                    if (human.behavior === 0) { 
+                        // SITTING AMBIENT BREATHING
+                        human.mesh.position.y = human.homeY + Math.sin(seed) * 0.05;
+                        human.leftArmRef.rotation.x = 0.4 + Math.sin(seed) * 0.08;
+                        human.rightArmRef.rotation.x = 0.4 + Math.cos(seed) * 0.08;
+                    } 
+                    else if (human.behavior === 1) { 
+                        // STANDING AND LOOKING AROUND
+                        human.mesh.position.y = human.homeY;
+                        human.mesh.rotation.y = Math.sin(seed * 0.3) * 0.15; // Shift body posture sight slightly
+                        human.leftArmRef.rotation.z = Math.sin(seed) * 0.05 - 0.1;
+                        human.rightArmRef.rotation.z = -Math.sin(seed) * 0.05 + 0.1;
+                    } 
+                    else if (human.behavior === 2) { 
+                        // WALKING / PACING BACK AND FORTH ON ROW STEPS
+                        let walkStroll = Math.sin(elapsedTicks * 0.8 + human.noiseSeed) * 3.5;
+                        human.mesh.position.z = human.homeZ + walkStroll;
+                        
+                        // Linear swing walking legs and arms synchronization
+                        human.leftLegRef.rotation.x = Math.sin(elapsedTicks * 4.0 + human.noiseSeed) * 0.4;
+                        human.rightLegRef.rotation.x = -Math.sin(elapsedTicks * 4.0 + human.noiseSeed) * 0.4;
+                        human.leftArmRef.rotation.x = -Math.sin(elapsedTicks * 4.0 + human.noiseSeed) * 0.3;
+                        human.rightArmRef.rotation.x = Math.sin(elapsedTicks * 4.0 + human.noiseSeed) * 0.3;
+                    }
+                }
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function startSystemUIRenders() {
+            gsap.to("#overlay", { opacity: 1, duration: 1.2, ease: "power2.out" });
+
+            gsap.utils.toArray(".reveal-fold").forEach(fold => {
+                gsap.from(fold, {
+                    scrollTrigger: {
+                        trigger: fold,
+                        start: "top 88%",
+                        toggleActions: "play none none none"
+                    },
+                    y: 60,
+                    opacity: 0,
+                    duration: 1.2,
+                    ease: "power3.out"
+                });
+            });
+        }
+
+        const scheduledTime = new Date("May 20, 2026 09:00:00").getTime();
+
+        const timeSyncLoop = setInterval(() => {
+            const timeDelta = scheduledTime - new Date().getTime();
+            const secondUnit = 1000, minuteUnit = secondUnit * 60, hourUnit = minuteUnit * 60, dayUnit = hourUnit * 24;
+
+            if (timeDelta <= 0) {
+                clearInterval(timeSyncLoop);
+                document.querySelectorAll("#countdown-container span").forEach(box => box.innerText = "00");
+                unlockLaunchMechanics();
+                return;
+            }
+
+            document.getElementById('days').innerText = String(Math.floor(timeDelta / dayUnit)).padStart(2, '0');
+            document.getElementById('hours').innerText = String(Math.floor((timeDelta % dayUnit) / hourUnit)).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(Math.floor((timeDelta % hourUnit) / minuteUnit)).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(Math.floor((timeDelta % minuteUnit) / secondUnit)).padStart(2, '0');
+        }, 1000);
+
+        function unlockLaunchMechanics() {
+            audienceState = "gathering";
+            document.getElementById('system-lock-notice').style.display = 'none';
+            const actionButton = document.getElementById('html-launch-btn');
+            actionButton.style.display = 'inline-block';
+            
+            actionButton.addEventListener('click', activateKineticPropulsionBlastOff);
+        }
+
+        function activateKineticPropulsionBlastOff() {
+            if(launchTriggerActive) return;
+            launchTriggerActive = true;
+
+            audienceState = "cheering";
+            document.body.style.overflow = "hidden";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            gsap.to(["#html-launch-btn", "#countdown-container", "header", ".animate-bounce"], { opacity: 0, duration: 0.5, stagger: 0.05 });
+
+            const fusionFlashLight = new THREE.PointLight(0x00ffff, 9, 350);
+            fusionFlashLight.position.set(0, -50, 20);
+            scene.add(fusionFlashLight);
+
+            gsap.to(engineFireGlow.scale, { x: 4, z: 4, y: 5, duration: 1.2 });
+            engineFireGlow.material.color.setHex(0x00ffff);
+
+            const hyperPositions = fireParticles.geometry.attributes.position.array;
+            fireParticles.material.size = 6.5;
+            fireParticles.material.color.setHex(0x00ffcc);
+
+            setInterval(() => {
+                for(let i=0; i<hyperPositions.length; i+=3) {
+                    hyperPositions[i] += (Math.random()-0.5)*5;
+                    hyperPositions[i+1] -= 4.0;
+                    hyperPositions[i+2] += (Math.random()-0.5)*5;
+                    if(hyperPositions[i+1] < -90) hyperPositions[i+1] = -6;
+                }
+                fireParticles.geometry.attributes.position.needsUpdate = true;
+            }, 16);
+
+            const launchTimeline = gsap.timeline();
+            launchTimeline.to(camera.position, { z: 130, y: 15, duration: 3, ease: "power2.inOut" });
+
+            launchTimeline.to("#three-canvas", { duration: 0.05, x: "+=15", yoyo: true, repeat: 40 }, "-=2.0")
+                          .to("#three-canvas", { duration: 0.05, y: "+=10", yoyo: true, repeat: 40 }, "-=2.0");
+
+            launchTimeline.to(rocketMasterGroup.position, { y: 550, duration: 4.8, ease: "power4.in" }, "+=0.1");
+            launchTimeline.to(scene.fog, { density: 0.05, duration: 2.2 }, "-=3");
+
+            launchTimeline.to("body", { opacity: 0, duration: 1.5, onComplete: () => {
+                window.location.href = "https://paramountschooledu.in/";
+            }}, "+=0.4");
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            buildCosmosStage();
+        });
+    </script>
 </body>
 </html>
