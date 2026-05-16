@@ -16,21 +16,16 @@
       font-family: 'Poppins', sans-serif;
     }
 
-    /* Target both HTML and BODY root levels to forcefully strip the browser scrollbar structure */
     html, body {
       overflow-x: hidden;
-      background-color: #02040a; /* Deep space space black base */
+      background-color: #030712; /* Deep space dark base */
       color: white;
       min-height: 100vh;
       position: relative;
-      
-      /* Hide scrollbar for Firefox */
       scrollbar-width: none;
-      /* Hide scrollbar for IE and Edge */
       -ms-overflow-style: none;
     }
 
-    /* Universal Webkit selector to catch Chrome, Safari, Edge Chromium, and Opera */
     html::-webkit-scrollbar,
     body::-webkit-scrollbar,
     *::-webkit-scrollbar {
@@ -39,7 +34,7 @@
       height: 0 !important;
     }
 
-    /* Cinematic 3D space backdrop nebulae */
+    /* Immersive Deep Blue Space Nebula Layers */
     .background {
       position: fixed;
       top: 0;
@@ -47,13 +42,14 @@
       width: 100%;
       height: 100%;
       background:
-        radial-gradient(circle at 20% 30%, rgba(0, 123, 255, 0.2), transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(140, 0, 255, 0.2), transparent 50%),
-        linear-gradient(180deg, #02040a 0%, #050b18 50%, #000000 100%);
+        radial-gradient(circle at 50% 40%, rgba(2, 35, 90, 0.6), transparent 60%),
+        radial-gradient(circle at 15% 20%, rgba(30, 64, 175, 0.25), transparent 45%),
+        radial-gradient(circle at 85% 70%, rgba(109, 40, 217, 0.2), transparent 50%),
+        linear-gradient(180deg, #030712 0%, #081125 50%, #020617 100%);
       z-index: -3;
     }
 
-    /* Moving Starfield Container positioned behind everything */
+    /* Solar System Floating Elements and Starfield Wrap */
     .starfield {
       position: fixed;
       top: 0;
@@ -62,7 +58,6 @@
       height: 100%;
       z-index: -2;
       pointer-events: none;
-      background: transparent;
     }
 
     .star {
@@ -72,16 +67,14 @@
       background: #ffffff;
       border-radius: 50%;
       opacity: 0;
-      /* Animation parameters are dynamically randomized via JS */
       animation: flyOutwards var(--duration) linear infinite;
       animation-delay: var(--delay);
     }
 
-    /* Live moving space warp-speed animation loop */
+    /* 3D Flight depth perspective warp space loop */
     @keyframes flyOutwards {
       0% {
         transform: translate(-50%, -50%) translate3d(var(--tx), var(--ty), 0) scale(0.1);
-        box-shadow: 0 0 4px rgba(255, 255, 255, 0);
         opacity: 0;
       }
       10% {
@@ -91,21 +84,69 @@
         opacity: var(--max-opacity);
       }
       100% {
-        /* Pushes the stars out and exponentially increases scale to simulate spatial depth motion */
-        transform: translate(-50%, -50%) translate3d(calc(var(--tx) * 10), calc(var(--ty) * 10), 0) scale(var(--max-scale));
-        box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+        transform: translate(-50%, -50%) translate3d(calc(var(--tx) * 8), calc(var(--ty) * 8), 0) scale(var(--max-scale));
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
         opacity: 0;
       }
     }
 
+    /* Cosmic Orbital Rings to match Solar System aesthetic */
+    .orbit-ring {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) rotateX(70deg);
+      pointer-events: none;
+      z-index: -2;
+    }
+    .orbit-1 { width: 500px; height: 500px; }
+    .orbit-2 { width: 850px; height: 850px; border-color: rgba(59, 130, 246, 0.04); }
+    .orbit-3 { width: 1200px; height: 1200px; }
+
+    /* Floating Planet Elements */
+    .cosmic-body {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -2;
+      opacity: 0.6;
+      filter: blur(1px);
+    }
+    .planet-blue {
+      top: 15%;
+      right: 12%;
+      width: 45px;
+      height: 45px;
+      background: radial-gradient(circle at 30% 30%, #3b82f6, #1d4ed8, #030712);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+      animation: floatBody 8s ease-in-out infinite;
+    }
+    .planet-purple {
+      bottom: 25%;
+      left: 7%;
+      width: 30px;
+      height: 30px;
+      background: radial-gradient(circle at 30% 30%, #a78bfa, #6d28d9, #020617);
+      box-shadow: 0 0 15px rgba(109, 40, 217, 0.3);
+      animation: floatBody 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatBody {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(180deg); }
+      100% { transform: translateY(0) rotate(360deg); }
+    }
+
     /* Shared Glassmorphism Card Style */
     .glass-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
       border-radius: 24px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
     }
 
     /* Hero/Countdown Container */
@@ -121,54 +162,42 @@
       z-index: 5;
     }
 
-    /* Logo Box with borders removed and optimized layout for flawless circular fit */
     .logo-box {
       width: 140px;
       height: 140px;
       border-radius: 50%;
-      background: transparent; /* Allows your logo's native design to blend perfectly */
-      border: none !important; /* Forcefully removes the visible hard border ring */
+      background: transparent;
+      border: none !important;
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 25px;
-      padding: 0; /* Removed padding so logo fits cleanly to the edge of the glow matrix */
+      padding: 0;
       animation: logoGlowPulse 4s infinite ease-in-out;
     }
 
     .logo-box img {
       width: 100%;
       height: 100%;
-      object-fit: contain; 
-      border-radius: 50%; /* Ensures the image edge tracks perfectly with the outer glow */
+      object-fit: contain;
+      border-radius: 50%;
     }
 
-    /* Premium seamless glowing animation matrix without hard color lines */
     @keyframes logoGlowPulse {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 25px rgba(59, 130, 246, 0.25);
-      }
-      50% {
-        transform: scale(1.04);
-        box-shadow: 0 0 55px rgba(139, 92, 246, 0.55), 
-                    0 0 85px rgba(59, 130, 246, 0.25);
-      }
-      100% {
-        transform: scale(1);
-        box-shadow: 0 0 25px rgba(59, 130, 246, 0.25);
-      }
+      0% { transform: scale(1); box-shadow: 0 0 25px rgba(59, 130, 246, 0.2); }
+      50% { transform: scale(1.04); box-shadow: 0 0 60px rgba(139, 92, 246, 0.45), 0 0 90px rgba(59, 130, 246, 0.2); }
+      100% { transform: scale(1); box-shadow: 0 0 25px rgba(59, 130, 246, 0.2); }
     }
 
     .school-name {
       font-size: 3.2rem;
       font-weight: 800;
       line-height: 1.2;
-      white-space: nowrap; /* Kept on 1 line for standard monitors */
+      white-space: nowrap;
       background: linear-gradient(to right, #ffffff, #93c5fd, #d8b4fe);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(255,255,255,0.1);
+      text-shadow: 0 0 25px rgba(255,255,255,0.08);
       margin-bottom: 15px;
       letter-spacing: 1px;
       width: 100%;
@@ -189,20 +218,20 @@
       gap: 10px;
       padding: 10px 24px;
       border-radius: 50px;
-      background: rgba(139, 92, 246, 0.1);
-      border: 1px solid rgba(139, 92, 246, 0.3);
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.25);
       font-size: 1.05rem;
-      color: #e9d5ff;
+      color: #e0f2fe;
       font-weight: 600;
       letter-spacing: 1px;
       margin-bottom: 35px;
-      box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
       animation: floatingBadge 3s infinite ease-in-out;
     }
 
     @keyframes floatingBadge {
       0% { transform: translateY(0); }
-      50% { transform: translateY(-5px); box-shadow: 0 5px 25px rgba(139, 92, 246, 0.3); }
+      50% { transform: translateY(-5px); box-shadow: 0 5px 25px rgba(59, 130, 246, 0.25); }
       100% { transform: translateY(0); }
     }
 
@@ -227,7 +256,7 @@
     .time-box:hover {
       transform: translateY(-10px) scale(1.05);
       box-shadow: 0 0 60px rgba(147,197,253,0.25);
-      border-color: rgba(147,197,253,0.4);
+      border-color: rgba(147,197,253,0.3);
     }
 
     .time {
@@ -269,21 +298,21 @@
     .launch-button {
       background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
       color: white;
-      box-shadow: 0 0 60px rgba(168,85,247,0.6);
+      box-shadow: 0 0 60px rgba(168,85,247,0.5);
       cursor: pointer;
       display: none;
     }
 
     .launch-button:hover {
       transform: scale(1.08);
-      box-shadow: 0 0 80px rgba(236,72,153,0.8);
+      box-shadow: 0 0 80px rgba(236,72,153,0.7);
     }
 
     .locked-button {
       font-size: 1.1rem;
       font-weight: 600;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
       color: #9ca3af;
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
@@ -308,7 +337,6 @@
       filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
     }
 
-    /* Thruster plume effects */
     .rocket-fire {
       width: 16px;
       height: 0px;
@@ -340,12 +368,11 @@
       100% { transform: translateY(-130vh) scale(0.3); opacity: 0; }
     }
 
-    /* Smoke plume generator styling */
     .smoke-layer {
       position: absolute;
       width: 10px;
       height: 10px;
-      background: rgba(200, 200, 250, 0.4);
+      background: rgba(200, 200, 250, 0.3);
       border-radius: 50%;
       filter: blur(8px);
       pointer-events: none;
@@ -354,7 +381,7 @@
     }
 
     @keyframes dissipate {
-      from { transform: scale(1) translateY(0); opacity: 0.6; }
+      from { transform: scale(1) translateY(0); opacity: 0.5; }
       to { transform: scale(6) translateY(50px); opacity: 0; }
     }
 
@@ -410,7 +437,7 @@
 
     .feature-card:hover {
       transform: translateY(-5px);
-      background: rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .feature-icon {
@@ -437,8 +464,8 @@
       text-align: center;
       position: relative;
       z-index: 5;
-      background: rgba(255, 255, 255, 0.02);
-      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.01);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
@@ -455,16 +482,15 @@
       font-weight: 600;
     }
 
-    /* Media Queries for full responsiveness */
+    /* Media Queries */
     @media(max-width: 1200px) {
       .school-name { font-size: 4vw; }
     }
-
     @media(max-width: 992px) {
       .school-name { font-size: 2.4rem; white-space: normal; }
       .about-grid { grid-template-columns: 1fr; text-align: center; }
+      .orbit-ring { display: none; } /* Hide heavy structural assets on complex mid layouts */
     }
-
     @media(max-width: 768px) {
       .hero-container { padding: 50px 15px; }
       .logo-box { width: 110px; height: 110px; margin-bottom: 20px; }
@@ -481,8 +507,8 @@
       .section-title { font-size: 1.6rem; }
       .rocket-container { left: 4%; bottom: 20px; }
       .rocket-body { font-size: 60px; }
+      .cosmic-body { display: none; }
     }
-
     @media (max-width: 360px) {
       .time-box { width: 60px; height: 75px; }
       .time { font-size: 1.3rem; }
@@ -492,6 +518,12 @@
 <body>
 
   <div class="background"></div>
+  
+  <div class="orbit-ring orbit-1"></div>
+  <div class="orbit-ring orbit-2"></div>
+  <div class="orbit-ring orbit-3"></div>
+  <div class="cosmic-body planet-blue"></div>
+  <div class="cosmic-body planet-purple"></div>
   
   <div class="starfield" id="starfield"></div>
 
@@ -600,34 +632,31 @@
 
   <script>
     // =============================
-    // LIVE MOVING SPACE WARP GENERATOR
+    // SOLAR SYSTEM STARFIELD MATRIX ENGINE
     // =============================
     const starfield = document.getElementById('starfield');
-    const starCount = 130; // Increased density for rich spatial depth
+    const starCount = 120;
 
     for (let i = 0; i < starCount; i++) {
       const star = document.createElement('div');
       star.classList.add('star');
       
-      // Randomize initial physical diameter parameters for stars
-      const starSize = Math.random() * 2 + 1;
+      const starSize = Math.random() * 2.5 + 1;
       star.style.width = starSize + 'px';
       star.style.height = starSize + 'px';
       
-      // Generate radial trajectory angles outwards from screen center (50%, 50%)
       const angle = Math.random() * Math.PI * 2;
-      const distance = 30 + Math.random() * 170; // Distance radius offset
+      const distance = 40 + Math.random() * 180;
       
       const tx = Math.cos(angle) * distance + 'px';
       const ty = Math.sin(angle) * distance + 'px';
       
-      // Assign unique custom CSS variable coordinates to each individual element
       star.style.setProperty('--tx', tx);
       star.style.setProperty('--ty', ty);
-      star.style.setProperty('--duration', (1.5 + Math.random() * 3.5) + 's');
-      star.style.setProperty('--delay', (Math.random() * 5) + 's');
-      star.style.setProperty('--max-opacity', 0.4 + Math.random() * 0.6);
-      star.style.setProperty('--max-scale', 2 + Math.random() * 3);
+      star.style.setProperty('--duration', (2.5 + Math.random() * 4.5) + 's');
+      star.style.setProperty('--delay', (Math.random() * 6) + 's');
+      star.style.setProperty('--max-opacity', 0.3 + Math.random() * 0.6);
+      star.style.setProperty('--max-scale', 2.5 + Math.random() * 3);
 
       starfield.appendChild(star);
     }
@@ -644,7 +673,6 @@
 
       rocket.classList.add('ignited');
 
-      // Loop generation matrix for heavy engine exhaust plume smoke particles
       let smokeInterval = setInterval(() => {
         if(!rocket) { clearInterval(smokeInterval); return; }
         
@@ -660,7 +688,6 @@
         setTimeout(() => { smoke.remove(); }, 1500);
       }, 50);
 
-      // Launch rocket out of bounds into the upper viewport layers
       setTimeout(() => {
         rocket.classList.add('launched');
         setTimeout(() => {
@@ -672,7 +699,6 @@
     // =============================
     // COUNTDOWN INTERFACE RUNTIME
     // =============================
-    // Set Grand Reveal Time: May 30th, 2026 at 2:00 PM (14:00:00)
     const launchDate = new Date('May 30, 2026 14:00:00').getTime();
 
     const timer = setInterval(function() {
@@ -704,7 +730,6 @@
       }
     }, 1000);
 
-    // Dynamic state listener triggers automatically on refresh if deadline has already matured
     window.addEventListener('load', () => {
       if (new Date().getTime() >= launchDate) {
         triggerRocketLaunch();
