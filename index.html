@@ -16,21 +16,16 @@
       font-family: 'Poppins', sans-serif;
     }
 
-    /* Target both HTML and BODY root levels to forcefully strip the browser scrollbar structure */
     html, body {
       overflow-x: hidden;
       background: #000;
       color: white;
       min-height: 100vh;
       position: relative;
-      
-      /* Hide scrollbar for Firefox */
       scrollbar-width: none;
-      /* Hide scrollbar for IE and Edge */
       -ms-overflow-style: none;
     }
 
-    /* Universal Webkit selector to catch Chrome, Safari, Edge Chromium, and Opera */
     html::-webkit-scrollbar,
     body::-webkit-scrollbar,
     *::-webkit-scrollbar {
@@ -39,6 +34,7 @@
       height: 0 !important;
     }
 
+    /* Cinematic 3D space backdrop */
     .background {
       position: fixed;
       top: 0;
@@ -46,9 +42,9 @@
       width: 100%;
       height: 100%;
       background:
-        radial-gradient(circle at top left, rgba(0,123,255,0.25), transparent 40%),
-        radial-gradient(circle at bottom right, rgba(140,0,255,0.25), transparent 40%),
-        linear-gradient(135deg, #020617, #000000, #0f172a);
+        radial-gradient(circle at 30% 20%, rgba(0, 123, 255, 0.18), transparent 45%),
+        radial-gradient(circle at 70% 80%, rgba(140, 0, 255, 0.18), transparent 45%),
+        linear-gradient(180deg, #02040a, #050b18, #000000);
       z-index: -3;
     }
 
@@ -61,42 +57,40 @@
       overflow: hidden;
       z-index: -2;
       pointer-events: none;
+      perspective: 600px;
     }
 
+    /* Dynamic 3D depth field particles */
     .particle {
       position: absolute;
-      width: 3px;
-      height: 3px;
-      background: rgba(255,255,255,0.8);
+      background: rgba(255, 255, 255, 0.8);
       border-radius: 50%;
-      animation: float 10s linear infinite;
+      animation: hyperDrive 8s linear infinite;
     }
 
-    @keyframes float {
+    @keyframes hyperDrive {
       from {
-        transform: translateY(105vh) scale(0);
+        transform: translateZ(-600px) translateY(100vh);
         opacity: 0;
       }
-      50% {
+      10% {
         opacity: 1;
       }
       to {
-        transform: translateY(-10vh) scale(1);
+        transform: translateZ(200px) translateY(-15vh);
         opacity: 0;
       }
     }
 
-    /* Shared Glassmorphism Card Style */
     .glass-card {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: 24px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     }
 
-    /* Hero/Countdown Container */
     .hero-container {
       min-height: 100vh;
       display: flex;
@@ -109,69 +103,78 @@
       z-index: 5;
     }
 
-    /* Logo Box with borders removed and optimized layout for flawless circular fit */
     .logo-box {
       width: 140px;
       height: 140px;
       border-radius: 50%;
-      background: transparent; /* Allows your logo's native design to blend perfectly */
-      border: none !important; /* Forcefully removes the visible hard border ring */
+      background: transparent;
+      border: none !important;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 25px;
-      padding: 0; /* Removed padding so logo fits cleanly to the edge of the glow matrix */
+      margin-bottom: 20px;
+      padding: 0;
       animation: logoGlowPulse 4s infinite ease-in-out;
     }
 
     .logo-box img {
       width: 100%;
       height: 100%;
-      object-fit: contain; 
-      border-radius: 50%; /* Ensures the image edge tracks perfectly with the outer glow */
+      object-fit: contain;
+      border-radius: 50%;
     }
 
-    /* Premium seamless glowing animation matrix without hard color lines */
     @keyframes logoGlowPulse {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.08), 
-                    0 0 45px rgba(59, 130, 246, 0.25);
-      }
-      50% {
-        transform: scale(1.04);
-        box-shadow: 0 0 35px rgba(147, 197, 253, 0.45), 
-                    0 0 65px rgba(139, 92, 246, 0.65),
-                    0 0 95px rgba(59, 130, 246, 0.35);
-      }
-      100% {
-        transform: scale(1);
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.08), 
-                    0 0 45px rgba(59, 130, 246, 0.25);
-      }
+      0% { transform: scale(1); box-shadow: 0 0 25px rgba(59, 130, 246, 0.25); }
+      50% { transform: scale(1.04); box-shadow: 0 0 55px rgba(139, 92, 246, 0.55), 0 0 85px rgba(59, 130, 246, 0.25); }
+      100% { transform: scale(1); box-shadow: 0 0 25px rgba(59, 130, 246, 0.25); }
     }
 
     .school-name {
       font-size: 3.2rem;
       font-weight: 800;
       line-height: 1.2;
-      white-space: nowrap; /* Kept on 1 line for standard monitors */
+      white-space: nowrap;
       background: linear-gradient(to right, #ffffff, #93c5fd, #d8b4fe);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 0 20px rgba(255,255,255,0.1);
-      margin-bottom: 25px;
+      margin-bottom: 15px;
       letter-spacing: 1px;
       width: 100%;
       max-width: 100%;
     }
 
     .subtitle {
-      font-size: 1.3rem;
-      color: #d1d5db;
+      font-size: 1.2rem;
+      color: #94a3b8;
       max-width: 900px;
       line-height: 1.7;
-      margin-bottom: 50px;
+      margin-bottom: 30px;
+    }
+
+    /* Grand Reveal Badge Style */
+    .reveal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 24px;
+      border-radius: 50px;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      font-size: 1.05rem;
+      color: #e9d5ff;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 35px;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+      animation: floatingBadge 3s infinite ease-in-out;
+    }
+
+    @keyframes floatingBadge {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-5px); box-shadow: 0 5px 25px rgba(139, 92, 246, 0.3); }
+      100% { transform: translateY(0); }
     }
 
     .countdown {
@@ -258,18 +261,74 @@
       cursor: not-allowed;
     }
 
-    .rocket {
-      position: absolute;
-      bottom: -200px;
-      font-size: 100px;
-      animation: rocketLaunch 12s linear infinite;
-      opacity: 0.1;
-      z-index: -1;
+    /* 3D Dynamic Rocket Core Infrastructure */
+    .rocket-container {
+      position: fixed;
+      bottom: 40px;
+      left: 8%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+      transform: translate52(0);
+      transition: transform 0.5s ease-in;
     }
 
-    @keyframes rocketLaunch {
-      0% { transform: translateY(0) translateX(0) rotate(-20deg); }
-      100% { transform: translateY(-200vh) translateX(70vw) rotate(20deg); }
+    .rocket-body {
+      font-size: 90px;
+      line-height: 1;
+      filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
+      transform: rotate(0deg);
+    }
+
+    /* Animated continuous trail thrusters */
+    .rocket-fire {
+      width: 16px;
+      height: 0px;
+      background: linear-gradient(to bottom, #ffea00, #ff5100, transparent);
+      border-radius: 50%;
+      opacity: 0;
+      transition: height 0.4s, opacity 0.4s;
+      box-shadow: 0 0 30px #ff5100, 0 0 15px #ffea00;
+      animation: jetStream 0.15s infinite alternate;
+    }
+
+    @keyframes jetStream {
+      from { transform: scaleX(0.9) translateY(0); }
+      to { transform: scaleX(1.1) translateY(-3px); }
+    }
+
+    /* Launch Execution Class triggers */
+    .rocket-container.ignited .rocket-fire {
+      height: 70px;
+      opacity: 1;
+    }
+
+    .rocket-container.launched {
+      animation: blastOffToSpace 6s cubic-bezier(0.42, 0, 1, 1) forwards;
+    }
+
+    @keyframes blastOffToSpace {
+      0% { transform: translateY(0) scale(1); }
+      15% { transform: translateY(15px) scale(1); } /* Small base recoil rumble */
+      100% { transform: translateY(-130vh) scale(0.3); opacity: 0; }
+    }
+
+    /* Smoke plume particle container generator */
+    .smoke-layer {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: rgba(200, 200, 250, 0.4);
+      border-radius: 50%;
+      filter: blur(8px);
+      pointer-events: none;
+      animation: dissipate 1.5s ease-out forwards;
+    }
+
+    @keyframes dissipate {
+      from { transform: scale(1) translateY(0); opacity: 0.6; }
+      to { transform: scale(6) translateY(50px); opacity: 0; }
     }
 
     /* Content Sections Styling */
@@ -296,7 +355,6 @@
       padding: 50px;
     }
 
-    /* About Grid Layout */
     .about-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -311,7 +369,6 @@
       margin-bottom: 20px;
     }
 
-    /* Features Grid Layout */
     .features-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -347,7 +404,6 @@
       line-height: 1.6;
     }
 
-    /* Footer Styling */
     .site-footer {
       width: 100%;
       padding: 30px 20px;
@@ -372,122 +428,37 @@
       font-weight: 600;
     }
 
-    /* ========================================================
-       MEDIA QUERIES (FLAWLESS TABLET & MOBILE RESPONSIVENESS)
-       ======================================================== */
-    
+    /* Media Queries for full mobile responsiveness */
     @media(max-width: 1200px) {
-      .school-name {
-        font-size: 4vw; /* Uses scales smoothly on medium landscape screens */
-      }
+      .school-name { font-size: 4vw; }
     }
 
     @media(max-width: 992px) {
-      .school-name {
-        font-size: 2.4rem;
-        white-space: normal; /* Permits structured wrap safely below desktop level */
-      }
-      .about-grid {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-      .about-text style {
-        border-left: none !important;
-        padding-left: 0 !important;
-        margin-top: 20px;
-      }
+      .school-name { font-size: 2.4rem; white-space: normal; }
+      .about-grid { grid-template-columns: 1fr; text-align: center; }
     }
 
     @media(max-width: 768px) {
-      .hero-container {
-        padding: 50px 15px;
-      }
-
-      .logo-box {
-        width: 110px;
-        height: 110px;
-        margin-bottom: 20px;
-      }
-
-      .school-name {
-        font-size: 1.8rem;
-        line-height: 1.3;
-        padding: 0 5px;
-      }
-
-      .subtitle {
-        font-size: 1rem;
-        line-height: 1.6;
-        margin-bottom: 40px;
-      }
-
-      .countdown {
-        gap: 12px; /* Pulls boxes closer together on mobile view */
-      }
-
-      .time-box {
-        width: 68px;   /* Standard square split layouts on portrait smartphones */
-        height: 85px;
-        border-radius: 14px;
-      }
-
-      .time {
-        font-size: 1.6rem;
-      }
-
-      .label {
-        font-size: 0.55rem;
-        letter-spacing: 1px;
-        margin-top: 4px;
-      }
-
-      .launch-text {
-        font-size: 0.75rem;
-        letter-spacing: 3px;
-        margin-top: 35px;
-      }
-
-      .launch-button, .locked-button {
-        margin-top: 30px;
-        padding: 15px 30px;
-        font-size: 0.9rem;
-      }
-
-      .preview-section {
-        padding: 30px 20px;
-        margin-bottom: 40px;
-        border-radius: 16px;
-      }
-
-      .section-title {
-        font-size: 1.6rem;
-        margin-bottom: 25px;
-      }
-
-      .about-text p {
-        font-size: 0.95rem;
-        line-height: 1.7;
-      }
-
-      .feature-card {
-        padding: 25px 20px;
-      }
-
-      .footer-text {
-        font-size: 0.8rem;
-        line-height: 1.5;
-      }
+      .hero-container { padding: 50px 15px; }
+      .logo-box { width: 110px; height: 110px; margin-bottom: 20px; }
+      .school-name { font-size: 1.8rem; line-height: 1.3; }
+      .subtitle { font-size: 1rem; margin-bottom: 25px; }
+      .reveal-badge { font-size: 0.85rem; padding: 8px 16px; margin-bottom: 25px; }
+      .countdown { gap: 12px; }
+      .time-box { width: 68px; height: 85px; border-radius: 14px; }
+      .time { font-size: 1.6rem; }
+      .label { font-size: 0.55rem; letter-spacing: 1px; margin-top: 4px; }
+      .launch-text { font-size: 0.75rem; margin-top: 35px; }
+      .launch-button, .locked-button { margin-top: 30px; padding: 15px 30px; font-size: 0.9rem; }
+      .preview-section { padding: 30px 20px; margin-bottom: 40px; }
+      .section-title { font-size: 1.6rem; }
+      .rocket-container { left: 4%; bottom: 20px; }
+      .rocket-body { font-size: 60px; }
     }
 
-    /* Small Mobile Devices Fix */
     @media (max-width: 360px) {
-      .time-box {
-        width: 60px;
-        height: 75px;
-      }
-      .time {
-        font-size: 1.3rem;
-      }
+      .time-box { width: 60px; height: 75px; }
+      .time { font-size: 1.3rem; }
     }
   </style>
 </head>
@@ -496,7 +467,10 @@
   <div class="background"></div>
   <div class="particles" id="particles"></div>
 
-  <div class="rocket">🚀</div>
+  <div class="rocket-container" id="rocketVehicle">
+    <div class="rocket-body">🚀</div>
+    <div class="rocket-fire"></div>
+  </div>
 
   <div class="hero-container">
     <div class="logo-box">
@@ -511,6 +485,10 @@
       The Future Of Smart Education Is About To Begin.<br>
       Experience A New Digital Journey For Parents, Students & Teachers.
     </p>
+
+    <div class="reveal-badge">
+      ✨ Grand Reveal on May 30th, 2026 at 2:00 PM
+    </div>
 
     <div class="countdown">
       <div class="time-box glass-card">
@@ -549,7 +527,6 @@
 
 
   <main class="main-content">
-
     <section class="preview-section glass-card">
       <h2 class="section-title">Shaping Tomorrow's Leaders</h2>
       <div class="about-grid">
@@ -567,28 +544,23 @@
     <section class="preview-section">
       <h2 class="section-title">Why Paramount School?</h2>
       <div class="features-grid">
-        
         <div class="feature-card glass-card">
           <span class="feature-icon">🧠</span>
           <h3>Smart Classrooms</h3>
           <p>Equipped with modern visual projectors and audio modules to simplify abstract theoretical topics seamlessly.</p>
         </div>
-
         <div class="feature-card glass-card">
           <span class="feature-icon">🔬</span>
           <h3>Advanced Labs</h3>
           <p>Fully functional scientific and computing setups providing hands-on validation parameters for real experience.</p>
         </div>
-
         <div class="feature-card glass-card">
           <span class="feature-icon">🏅</span>
           <h3>Sports & Wellness</h3>
           <p>Comprehensive structured physical regimens helping cultivate sportsmanship, strategy, and overall physical endurance.</p>
         </div>
-
       </div>
     </section>
-
   </main>
 
   <footer class="site-footer">
@@ -600,53 +572,112 @@
 
   <script>
     // =============================
-    // PARTICLES GENERATOR
+    // 3D DEPTH FIELDS STAR GENERATOR
     // =============================
     const particlesContainer = document.getElementById('particles');
 
-    for(let i = 0; i < 60; i++) {
+    for(let i = 0; i < 75; i++) {
       const particle = document.createElement('div');
       particle.classList.add('particle');
 
+      let size = Math.random() * 3 + 1;
+      particle.style.width = size + 'px';
+      particle.style.height = size + 'px';
+      
       particle.style.left = Math.random() * 100 + '%';
-      particle.style.animationDuration = (5 + Math.random() * 10) + 's';
-      particle.style.animationDelay = Math.random() * 5 + 's';
+      particle.style.animationDuration = (4 + Math.random() * 8) + 's';
+      particle.style.animationDelay = Math.random() * 6 + 's';
+      
+      // Calculate random depth layers to fulfill perspective rules
+      particle.style.transform = `translateZ(${Math.random() * 400 - 200}px)`;
       particle.style.opacity = Math.random();
 
       particlesContainer.appendChild(particle);
     }
 
     // =============================
-    // COUNTDOWN TIMER
+    // ROCKET LIFTOFF ANIMATION ENGINE
     // =============================
-    const launchDate = new Date('June 30, 2026 00:00:00').getTime();
+    const rocket = document.getElementById('rocketVehicle');
+    let hasLaunched = false;
+
+    function triggerRocketLaunch() {
+      if (hasLaunched) return;
+      hasLaunched = true;
+
+      // Stage 1: Ignite engine systems
+      rocket.classList.add('ignited');
+
+      // Loop generation matrix for ground exhaust smoke
+      let smokeInterval = setInterval(() => {
+        if(!rocket) { clearInterval(smokeInterval); return; }
+        
+        const smoke = document.createElement('div');
+        smoke.classList.add('smoke-layer');
+        
+        // Position smoke perfectly at the engine base nozzle area
+        const rect = rocket.getBoundingClientRect();
+        smoke.style.left = (rect.left + rect.width / 2 - 5) + 'px';
+        smoke.style.top = (rect.top + rect.height - 15) + 'px';
+        
+        document.body.appendChild(smoke);
+        
+        setTimeout(() => { smoke.remove(); }, 1500);
+      }, 60);
+
+      // Stage 2: Lift-off sequence departure delay 
+      setTimeout(() => {
+        rocket.classList.add('launched');
+        setTimeout(() => {
+          clearInterval(smokeInterval);
+        }, 5000);
+      }, 1200);
+    }
+
+    // =============================
+    // COUNTDOWN INTERFACE RUNTIME
+    // =============================
+    // Adjusted Launch Date to match reveal section text: May 30th, 2026 at 2:00 PM (14:00:00)
+    const launchDate = new Date('May 30, 2026 14:00:00').getTime();
 
     const timer = setInterval(function() {
       const now = new Date().getTime();
       const distance = launchDate - now;
 
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      document.getElementById('days').innerHTML = String(days).padStart(2, '0');
-      document.getElementById('hours').innerHTML = String(hours).padStart(2, '0');
-      document.getElementById('minutes').innerHTML = String(minutes).padStart(2, '0');
-      document.getElementById('seconds').innerHTML = String(seconds).padStart(2, '0');
-
-      if(distance < 0) {
+      if(distance <= 0) {
         clearInterval(timer);
 
+        // Terminate variables strictly at zero state
         document.getElementById('days').innerHTML = '00';
         document.getElementById('hours').innerHTML = '00';
         document.getElementById('minutes').innerHTML = '00';
         document.getElementById('seconds').innerHTML = '00';
 
+        // Swap UI access buttons instantly
         document.getElementById('lockedBtn').style.display = 'none';
         document.getElementById('launchBtn').style.display = 'inline-block';
+
+        // Execute background vehicle departure tracking sequence
+        triggerRocketLaunch();
+      } else {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById('days').innerHTML = String(days).padStart(2, '0');
+        document.getElementById('hours').innerHTML = String(hours).padStart(2, '0');
+        document.getElementById('minutes').innerHTML = String(minutes).padStart(2, '0');
+        document.getElementById('seconds').innerHTML = String(seconds).padStart(2, '0');
       }
     }, 1000);
+
+    // Run safe-check loop instantly on load to protect status against client manual refresh calls
+    window.addEventListener('load', () => {
+      if (new Date().getTime() >= launchDate) {
+        triggerRocketLaunch();
+      }
+    });
   </script>
 
 </body>
