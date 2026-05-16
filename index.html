@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Grand Reveal 🚀 | Paramount School</title>
+  <title>The Grand Dual Launch 🚀 | Paramount School</title>
 
   <link href="logo.png" rel="stylesheet">
   <link rel="icon" type="image/png" href="logo.png">
@@ -49,7 +49,7 @@
       z-index: -3;
     }
 
-    /* Solar System Starfield */
+    /* Solar System Starfield Wrap */
     .starfield {
       position: fixed;
       top: 0;
@@ -76,12 +76,8 @@
         transform: translate(-50%, -50%) translate3d(var(--tx), var(--ty), 0) scale(0.1);
         opacity: 0;
       }
-      10% {
-        opacity: var(--max-opacity);
-      }
-      90% {
-        opacity: var(--max-opacity);
-      }
+      10% { opacity: var(--max-opacity); }
+      90% { opacity: var(--max-opacity); }
       100% {
         transform: translate(-50%, -50%) translate3d(calc(var(--tx) * 8), calc(var(--ty) * 8), 0) scale(var(--max-scale));
         box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
@@ -148,7 +144,7 @@
       box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
     }
 
-    /* Hero/Countdown Container */
+    /* Main Hero Stage Setup */
     .hero-container {
       min-height: 100vh;
       display: flex;
@@ -156,65 +152,169 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 40px 20px;
+      padding: 60px 20px;
       position: relative;
       z-index: 5;
     }
 
-    .logo-box {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: transparent;
-      border: none !important;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 25px;
-      padding: 0;
-      animation: logoGlowPulse 4s infinite ease-in-out;
-    }
-
-    .logo-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 50%;
-    }
-
-    @keyframes logoGlowPulse {
-      0% { transform: scale(1); box-shadow: 0 0 25px rgba(59, 130, 246, 0.2); }
-      50% { transform: scale(1.04); box-shadow: 0 0 60px rgba(139, 92, 246, 0.45), 0 0 90px rgba(59, 130, 246, 0.2); }
-      100% { transform: scale(1); box-shadow: 0 0 25px rgba(59, 130, 246, 0.2); }
-    }
-
     .school-name {
-      font-size: 3.2rem;
+      font-size: 3.5rem;
       font-weight: 800;
-      line-height: 1.2;
-      white-space: nowrap;
+      line-height: 1.1;
       background: linear-gradient(to right, #ffffff, #93c5fd, #d8b4fe);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 25px rgba(255,255,255,0.08);
-      margin-bottom: 15px;
+      text-shadow: 0 0 30px rgba(255,255,255,0.1);
+      margin-bottom: 10px;
       letter-spacing: 1px;
-      width: 100%;
-      max-width: 100%;
     }
 
     .subtitle {
       font-size: 1.2rem;
       color: #94a3b8;
-      max-width: 900px;
-      line-height: 1.7;
-      margin-bottom: 30px;
+      max-width: 800px;
+      line-height: 1.6;
+      margin-bottom: 40px;
     }
 
+    /* ========================================================
+       GRAND THEATRICAL REVEAL EXHIBITION GRID (NEW STRUCTURAL LAYOUT)
+       ======================================================== */
+    .launch-exhibition-stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 50px;
+      margin-bottom: 40px;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .exhibition-pillar {
+      flex: 1;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 240px;
+      justify-content: center;
+      position: relative;
+      transition: all 0.5s ease-in-out;
+    }
+
+    .exhibition-pillar h2 {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #93c5fd;
+      margin-bottom: 20px;
+    }
+
+    /* High-tech Shroud Wrapper for the Logo Module */
+    .logo-reveal-container {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .logo-reveal-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+      z-index: 1;
+      /* Dynamic inline blur/hiding is automated cleanly below via JS */
+      transition: filter 1.5s ease;
+    }
+
+    /* Theatrical Shroud Cover placeholder box before timer finishes */
+    .veil-shroud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 35% 35%, #1e1b4b, #090514);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+      font-size: 1.8rem;
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+      animation: veilPulse 3s infinite alternate;
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+
+    @keyframes veilPulse {
+      0% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); border-color: rgba(139, 92, 246, 0.3); }
+      100% { box-shadow: 0 0 45px rgba(59, 130, 246, 0.6); border-color: rgba(59, 130, 246, 0.6); }
+    }
+
+    /* Web Preview Digital Asset Frame */
+    .web-reveal-container {
+      width: 160px;
+      height: 110px;
+      border-radius: 12px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .web-reveal-container .veil-shroud {
+      border-radius: 12px;
+    }
+
+    .web-mock-svg {
+      width: 80%;
+      height: auto;
+      opacity: 0.8;
+      filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.4));
+    }
+
+    /* Decorative Central Stage Light Divider beam */
+    .stage-divider-beam {
+      width: 1px;
+      height: 180px;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.15), transparent);
+      position: relative;
+    }
+    .stage-divider-beam::before {
+      content: '✦';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(147, 197, 243, 0.5);
+      font-size: 0.9rem;
+    }
+
+    /* Active Reveal Class injections handled over script logic */
+    .revealed-status .veil-shroud {
+      opacity: 0 !important;
+      transform: scale(0.8);
+      pointer-events: none;
+    }
+    .revealed-status .logo-reveal-container {
+      animation: activeLogoGlow 4s infinite ease-in-out;
+    }
+
+    @keyframes activeLogoGlow {
+      0% { transform: scale(1); box-shadow: 0 0 25px rgba(59, 130, 246, 0.3); }
+      50% { transform: scale(1.05); box-shadow: 0 0 55px rgba(139, 92, 246, 0.6), 0 0 85px rgba(59, 130, 246, 0.3); }
+      100% { transform: scale(1); box-shadow: 0 0 25px rgba(59, 130, 246, 0.3); }
+    }
+
+    /* Reveal Badge positioning tweaks */
     .reveal-badge {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
       padding: 10px 24px;
       border-radius: 50px;
       background: rgba(59, 130, 246, 0.08);
@@ -318,7 +418,7 @@
       cursor: not-allowed;
     }
 
-    /* Professional High-Fidelity 3D Vector Rocket */
+    /* Professional High-Fidelity 3D Vector Rocket Components */
     .rocket-container {
       position: fixed;
       bottom: 60px;
@@ -380,18 +480,8 @@
       background: linear-gradient(90deg, #ef4444 0%, #b91c1c 100%);
       z-index: 0;
     }
-    .fin-left {
-      left: -14px;
-      border-top-left-radius: 100% 20%;
-      border-bottom-left-radius: 20%;
-      transform: skewY(-15deg);
-    }
-    .fin-right {
-      right: -14px;
-      border-top-right-radius: 100% 20%;
-      border-bottom-right-radius: 20%;
-      transform: skewY(15deg);
-    }
+    .fin-left { left: -14px; border-top-left-radius: 100% 20%; border-bottom-left-radius: 20%; transform: skewY(-15deg); }
+    .fin-right { right: -14px; border-top-right-radius: 100% 20%; border-bottom-right-radius: 20%; transform: skewY(15deg); }
 
     .rocket-engine-nozzle {
       width: 18px;
@@ -419,14 +509,8 @@
       to { transform: scaleX(1.15) translateY(-2px); }
     }
 
-    .rocket-container.ignited .rocket-fire {
-      height: 65px;
-      opacity: 1;
-    }
-
-    .rocket-container.launched {
-      animation: blastOffToSpace 6s cubic-bezier(0.45, 0, 1, 1) forwards;
-    }
+    .rocket-container.ignited .rocket-fire { height: 65px; opacity: 1; }
+    .rocket-container.launched { animation: blastOffToSpace 6s cubic-bezier(0.45, 0, 1, 1) forwards; }
 
     @keyframes blastOffToSpace {
       0% { transform: rotate(15deg) translateY(0) scale(1); }
@@ -501,28 +585,10 @@
       transition: 0.3s transform ease;
     }
 
-    .feature-card:hover {
-      transform: translateY(-5px);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .feature-icon {
-      font-size: 2.5rem;
-      margin-bottom: 15px;
-      display: inline-block;
-    }
-
-    .feature-card h3 {
-      font-size: 1.4rem;
-      margin-bottom: 15px;
-      color: #93c5fd;
-    }
-
-    .feature-card p {
-      color: #94a3b8;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
+    .feature-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.05); }
+    .feature-icon { font-size: 2.5rem; margin-bottom: 15px; display: inline-block; }
+    .feature-card h3 { font-size: 1.4rem; margin-bottom: 15px; color: #93c5fd; }
+    .feature-card p { color: #94a3b8; font-size: 0.95rem; line-height: 1.6; }
 
     .site-footer {
       width: 100%;
@@ -536,31 +602,20 @@
       -webkit-backdrop-filter: blur(10px);
     }
 
-    .footer-text {
-      font-size: 0.95rem;
-      color: #94a3b8;
-      letter-spacing: 1px;
-      font-weight: 400;
-    }
-
-    .footer-text strong {
-      color: #ffffff;
-      font-weight: 600;
-    }
+    .footer-text { font-size: 0.95rem; color: #94a3b8; letter-spacing: 1px; font-weight: 400; }
+    .footer-text strong { color: #ffffff; font-weight: 600; }
 
     /* Media Queries */
-    @media(max-width: 1200px) {
-      .school-name { font-size: 4vw; }
-    }
     @media(max-width: 992px) {
       .school-name { font-size: 2.4rem; white-space: normal; }
+      .launch-exhibition-stage { flex-direction: column; gap: 20px; }
+      .stage-divider-beam { width: 80%; height: 1px; background: linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent); }
       .about-grid { grid-template-columns: 1fr; text-align: center; }
       .orbit-ring { display: none; }
     }
     @media(max-width: 768px) {
-      .hero-container { padding: 50px 15px; }
-      .logo-box { width: 110px; height: 110px; margin-bottom: 20px; }
-      .school-name { font-size: 1.8rem; line-height: 1.3; }
+      .hero-container { padding: 40px 15px; }
+      .school-name { font-size: 1.8rem; }
       .subtitle { font-size: 1rem; margin-bottom: 25px; }
       .reveal-badge { font-size: 0.85rem; padding: 8px 16px; margin-bottom: 25px; }
       .countdown { gap: 12px; }
@@ -570,7 +625,6 @@
       .launch-text { font-size: 0.75rem; margin-top: 35px; }
       .launch-button, .locked-button { margin-top: 30px; padding: 15px 30px; font-size: 0.9rem; }
       .preview-section { padding: 30px 20px; margin-bottom: 40px; }
-      .section-title { font-size: 1.6rem; }
       .rocket-container { left: 4%; bottom: 40px; transform: scale(0.7) rotate(15deg); }
       .cosmic-body { display: none; }
     }
@@ -606,61 +660,59 @@
   </div>
 
   <div class="hero-container">
-    <div class="logo-box">
-      <img src="logo.png" alt="School New Logo">
-    </div>
-
-    <h1 class="school-name">
-      PARAMOUNT ENGLISH MEDIUM HIGH SCHOOL
-    </h1>
-
-    <p class="subtitle">
-      A New Identity. A New Digital Journey.<br>
-      Experience The Grand Simultaneous Launch Of Our Brand New Logo & Official Website Hub.
-    </p>
+    
+    <h1 class="school-name">PARAMOUNT ENGLISH MEDIUM HIGH SCHOOL</h1>
+    <p class="subtitle">A New Identity. A New Digital Horizon. Witness the historic synchronized unveiling of our brand new school logo and official web platform portal.</p>
 
     <div class="reveal-badge">
       ✨ Grand Dual Reveal on May 30th, 2026 at 2:00 PM
     </div>
 
+    <div class="launch-exhibition-stage" id="revealStageContainer">
+      
+      <div class="exhibition-pillar glass-card">
+        <h2>1. New Brand Identity</h2>
+        <div class="logo-reveal-container">
+          <div class="veil-shroud">?</div>
+          <img src="logo.png" alt="School Brand New Logo">
+        </div>
+      </div>
+
+      <div class="stage-divider-beam"></div>
+
+      <div class="exhibition-pillar glass-card">
+        <h2>2. Next-Gen Web Platform</h2>
+        <div class="web-reveal-container">
+          <div class="veil-shroud">🔒</div>
+          <svg class="web-mock-svg" viewBox="0 0 100 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="90" height="50" rx="4" stroke="#93c5fd" stroke-width="3"/>
+            <line x1="5" y1="18" x2="95" y2="18" stroke="#93c5fd" stroke-width="2"/>
+            <circle cx="12" cy="11.5" r="2" fill="#93c5fd"/>
+            <circle cx="18" cy="11.5" r="2" fill="#93c5fd"/>
+            <circle cx="24" cy="11.5" r="2" fill="#93c5fd"/>
+            <line x1="35" y1="30" x2="75" y2="30" stroke="#6b7280" stroke-width="3" stroke-linecap="round"/>
+            <line x1="35" y1="40" x2="60" y2="40" stroke="#6b7280" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+
     <div class="countdown">
-      <div class="time-box glass-card">
-        <div class="time" id="days">00</div>
-        <div class="label">Days</div>
-      </div>
-
-      <div class="time-box glass-card">
-        <div class="time" id="hours">00</div>
-        <div class="label">Hours</div>
-      </div>
-
-      <div class="time-box glass-card">
-        <div class="time" id="minutes">00</div>
-        <div class="label">Minutes</div>
-      </div>
-
-      <div class="time-box glass-card">
-        <div class="time" id="seconds">00</div>
-        <div class="label">Seconds</div>
-      </div>
+      <div class="time-box glass-card"><div class="time" id="days">00</div><div class="label">Days</div></div>
+      <div class="time-box glass-card"><div class="time" id="hours">00</div><div class="label">Hours</div></div>
+      <div class="time-box glass-card"><div class="time" id="minutes">00</div><div class="label">Minutes</div></div>
+      <div class="time-box glass-card"><div class="time" id="seconds">00</div><div class="label">Seconds</div></div>
     </div>
 
-    <div class="launch-text">
-      GRAND DUAL LAUNCH COUNTDOWN
-    </div>
+    <div class="launch-text">GRAND DUAL LAUNCH COUNTDOWN</div>
 
-    <button class="locked-button" id="lockedBtn">
-      WEBSITE & LOGO UNLOCKING SOON
-    </button>
+    <button class="locked-button" id="lockedBtn">THE ERA OF SMART EDUCATION IS UNLOCKING</button>
+    <a href="https://paramountschooledu.in/" class="launch-button" id="launchBtn" target="_blank">🚀 ENTER OFFICIAL WEBSITE</a>
 
-    <a href="https://paramountschooledu.in/" class="launch-button" id="launchBtn" target="_blank">
-      🚀 ENTER OFFICIAL WEBSITE
-    </a>
   </div>
 
-
   <main class="main-content">
-    
     <section class="preview-section glass-card">
       <h2 class="section-title">Shaping Tomorrow's Leaders</h2>
       <div class="about-grid">
@@ -698,11 +750,8 @@
   </main>
 
   <footer class="site-footer">
-    <div class="footer-text">
-      2026 &copy; <strong>PARAMOUNT ENGLISH MEDIUM SCHOOL</strong> | All Rights Reserved.
-    </div>
+    <div class="footer-text">2026 &copy; <strong>PARAMOUNT ENGLISH MEDIUM SCHOOL</strong> | All Rights Reserved.</div>
   </footer>
-
 
   <script>
     // =============================
@@ -745,6 +794,9 @@
       if (hasLaunched) return;
       hasLaunched = true;
 
+      // Reveal hidden assets on display grid simultaneously
+      document.getElementById('revealStageContainer').classList.add('revealed-status');
+
       rocket.classList.add('ignited');
 
       let smokeInterval = setInterval(() => {
@@ -758,22 +810,19 @@
         smoke.style.top = (rect.top + rect.height - 5) + 'px';
         
         document.body.appendChild(smoke);
-        
         setTimeout(() => { smoke.remove(); }, 1400);
       }, 50);
 
       setTimeout(() => {
         rocket.classList.add('launched');
-        setTimeout(() => {
-          clearInterval(smokeInterval);
-        }, 5000);
+        setTimeout(() => { clearInterval(smokeInterval); }, 5000);
       }, 1200);
     }
 
     // =============================
     // COUNTDOWN INTERFACE RUNTIME
     // =============================
-    const launchDate = new Date('May 16, 2026 19:41:00').getTime();
+    const launchDate = new Date('May 30, 2026 14:00:00').getTime();
 
     const timer = setInterval(function() {
       const now = new Date().getTime();
