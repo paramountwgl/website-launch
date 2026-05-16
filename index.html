@@ -261,7 +261,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-            const ambient = new THREE.AmbientLight(0xffffff, 1.3); 
+            const ambient = new THREE.AmbientLight(0xffffff, 1.4); 
             scene.add(ambient);
 
             const platformLight = new THREE.DirectionalLight(0xfff5df, 2.5);
@@ -308,7 +308,7 @@
             }
             scene.add(stadiumGroup);
 
-            // PERFECT ALIGNED SEATING GRID MATRIX (Eliminated overlaps and step overflows)
+            // RIGID MATRIX GENERATION MECHANICS WITH MATHEMATICAL CO-EFFICIENTS FOR ANGLE MATCHING
             audienceGroup = new THREE.Group();
 
             const clothColors = [0xe2c069, 0xa62626, 0x164e63, 0x2d3748, 0xd4af37];
@@ -319,19 +319,30 @@
             const armGeom = new THREE.CylinderGeometry(0.24, 0.2, 2.0, 8);
             const legGeom = new THREE.CylinderGeometry(0.32, 0.26, 2.4, 8);
 
-            // Generate clean rows across left and right blocks systematically
-            for (let side = -1; side <= 1; side += 2) { 
-                for (let stepLevel = 0; stepLevel < 12; stepLevel++) {
-                    // Maximum of 15 perfectly spaced seats per row step depth
-                    for (let seatIndex = 0; seatIndex < 15; seatIndex++) {
-                        
-                        // Keep a portion of seats naturally vacant to simulate a realistic audience spread
-                        if (Math.random() > 0.75) continue;
+            // Map rows along the actual angled structural layout lines (Left side 115 deg, Right side -65 deg)
+            const sideAngles = {
+                "-1": 115 * (Math.PI / 180), // Left Side angled vector
+                "1": -65 * (Math.PI / 180)   // Right Side angled vector
+            };
 
-                        // Precise step calculations to snap meshes squarely onto structural blocks
-                        let targetX = side * (120 + (stepLevel * 5.0)); 
+            for (let sideIdx of [-1, 1]) {
+                let angleOffset = sideAngles[sideIdx];
+
+                for (let stepLevel = 0; stepLevel < 12; stepLevel++) {
+                    // Exactly 12 seats evenly spaced along the diagonal step depth row line
+                    for (let seatIdx = 0; seatIdx < 12; seatIdx++) {
+                        
+                        if (Math.random() > 0.85) continue; // Natural empty spaces configuration
+
+                        // Map horizontal steps along width and depth systematically using trigonometry 
+                        let rowRadius = 120 + (stepLevel * 5.2);
+                        let spreadAlongRowDepth = -40 + (seatIdx * 7.5); 
+
+                        let targetX = (rowRadius * Math.cos(angleOffset)) + (spreadAlongRowDepth * Math.sin(angleOffset));
+                        let targetZ = (rowRadius * Math.sin(angleOffset)) - (spreadAlongRowDepth * Math.cos(angleOffset));
+                        
+                        // Height elevation matching ensuring they fit directly on step plane tops
                         let targetY = -60 + (stepLevel * 4.0) + 4.9; 
-                        let targetZ = -45 + (seatIndex * 6.5) + (Math.random() * 1.5 - 0.75); // Clean depth alignment
 
                         const humanContainer = new THREE.Group();
 
@@ -383,6 +394,8 @@
                         humanContainer.add(leftLeg, rightLeg);
 
                         humanContainer.position.set(targetX, targetY, targetZ);
+                        
+                        // Face the center launch platform directly
                         humanContainer.lookAt(0, targetY, 0); 
 
                         audienceMeshArray.push({
@@ -409,12 +422,13 @@
             const goldChromeMat = new THREE.MeshStandardMaterial({ color: 0xe2c069, roughness: 0.15, metalness: 0.85 });
             const darkTitaniumMat = new THREE.MeshStandardMaterial({ color: 0x1a1e26, roughness: 0.4, metalness: 0.7 });
             
-            // Brightened fire plume emission configuration
+            // Premium high intensity radiant rocket engine fire material setup
             const enginePlumeMat = new THREE.MeshBasicMaterial({ 
                 color: 0xffaa00, 
                 transparent: true, 
-                opacity: 0.95,
-                blending: THREE.AdditiveBlending 
+                opacity: 0.98,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false 
             });
 
             const coreGeom = new THREE.CylinderGeometry(7, 7.5, 55, 32);
@@ -446,21 +460,30 @@
             mainNozzle.position.y = -3;
             rocketMasterGroup.add(mainNozzle);
 
-            const flameGeom = new THREE.ConeGeometry(5, 16, 16);
+            // ENGINE ROCKET FLAME LAYER (Brought completely forward to render over backgrounds)
+            const flameGeom = new THREE.ConeGeometry(5.2, 18, 16);
             flameGeom.rotateX(Math.PI);
             engineFireGlow = new THREE.Mesh(flameGeom, enginePlumeMat);
-            // Shifted outward forward along the Z axis to pop in front of the platform background mesh
-            engineFireGlow.position.set(0, -11, 12); 
+            engineFireGlow.position.set(0, -11, 14); 
+            engineFireGlow.renderOrder = 999; 
             rocketMasterGroup.add(engineFireGlow);
 
             const fireGeom = new THREE.BufferGeometry();
             const firePositions = [];
             for(let i=0; i<250; i++) {
-                firePositions.push((Math.random()-0.5)*9, -6 - (Math.random()*18), 12 + (Math.random()-0.5)*4);
+                firePositions.push((Math.random()-0.5)*9, -6 - (Math.random()*18), 14 + (Math.random()-0.5)*4);
             }
             fireGeom.setAttribute('position', new THREE.Float32BufferAttribute(firePositions, 3));
-            const fireMat = new THREE.PointsMaterial({ size: 3.5, color: 0xff5500, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending });
+            const fireMat = new THREE.PointsMaterial({ 
+                size: 3.8, 
+                color: 0xff5500, 
+                transparent: true, 
+                opacity: 0.95, 
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
             fireParticles = new THREE.Points(fireGeom, fireMat);
+            fireParticles.renderOrder = 1000;
             rocketMasterGroup.add(fireParticles);
 
             rocketMasterGroup.position.set(0, -56, 0);
@@ -488,7 +511,7 @@
                 fireParticles.geometry.attributes.position.needsUpdate = true;
             }
 
-            // Dressed Character Procedural Animations Iterations Loop
+            // High-Definition Character Animation Loop
             for(let i=0; i<audienceMeshArray.length; i++) {
                 let human = audienceMeshArray[i];
                 let seed = elapsedTicks * 2.5 + human.noiseSeed;
@@ -503,17 +526,20 @@
                 } 
                 else {
                     if (human.behavior === 0) { 
+                        // Sitting Breathing Loop
                         human.mesh.position.y = human.homeY + Math.sin(seed) * 0.06;
                         human.leftArmRef.rotation.x = 0.4 + Math.sin(seed * 0.5) * 0.08;
                         human.rightArmRef.rotation.x = 0.4 + Math.cos(seed * 0.5) * 0.08;
                     } 
                     else if (human.behavior === 1) { 
+                        // Standing & Looking Around Cycles
                         human.mesh.position.y = human.homeY;
                         human.mesh.rotation.y = Math.sin(seed * 0.3) * 0.25; 
                         human.leftArmRef.rotation.z = Math.sin(seed * 0.4) * 0.06 - 0.12;
                         human.rightArmRef.rotation.z = -Math.sin(seed * 0.4) * 0.06 + 0.12;
                     } 
                     else if (human.behavior === 2) { 
+                        // Diagonal Row Walking Pacing Animation Cycles
                         let walkStroll = Math.sin(elapsedTicks * 0.7 + human.noiseSeed) * 5.0;
                         human.mesh.position.z = human.homeZ + walkStroll;
                         
